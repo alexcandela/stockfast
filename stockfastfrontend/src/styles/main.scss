@@ -1,0 +1,26 @@
+/* 1. Importar todos los abstracts (variables, mixins, funciones) */
+@use 'abstracts/variables' as *;
+@use 'abstracts/mixins' as *;
+@use 'abstracts/functions' as *;
+
+/* 2. Reset y base */
+@use 'base/reset';
+@use 'base/base';
+
+/* 3. Layout: header, sidebar, footer, grid */
+@use 'layout/header';
+@use 'layout/sidebar';
+@use 'layout/footer';
+@use 'layout/grid';
+
+/* 4. Componentes reutilizables */
+@use 'components/button';
+@use 'components/card';
+@use 'components/modal';
+
+/* 5. Páginas específicas */
+@use 'pages/dashboard';
+@use 'pages/login';
+
+/* 6. Temas opcionales */
+@use 'themes/dark';

@@ -1,0 +1,33 @@
+.usercomponent {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background-color: #f3f3f3;
+  padding: 5px 10px;
+  border-radius: 5px;
+  gap: 10px;
+  
+  &-info {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    .user-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+    }
+
+      &-name {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        font-weight: 500;
+        margin: 0;
+        color: #252525;
+        white-space: nowrap; // no pasa a otra línea
+        overflow: hidden; // oculta el texto que se pasa
+        text-overflow: ellipsis; // añade "..."
+        max-width: 150px;
+      }
+    
+  }
+}

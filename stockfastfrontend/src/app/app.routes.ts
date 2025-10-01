@@ -1,3 +1,18 @@
 import { Routes } from '@angular/router';
+import { GeneralComponent } from './pages/general-component/general-component';
+import { StockComponent } from './pages/stock-component/stock-component';
+import { VentasComponent } from './pages/ventas-component/ventas-component';
+import { SeoComponent } from './pages/seo-component/seo-component';
+import { EstadisticasComponent } from './pages/estadisticas-component/estadisticas-component';
+import { AjustesComponent } from './pages/ajustes-component/ajustes-component';
 
-export const routes: Routes = [];
+export const routes: Routes = [
+  { path: 'general', component: GeneralComponent },
+  { path: 'stock', component: StockComponent },
+  { path: 'ventas', component: VentasComponent },
+  { path: 'seo', component: SeoComponent },
+  { path: 'estadisticas', component: EstadisticasComponent },
+  { path: 'ajustes', component: AjustesComponent },
+  { path: '', redirectTo: '/general', pathMatch: 'full' }, // redirección inicial
+  { path: '**', redirectTo: '/general' } // wildcard
+];

@@ -1,0 +1,71 @@
+@use '../abstracts/variables' as *;
+.sidebarbtn {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000;
+  background-color: transparent;
+  opacity: 0.6;
+  position: relative;
+  transition: all 0.3s ease;
+  img {
+    margin-right: 12px;
+    width: 15px;
+    height: 15px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  &:hover {
+    background-color: #f7f7f7;
+    opacity: 1;
+    
+    img {
+      transform: translateX(2px);
+      filter: brightness(1.2); // ilumina el icono
+    }
+  }
+
+  &.active {
+    background-color: #f7f7f7;
+    opacity: 1;
+  }
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 8px;
+  font-size: 16px;
+  text-decoration: none;
+  color: #000;
+  background-color: transparent;
+  
+  position: relative;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+
+  img {
+    width: 15px;
+    height: 15px;
+    transition: transform 0.3s ease, filter 0.3s ease;
+  }
+
+  &:hover {
+    background-color: #ffe4e4;
+    opacity: 1;
+
+    img {
+      transform: translateX(2px);
+      filter: brightness(1.2);
+    }
+  }
+}
+
+.hide-sidebar-button {
+  cursor: pointer;
+}
