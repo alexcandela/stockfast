@@ -1,29 +1,31 @@
 <div class="app-container">
   <!-- Barra lateral -->
-  <aside class="sidebar">
+  <aside class="sidebar" [ngClass]="{ 'closed-sidebar': !show() }">
+
     <div class="sidebar-logo">
-      <h1>stockfast.</h1>
+      <h1 [hidden]="!show()">stockfast.</h1>
+      <button (click)="toggle()"><img src="assets/icons/arrowclose.svg" alt="close-icon" class="closebtn"></button>
     </div>
     <nav class="sidebar-menu">
       <ul>
         <hr>
         <li><a class="sidebarbtn" routerLink="/general" routerLinkActive="active"><img src="assets/icons/home.svg"
-              alt="home-icon"><span>General</span></a></li>
+              alt="home-icon"><span [hidden]="!show()">General</span></a></li>
         <li><a class="sidebarbtn" routerLink="/stock" routerLinkActive="active"><img src="assets/icons/stock.svg"
-              alt="stock-icon"><span>Stock</span></a></li>
+              alt="stock-icon"><span [hidden]="!show()">Stock</span></a></li>
         <li><a class="sidebarbtn" routerLink="/ventas" routerLinkActive="active"><img src="assets/icons/sales.svg"
-              alt="sales-icon"><span>Ventas</span></a></li>
+              alt="sales-icon"><span [hidden]="!show()">Ventas</span></a></li>
         <hr>
         <li><a class="sidebarbtn" routerLink="/seo" routerLinkActive="active"><img src="assets/icons/seo.svg"
-              alt="seo-icon"><span>Seo</span></a></li>
+              alt="seo-icon"><span [hidden]="!show()">Seo</span></a></li>
         <li><a class="sidebarbtn" routerLink="/estadisticas" routerLinkActive="active"><img
-              src="assets/icons/analytics.svg" alt="analytics-icon"><span>Estadísticas</span></a></li>
+              src="assets/icons/analytics.svg" alt="analytics-icon"><span [hidden]="!show()">Estadísticas</span></a></li>
         <hr>
         <li><a class="sidebarbtn" routerLink="/ajustes" routerLinkActive="active"><img src="assets/icons/settings.svg"
-              alt="settings-icon"><span>Ajustes</span></a></li>
+              alt="settings-icon"><span [hidden]="!show()">Ajustes</span></a></li>
       </ul>
     </nav>
-    <app-user-component />
+    <app-user-component [hidden]="!show()"/>    
   </aside>
 
   <!-- Contenido principal -->
