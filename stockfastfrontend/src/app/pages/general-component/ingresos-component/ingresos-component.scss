@@ -1,0 +1,41 @@
+.ingresoscomponent {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 2fr 1fr 1fr;
+  gap: 10px;
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  border: ra;
+  &-beneficio {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 2fr;
+    // background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    padding: 20px;
+    
+    
+    p {
+      font-size: clamp(0.2rem, 3vw, 1rem);
+      color: #ffffff;
+      font-weight: 600;
+    }
+    span {
+        font-size: clamp(1.5rem, 3vw, 5rem);
+        font-weight: 800;
+        color: #ffffff;
+    }
+    &-opciones {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        button {
+            color: #ffffff;
+        }
+    }
+  }
+  &-facturacion {
+    // border: solid 1px #ff0000;
+  }
+  &-porcentaje {
+    // border: solid 1px #ff0000;
+  }
+}

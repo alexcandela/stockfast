@@ -5,6 +5,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   height: 100vh;
+  
 
   .sidebar {
     width: 250px;
@@ -63,13 +64,21 @@
     align-items: center;
     justify-content: start;
     transition: all 0.4s ease-in-out;
+
     a {
       padding: 5px;
+    }
+
+    @media (max-width: 768px) {
+      width: 60px;
     }
   }
 
   .main {
     background-color: #f1f1f1;
     padding: 25px;
+    @media (max-width: 768px) {
+      padding: 15px;
+    }
   }
 }
