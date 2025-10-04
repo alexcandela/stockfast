@@ -1,0 +1,12 @@
+.saleschart {
+    height: 100%;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    h3 {
+        font-size: clamp(1rem, 1vw, 1vw);
+        font-weight: 600;
+      }
+}
+

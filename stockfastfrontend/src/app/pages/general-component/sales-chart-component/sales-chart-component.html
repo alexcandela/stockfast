@@ -1,0 +1,11 @@
+<div class="saleschart">
+    <div class="minititle">
+        <div class="iconcontainer" class="icon"><img src="assets/icons/stats.svg" alt="stats-icon"></div>
+        <h3>Resumen de ventas</h3>
+    </div>
+    <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
+        [stroke]="chartOptions.stroke" [dataLabels]="chartOptions.dataLabels" [yaxis]="chartOptions.yaxis"
+        [labels]="chartOptions.labels" [legend]="chartOptions.legend" [title]="chartOptions.title"
+        [subtitle]="chartOptions.subtitle">
+    </apx-chart>
+</div>

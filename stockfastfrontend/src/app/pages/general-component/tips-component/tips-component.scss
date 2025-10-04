@@ -1,0 +1,27 @@
+.tipscontainer {
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 15px;
+
+  &-tips {
+    padding: 20px;
+
+    &-title {
+        h3 {
+          font-size: clamp(1rem, 1vw, 1vw);
+          font-weight: 600;
+        }
+      }
+  }
+  &-stock {
+    padding: 20px;
+    
+    &-title {
+      h3 {
+        font-size: clamp(1rem, 1vw, 1vw);
+        font-weight: 600;
+      }
+    }
+  }
+}
