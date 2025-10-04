@@ -1,3 +1,38 @@
 body {
-    font-family: "Figtree", sans-serif;
+  font-family: 'Figtree', sans-serif;
+}
+
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fdacec;
+  padding: 3px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  img {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+.greencontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 5px;
+  background-color: #cfffca;
+  border: solid 1px #009b05;
+  border-radius: 5px;
+  color: #009b05;
+  letter-spacing: -0.5px;
+  img {
+    width: 1.6vh;
+  }
+}
+
+.minititle {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }

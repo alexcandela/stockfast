@@ -1,21 +1,44 @@
 <div class="ingresoscomponent">
-    <div class="ingresoscomponent-beneficio">
-        <p>Beneficio total:</p>
-        <span>1692.56€</span>
-        <div class="ingresoscomponent-beneficio-opciones">
-            <div class="botones">
-                <button>Mes Actual</button>
-                <button>Total</button>
+    <div class="ingresoscomponent-beneficio card">
+        <div class="titletoggle">
+            <div class="titletoggle-title minititle">
+                <div class="iconcontainer" class="icon"><img src="assets/icons/ingresos.svg" alt="dolar-icon"></div>
+                <h3>Ingresos</h3>
             </div>
-            <button>
-                Ocultar
-            </button>
+            <div class="titletoggle-toggle">
+                <select class="select" name="" id="">
+                    <option value="mensual">Mensual</option>
+                    <option value="anual">Total</option>
+                </select>
+            </div>
+        </div>
+        <div class="netos">
+            <p class="netos-dinero">36731,56 €</p>
+            <p class="netos-info"><span class="greencontainer">
+                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon">12%</span>vs Mes Anterior
+            </p>
+        </div>
+        <div class="bruto">
+            <div class="bruto-ingresos">
+                <div class="minititle">
+                    <img src="assets/icons/bank.svg" alt="bank-icon" class="icon">
+                    <h3>Ingresos Brutos</h3>
+                </div>
+                <p>11654,65 €</p>
+            </div>
+            <div class="bruto-margen">
+                <div class="minititle">
+                    <img src="assets/icons/percent.svg" alt="percent-icon" class="icon">
+                    <h3>Margen Bruto</h3>
+                </div>
+                <p>37,3%</p>
+            </div>
         </div>
     </div>
-    <div class="ingresoscomponent-facturacion">
-
+    <div class="ingresoscomponent-facturacion card">
+        
     </div>
-    <div class="ingresoscomponent-porcentaje">
+    <div class="ingresoscomponent-topproduct card">
 
     </div>
 </div>

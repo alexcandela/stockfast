@@ -3,39 +3,76 @@
   display: grid;
   grid-template-rows: 2fr 1fr 1fr;
   gap: 10px;
-  background: linear-gradient(135deg, #232526 0%, #414345 100%);
-  border: ra;
   &-beneficio {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto 2fr;
-    // background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    grid-template-rows: auto 1fr auto;
     padding: 20px;
-    
-    
-    p {
-      font-size: clamp(0.2rem, 3vw, 1rem);
-      color: #ffffff;
-      font-weight: 600;
-    }
-    span {
-        font-size: clamp(1.5rem, 3vw, 5rem);
-        font-weight: 800;
-        color: #ffffff;
-    }
-    &-opciones {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
-        button {
-            color: #ffffff;
+    gap: 10px;
+    .titletoggle {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-title {
+        h3 {
+          font-size: clamp(1rem, 1vw, 1vw);
+          font-weight: 600;
         }
+      }
+      &-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .netos {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      &-dinero {
+        font-size: clamp(3rem, 3vw, 3vw);
+        font-weight: 800;
+        letter-spacing: -1px;
+      }
+      &-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: clamp(1rem, 1vw, 1vw);
+      }
+    }
+    .bruto {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 5px;
+
+      h3 {
+        font-size: clamp(0.9rem, 1.1rem, 1vw);
+        font-weight: 600;
+      }
+      p {
+        font-size: clamp(1.5rem, 4vh, 4vw);
+        font-weight: 700;
+        letter-spacing: -1px;
+      }
+
+      &-ingresos {
+        display: flex;
+        flex-direction: column;
+      }
+      &-margen {
+        display: flex;
+        flex-direction: column;
+        p {
+          color: #009b05;
+        }
+      }
     }
   }
   &-facturacion {
-    // border: solid 1px #ff0000;
+    
   }
-  &-porcentaje {
+  &-topproduct {
     // border: solid 1px #ff0000;
   }
 }

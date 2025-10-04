@@ -69,3 +69,18 @@
 .hide-sidebar-button {
   cursor: pointer;
 }
+
+.select {
+  width: 100%;
+  padding: 5px 10px;
+  border: 1px solid #777777;
+  border-radius: 5px;
+  background-color: transparent;
+  font-size: clamp(14px, 1rem, 1vw);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    border-color: #000000;
+
+  }
+}
