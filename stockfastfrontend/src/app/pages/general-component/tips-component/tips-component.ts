@@ -15,6 +15,7 @@ export type ChartOptions = {
   labels: any;
   dataLabels: ApexDataLabels;
   legend: ApexLegend;
+  tooltip: ApexTooltip;
 };
 
 @Component({
@@ -30,29 +31,21 @@ export class TipsComponent {
   constructor() {
     this.chartOptions = {
       series: [132, 56, 389],
-      chart: {
-        height: '100%',
-        type: 'pie',
-        
-      },
+      chart: { height: '100%', type: 'donut' },
       labels: ['Productos', 'Envío', 'Beneficio'],
-      dataLabels: {
-        enabled: true,
-      },
-      legend: {
-        show: false,
+      dataLabels: { enabled: false },
+      legend: { show: false },
+      tooltip: {
+        y: {
+          formatter: (val: number, opts: any) => {
+            return `${val} €`;
+          },
+        },
       },
       responsive: [
         {
           breakpoint: 480,
-          options: {
-            chart: {
-              width: 200,
-            },
-            legend: {
-              position: 'bottom',
-            },
-          },
+          options: { chart: { width: 200 }, legend: { position: 'bottom' } },
         },
       ],
     };

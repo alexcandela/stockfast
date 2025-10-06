@@ -1,13 +1,8 @@
 <div class="tipscontainer">
     <div class="tipscontainer-tips card">
-        <div class="tipscontainer-tips-title minititle">
-            <div class="iconcontainer" class="icon"><img src="assets/icons/question.svg" alt="tip-icon"></div>
-            <h3>Consejos</h3>
-        </div>
-        <div>
-
-        </div>
-
+        <p class="a">Productos en</p>
+        <p class="b">stock</p>
+        <p class="c">21</p>
     </div>
     <div class="tipscontainer-stock card">
         <div class="tipscontainer-stock-title minititle">
@@ -74,10 +69,10 @@
                 </div>
 
             </div>
-            <div class="lote-list">
+            <div class="lote-pie">
                 <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
                     [dataLabels]="chartOptions.dataLabels" [legend]="chartOptions.legend"
-                    [responsive]="chartOptions.responsive">
+                    [responsive]="chartOptions.responsive" [tooltip]="chartOptions.tooltip">
                 </apx-chart>
 
             </div>
