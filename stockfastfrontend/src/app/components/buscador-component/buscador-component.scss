@@ -1,0 +1,38 @@
+.allbuscador {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 5px;
+}
+
+.buscador {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    padding: 8px;
+    gap: 10px;
+    &-img {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img {
+            width: 20px;
+            opacity: 0.5;
+
+        }
+    }
+    &-input {
+        font-weight: 300;
+    }
+}
+
+.filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    img {
+            width: 20px;
+            opacity: 0.5;
+
+        }
+}
