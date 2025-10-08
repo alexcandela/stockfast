@@ -1,0 +1,42 @@
+.productlist {
+  display: grid;
+  grid-template-columns:
+        auto
+        2fr
+        repeat(7, 1fr);
+
+  padding: 15px 20px;
+  gap: 20px;
+  border-bottom: solid 1px #eeeeee;
+
+  .inputcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .productname {
+    width: 250px;
+  }
+
+  .dataname {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    span {
+      font-size: clamp(10px, 1rem, 1vw);
+    }
+  }
+
+  .categoria {
+    padding: 2px 5px;
+    background-color: #fca0fc;
+    border-radius: 10px;
+  }
+  &-buttons {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 5px;
+  }
+}

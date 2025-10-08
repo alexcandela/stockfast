@@ -3,6 +3,44 @@
         <app-buscador-component />
     </div>
     <div class="stock-listcontainer card">
-
+        <div class="stock-listcontainer-types">
+            <input type="checkbox" name="" id="">
+            <div class="typetitle">
+                <span>Name</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>Cantidad</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>Categoria</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>Coste</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>P.Estimado</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>F. Entrada</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+            <div class="typetitle">
+                <span>Lote</span>
+                <img src="assets/icons/sort.svg" alt="sort-icon">
+            </div>
+        </div>
+        <div class="stock-listcontainer-list">
+            <div class="listscroll">
+                @for (item of [].constructor(20); track $index) {
+                <app-productlist-component />
+                }
+                
+            </div>
+        </div>
     </div>
 </div>

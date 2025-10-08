@@ -84,3 +84,18 @@
 
   }
 }
+
+.productbutton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5;
+  transition: all ease 0.4s;
+  cursor: pointer;
+  width: clamp(14px, 1.5rem, 2rem);
+
+  
+  &:hover {
+    opacity: 1;
+  }
+}

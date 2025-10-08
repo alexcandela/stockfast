@@ -36,3 +36,12 @@ body {
   align-items: center;
   gap: 5px;
 }
+
+.hideoverflowtext {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// @media (max-width: 768px) {
+// }
