@@ -1,3 +1,6 @@
+// @media (max-width: 768px) {
+// }
+
 body {
   font-family: 'Figtree', sans-serif;
 }
@@ -43,5 +46,6 @@ body {
   text-overflow: ellipsis;
 }
 
-// @media (max-width: 768px) {
-// }
+input[type="checkbox"] {
+  cursor: pointer;
+};
