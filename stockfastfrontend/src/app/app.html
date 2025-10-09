@@ -13,7 +13,7 @@
               alt="home-icon"><span [hidden]="!show()">General</span></a></li>
         <li><a class="sidebarbtn" routerLink="/stock" routerLinkActive="active"><img src="assets/icons/stock.svg"
               alt="stock-icon"><span [hidden]="!show()">Stock</span></a></li>
-              <li><a class="sidebarbtn" routerLink="/addlote" routerLinkActive="active"><img src="assets/icons/add.svg"
+        <li><a class="sidebarbtn" routerLink="/addlote" routerLinkActive="active"><img src="assets/icons/add.svg"
               alt="sales-icon"><span [hidden]="!show()">Añadir Lote</span></a></li>
         <li><a class="sidebarbtn" routerLink="/ventas" routerLinkActive="active"><img src="assets/icons/sales.svg"
               alt="sales-icon"><span [hidden]="!show()">Ventas</span></a></li>
@@ -21,13 +21,14 @@
         <li><a class="sidebarbtn" routerLink="/seo" routerLinkActive="active"><img src="assets/icons/seo.svg"
               alt="seo-icon"><span [hidden]="!show()">Seo</span></a></li>
         <li><a class="sidebarbtn" routerLink="/estadisticas" routerLinkActive="active"><img
-              src="assets/icons/analytics.svg" alt="analytics-icon"><span [hidden]="!show()">Estadísticas</span></a></li>
+              src="assets/icons/analytics.svg" alt="analytics-icon"><span [hidden]="!show()">Estadísticas</span></a>
+        </li>
         <hr>
         <li><a class="sidebarbtn" routerLink="/ajustes" routerLinkActive="active"><img src="assets/icons/settings.svg"
               alt="settings-icon"><span [hidden]="!show()">Ajustes</span></a></li>
       </ul>
     </nav>
-    <app-user-component [hidden]="!show()"/>    
+    <app-user-component [hidden]="!show()" />
   </aside>
 
   <!-- Contenido principal -->
