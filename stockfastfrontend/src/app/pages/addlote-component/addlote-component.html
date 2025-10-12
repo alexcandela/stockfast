@@ -155,6 +155,11 @@
                     <div class="listscroll">
                         @for (producto of productos; track $index) {
                         <app-productlote-component [producto]="producto" (eliminar)="eliminarProducto($index)" />
+                        } @empty {
+                            <div class="emptylist">
+                                <img src="assets/icons/info.svg" alt="info-icon">
+                                <p>La lista esta vacía</p>
+                            </div>
                         }
                     </div>
                 </div>
