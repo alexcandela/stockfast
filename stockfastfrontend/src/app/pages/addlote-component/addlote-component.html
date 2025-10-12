@@ -1,1 +1,226 @@
-<p>addlote-component works!</p>
+<div class="addlotecontainer">
+    <div class="addlotecontainer-title">
+        <div class="bigtitle">
+            <img src="assets/icons/addicon.svg" alt="add-icon">
+            <h3>Añadir Lote</h3>
+        </div>
+        <div class="addlotecontainer-title-buttons">
+            <button class="lotebtn">Cancelar</button>
+            <button class="lotebtn" (click)="addLote()">Añadir</button>
+        </div>
+    </div>
+    <div class="addlotecontainer-cont">
+        <div class="addlotecontainer-cont-producto">
+            <form class="card formproduct" [formGroup]="productoForm">
+                <div class="minititle formproduct-title">
+                    <img src="assets/icons/info.svg" alt="product-icon">
+                    <h4>Producto</h4>
+                </div>
+                <div class="forminputs">
+                    <div class="forminputs-section1">
+                        <div class="input">
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" formControlName="nombre">
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('nombre')?.touched &&
+                                productoForm.get('nombre')?.errors?.['required']) {
+                                <small class="errorMessage">
+                                    El nombre no puede estar vacío
+                                </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="forminputs-section2">
+                        <div class="input">
+                            <label for="precio">Precio Unidad</label>
+                            <input type="number" id="precio" placeholder="0.00€" formControlName="precio">
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('precio')?.touched &&
+                                productoForm.get('precio')?.errors?.['required']) {
+                                <small class="errorMessage">
+                                    No puede estar vacío
+                                </small>
+                                } @else if (productoForm.get('precio')?.touched &&
+                                productoForm.get('precio')?.errors?.['min']) {
+                                <small class="errorMessage">
+                                    Error
+                                </small>
+                                }
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="venta">Venta Estimada</label>
+                            <input type="number" id="venta" placeholder="0.00€" formControlName="venta">
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('venta')?.touched &&
+                                productoForm.get('venta')?.errors?.['required']) {
+                                <small class="errorMessage">
+                                    No puede estar vacío
+                                </small>
+                                }
+                                @else if (productoForm.get('venta')?.touched &&
+                                productoForm.get('venta')?.errors?.['min']) {
+                                <small class="errorMessage">
+                                    Error
+                                </small>
+                                }
+                            </div>
+                        </div>
+                        <div class="input">
+                            <label for="cantidad">Cantidad</label>
+                            <input type="number" id="cantidad" placeholder="1" formControlName="cantidad">
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('cantidad')?.touched &&
+                                productoForm.get('cantidad')?.errors?.['required']) {
+                                <small class="errorMessage">
+                                    No puede estar vacío
+                                </small>
+                                } @else if (productoForm.get('cantidad')?.touched &&
+                                productoForm.get('cantidad')?.errors?.['min']) {
+                                <small class="errorMessage">
+                                    Error
+                                </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="forminputs-section3">
+                        <div class="categorias">
+                            <label for="categoria">Selecciona una categoría</label>
+                            <div class="categorias-categoryselector">
+                                @for (categoria of categorias; track $index) {
+                                <span (click)="seleccionarCategoria(categoria.nombre)"
+                                    [class.selected]="productoForm.get('categoria')?.value === categoria.nombre">
+                                    {{ categoria.nombre }}
+                                </span>
+                                }
+                            </div>
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('categoria')?.touched &&
+                                productoForm.get('categoria')?.errors?.['required']) {
+                                <small class="errorMessage">
+                                    No se a seleccionado ninguna categoría
+                                </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="forminputs-section4">
+                        <div class="input">
+                            <label for="desc">Descripción</label>
+                            <textarea type="text" id="desc" formControlName="desc"></textarea>
+                            <div class="errorMessageContainer">
+                                @if (productoForm.get('desc')?.touched &&
+                                productoForm.get('desc')?.errors?.['maxlength']) {
+                                <small class="errorMessage">
+                                    Descripción demasiado larga
+                                </small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="addproductbtn" type="button" (click)="addProduct()"><img
+                        src="assets/icons/whitearrow.svg" alt="arrow-icon"></button>
+            </form>
+            <div class="card"></div>
+        </div>
+        <div class="addlotecontainer-cont-lote lote">
+            <div class="lote-listcontainer card">
+                <div class="lote-listcontainer-types">
+                    <input type="checkbox" name="" id="">
+                    <div class="typetitle">
+                        <span>Nombre</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                    <div class="typetitle">
+                        <span>Cantidad</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                    <div class="typetitle">
+                        <span>Categoria</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                    <div class="typetitle">
+                        <span>Coste</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                    <div class="typetitle">
+                        <span>V.Estimada</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                </div>
+                <div class="lote-listcontainer-list">
+                    <div class="listscroll">
+                        @for (producto of productos; track $index) {
+                        <app-productlote-component [producto]="producto" (eliminar)="eliminarProducto($index)" />
+                        }
+                    </div>
+                </div>
+            </div>
+            <form class="loteform card" [formGroup]="loteForm">
+                <div class="minititle loteform-title">
+                    <img src="assets/icons/info.svg" alt="product-icon">
+                    <h4>Lote</h4>
+                </div>
+                <div class="forminputs">
+                    <div class="input">
+                        <label for="proveedor">Proveedor</label>
+                        <input type="text" id="proveedor" formControlName="proveedor">
+                        <div class="errorMessageContainer">
+                            @if (productoForm.get('proveedor')?.touched &&
+                            productoForm.get('proveedor')?.errors?.['required']) {
+                            <small class="errorMessage">
+                                El nombre no puede estar vacío
+                            </small>
+                            }
+                        </div>
+                    </div>
+                    <div class="input">
+                        <label for="agenciaenvio">Agencía Envío</label>
+                        <input type="text" id="agenciaenvio" formControlName="agenciaenvio">
+                        <div class="errorMessageContainer">
+                            
+                        </div>
+                    </div>
+                    <div class="input">
+                        <label for="gastosenvio">Gastos Envío</label>
+                        <input type="number" id="gastosenvio" placeholder="0.00€" formControlName="gastosenvio">
+                        <div class="errorMessageContainer">
+                            @if (loteForm.get('gastosenvio')?.touched &&
+                            loteForm.get('gastosenvio')?.errors?.['required']) {
+                            <small class="errorMessage">
+                                Obligatorio
+                            </small>
+                            } @else if (loteForm.get('gastosenvio')?.touched &&
+                            loteForm.get('gastosenvio')?.errors?.['min']) {
+                            <small class="errorMessage">
+                                Error
+                            </small>
+                            }
+                        </div>
+                    </div>
+                    <div class="input">
+                        <label for="fechacompra">Gastos Envío</label>
+                        <input type="date" id="fechacompra" formControlName="fechacompra">
+                        <div class="errorMessageContainer">
+                            @if (loteForm.get('fechacompra')?.touched &&
+                            loteForm.get('fechacompra')?.errors?.['required']) {
+                            <small class="errorMessage">
+                                Obligatorio
+                            </small>
+                            }
+                            @else if (loteForm.get('fechacompra')?.touched &&
+                            loteForm.get('fechacompra')?.errors?.['fechaFutura']) {
+                            <small class="errorMessage">
+                                Error
+                            </small>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

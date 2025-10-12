@@ -21,7 +21,7 @@
   &:hover {
     background-color: #f7f7f7;
     opacity: 1;
-    
+
     img {
       transform: translateX(2px);
       filter: brightness(1.2); // ilumina el icono
@@ -43,7 +43,7 @@
   text-decoration: none;
   color: #000;
   background-color: transparent;
-  
+
   position: relative;
   transition: all 0.3s ease;
   border: none;
@@ -81,7 +81,6 @@
   transition: all 0.3s ease;
   &:hover {
     border-color: #000000;
-
   }
 }
 
@@ -94,8 +93,39 @@
   cursor: pointer;
   width: clamp(14px, 1.5rem, 2rem);
 
-  
   &:hover {
     opacity: 1;
+  }
+}
+
+.lotebtn {
+  padding: 5px 15px;
+  border: solid 1px #777777;
+  background-color: #ffffff;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all ease 0.4s;
+  font-size: clamp(0.5rem, 1rem, 1rem);
+  font-weight: 500;
+
+  &:hover {
+    background-color: #f0eeee;
+  }
+}
+
+.addproductbtn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #7B91FF;
+  width: 100%;
+  transition: all ease 0.4s;
+  cursor: pointer;
+  padding: 5px;
+  img {
+    width: clamp(14px, 1.5rem, 2rem);
+  }
+  &:hover {
+    background-color: #667ffc;
   }
 }

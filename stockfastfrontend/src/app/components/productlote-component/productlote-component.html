@@ -1,0 +1,31 @@
+<div class="productlist">
+    <div class="productlist-product">
+        <div class="inputcontainer">
+            <input type="checkbox" name="" id="">
+        </div>
+        <div class="dataname">
+            <span class="hideoverflowtext productname">{{ producto.nombre }}</span>
+        </div>
+        <div class="dataname">
+            <span>{{ producto.cantidad }}</span>
+        </div>
+        <div class="dataname">
+            <span class="categoria">{{ producto.categoria }}</span>
+        </div>
+        <div class="dataname">
+            <span>{{ producto.precio }}€</span>
+        </div>
+        <div class="dataname">
+            <span>{{ producto.venta }}€</span>
+        </div>
+        <div class="productlist-product-buttons">
+            
+            <button class="productbutton" (click)="eliminarProducto()">
+                <img src="assets/icons/delete.svg" alt="delete-icon">
+            </button>
+        </div>
+    </div>
+    <div class="productlist-form" [ngClass]="{ 'opened': show() }">
+        formulario
+    </div>
+</div>
