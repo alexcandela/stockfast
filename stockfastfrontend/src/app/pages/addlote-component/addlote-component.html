@@ -11,7 +11,7 @@
     </div>
     <div class="addlotecontainer-cont">
         <div class="addlotecontainer-cont-producto">
-            <form class="card formproduct" [formGroup]="productoForm">
+            <form class="card formproduct" [formGroup]="productForm">
                 <div class="minititle formproduct-title">
                     <img src="assets/icons/info.svg" alt="product-icon">
                     <h4>Producto</h4>
@@ -19,11 +19,11 @@
                 <div class="forminputs">
                     <div class="forminputs-section1">
                         <div class="input">
-                            <label for="nombre">Nombre</label>
-                            <input type="text" id="nombre" formControlName="nombre">
+                            <label for="name">Nombre</label>
+                            <input type="text" id="name" formControlName="name">
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('nombre')?.touched &&
-                                productoForm.get('nombre')?.errors?.['required']) {
+                                @if (productForm.get('name')?.touched &&
+                                productForm.get('name')?.errors?.['required']) {
                                 <small class="errorMessage">
                                     El nombre no puede estar vacío
                                 </small>
@@ -33,16 +33,16 @@
                     </div>
                     <div class="forminputs-section2">
                         <div class="input">
-                            <label for="precio">Precio Unidad</label>
-                            <input type="number" id="precio" placeholder="0.00€" formControlName="precio">
+                            <label for="purchase_price">Precio Unidad</label>
+                            <input type="number" id="purchase_price" placeholder="0.00€" formControlName="purchase_price">
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('precio')?.touched &&
-                                productoForm.get('precio')?.errors?.['required']) {
+                                @if (productForm.get('purchase_price')?.touched &&
+                                productForm.get('purchase_price')?.errors?.['required']) {
                                 <small class="errorMessage">
                                     No puede estar vacío
                                 </small>
-                                } @else if (productoForm.get('precio')?.touched &&
-                                productoForm.get('precio')?.errors?.['min']) {
+                                } @else if (productForm.get('purchase_price')?.touched &&
+                                productForm.get('purchase_price')?.errors?.['min']) {
                                 <small class="errorMessage">
                                     Error
                                 </small>
@@ -50,17 +50,17 @@
                             </div>
                         </div>
                         <div class="input">
-                            <label for="venta">Venta Estimada</label>
-                            <input type="number" id="venta" placeholder="0.00€" formControlName="venta">
+                            <label for="estimated_sale_price">Venta Estimada</label>
+                            <input type="number" id="estimated_sale_price" placeholder="0.00€" formControlName="estimated_sale_price">
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('venta')?.touched &&
-                                productoForm.get('venta')?.errors?.['required']) {
+                                @if (productForm.get('estimated_sale_price')?.touched &&
+                                productForm.get('estimated_sale_price')?.errors?.['required']) {
                                 <small class="errorMessage">
                                     No puede estar vacío
                                 </small>
                                 }
-                                @else if (productoForm.get('venta')?.touched &&
-                                productoForm.get('venta')?.errors?.['min']) {
+                                @else if (productForm.get('estimated_sale_price')?.touched &&
+                                productForm.get('estimated_sale_price')?.errors?.['min']) {
                                 <small class="errorMessage">
                                     Error
                                 </small>
@@ -68,16 +68,16 @@
                             </div>
                         </div>
                         <div class="input">
-                            <label for="cantidad">Cantidad</label>
-                            <input type="number" id="cantidad" placeholder="1" formControlName="cantidad">
+                            <label for="quantity">Cantidad</label>
+                            <input type="number" id="quantity" placeholder="1" formControlName="quantity">
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('cantidad')?.touched &&
-                                productoForm.get('cantidad')?.errors?.['required']) {
+                                @if (productForm.get('quantity')?.touched &&
+                                productForm.get('quantity')?.errors?.['required']) {
                                 <small class="errorMessage">
                                     No puede estar vacío
                                 </small>
-                                } @else if (productoForm.get('cantidad')?.touched &&
-                                productoForm.get('cantidad')?.errors?.['min']) {
+                                } @else if (productForm.get('quantity')?.touched &&
+                                productForm.get('quantity')?.errors?.['min']) {
                                 <small class="errorMessage">
                                     Error
                                 </small>
@@ -90,15 +90,15 @@
                             <label for="categoria">Selecciona una categoría</label>
                             <div class="categorias-categoryselector">
                                 @for (categoria of categorias; track $index) {
-                                <span (click)="seleccionarCategoria(categoria.nombre)"
-                                    [class.selected]="productoForm.get('categoria')?.value === categoria.nombre">
+                                <span (click)="seleccionarCategoria(categoria.id)"
+                                    [class.selected]="productForm.get('category_id')?.value === categoria.id">
                                     {{ categoria.nombre }}
                                 </span>
                                 }
                             </div>
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('categoria')?.touched &&
-                                productoForm.get('categoria')?.errors?.['required']) {
+                                @if (productForm.get('category_id')?.touched &&
+                                productForm.get('category_id')?.errors?.['required']) {
                                 <small class="errorMessage">
                                     No se a seleccionado ninguna categoría
                                 </small>
@@ -108,11 +108,11 @@
                     </div>
                     <div class="forminputs-section4">
                         <div class="input">
-                            <label for="desc">Descripción</label>
-                            <textarea type="text" id="desc" formControlName="desc"></textarea>
+                            <label for="description">Descripción</label>
+                            <textarea type="text" id="desc" formControlName="description"></textarea>
                             <div class="errorMessageContainer">
-                                @if (productoForm.get('desc')?.touched &&
-                                productoForm.get('desc')?.errors?.['maxlength']) {
+                                @if (productForm.get('description')?.touched &&
+                                productForm.get('description')?.errors?.['maxlength']) {
                                 <small class="errorMessage">
                                     Descripción demasiado larga
                                 </small>
@@ -153,8 +153,8 @@
                 </div>
                 <div class="lote-listcontainer-list">
                     <div class="listscroll">
-                        @for (producto of productos; track $index) {
-                        <app-productlote-component [producto]="producto" (eliminar)="eliminarProducto($index)" />
+                        @for (product of products; track $index) {
+                        <app-productlote-component [product]="product" (eliminar)="eliminarProducto($index)" />
                         } @empty {
                             <div class="emptylist">
                                 <img src="assets/icons/info.svg" alt="info-icon">
@@ -164,42 +164,36 @@
                     </div>
                 </div>
             </div>
-            <form class="loteform card" [formGroup]="loteForm">
+            <form class="loteform card" [formGroup]="purchaseForm">
                 <div class="minititle loteform-title">
                     <img src="assets/icons/info.svg" alt="product-icon">
                     <h4>Lote</h4>
                 </div>
                 <div class="forminputs">
                     <div class="input">
-                        <label for="proveedor">Proveedor</label>
-                        <input type="text" id="proveedor" formControlName="proveedor">
+                        <label for="supplier_name">Proveedor</label>
+                        <input type="text" id="supplier_name" formControlName="supplier_name">
                         <div class="errorMessageContainer">
-                            @if (productoForm.get('proveedor')?.touched &&
-                            productoForm.get('proveedor')?.errors?.['required']) {
-                            <small class="errorMessage">
-                                El nombre no puede estar vacío
-                            </small>
-                            }
                         </div>
                     </div>
                     <div class="input">
-                        <label for="agenciaenvio">Agencía Envío</label>
-                        <input type="text" id="agenciaenvio" formControlName="agenciaenvio">
+                        <label for="shipping_agency">Agencía Envío</label>
+                        <input type="text" id="shipping_agency" formControlName="shipping_agency">
                         <div class="errorMessageContainer">
                             
                         </div>
                     </div>
                     <div class="input">
-                        <label for="gastosenvio">Gastos Envío</label>
-                        <input type="number" id="gastosenvio" placeholder="0.00€" formControlName="gastosenvio">
+                        <label for="shipping_cost">Gastos Envío</label>
+                        <input type="number" id="shipping_cost" placeholder="0.00€" formControlName="shipping_cost">
                         <div class="errorMessageContainer">
-                            @if (loteForm.get('gastosenvio')?.touched &&
-                            loteForm.get('gastosenvio')?.errors?.['required']) {
+                            @if (purchaseForm.get('shipping_cost')?.touched &&
+                            purchaseForm.get('shipping_cost')?.errors?.['required']) {
                             <small class="errorMessage">
                                 Obligatorio
                             </small>
-                            } @else if (loteForm.get('gastosenvio')?.touched &&
-                            loteForm.get('gastosenvio')?.errors?.['min']) {
+                            } @else if (purchaseForm.get('shipping_cost')?.touched &&
+                            purchaseForm.get('shipping_cost')?.errors?.['min']) {
                             <small class="errorMessage">
                                 Error
                             </small>
@@ -207,17 +201,17 @@
                         </div>
                     </div>
                     <div class="input">
-                        <label for="fechacompra">Gastos Envío</label>
-                        <input type="date" id="fechacompra" formControlName="fechacompra">
+                        <label for="purchase_date">Gastos Envío</label>
+                        <input type="date" id="purchase_date" formControlName="purchase_date">
                         <div class="errorMessageContainer">
-                            @if (loteForm.get('fechacompra')?.touched &&
-                            loteForm.get('fechacompra')?.errors?.['required']) {
+                            @if (purchaseForm.get('purchase_date')?.touched &&
+                            purchaseForm.get('purchase_date')?.errors?.['required']) {
                             <small class="errorMessage">
                                 Obligatorio
                             </small>
                             }
-                            @else if (loteForm.get('fechacompra')?.touched &&
-                            loteForm.get('fechacompra')?.errors?.['fechaFutura']) {
+                            @else if (purchaseForm.get('purchase_date')?.touched &&
+                            purchaseForm.get('purchase_date')?.errors?.['fechaFutura']) {
                             <small class="errorMessage">
                                 Error
                             </small>

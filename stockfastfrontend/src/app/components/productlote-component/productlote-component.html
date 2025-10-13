@@ -4,19 +4,19 @@
             <input type="checkbox" name="" id="">
         </div>
         <div class="dataname">
-            <span class="hideoverflowtext productname">{{ producto.nombre }}</span>
+            <span class="hideoverflowtext productname">{{ product.name }}</span>
         </div>
         <div class="dataname">
-            <span>{{ producto.cantidad }}</span>
+            <span>{{ product.quantity }}</span>
         </div>
         <div class="dataname">
-            <span class="categoria">{{ producto.categoria }}</span>
+            <span class="categoria">{{ categoria() }}</span>
         </div>
         <div class="dataname">
-            <span>{{ producto.precio }}€</span>
+            <span>{{ product.purchase_price.toFixed(2) }} €</span>
         </div>
         <div class="dataname">
-            <span>{{ producto.venta }}€</span>
+            <span>{{ product.estimated_sale_price.toFixed(2) }} €</span>
         </div>
         <div class="productlist-product-buttons">
             

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->decimal('shipping_cost', 8, 2);
-            $table->string('supplier_name');
-            $table->string('shipping_agency');
+            $table->string('supplier_name')->nullable();
+            $table->string('shipping_agency')->nullable();
             $table->date('purchase_date');
             $table->timestamps();
         });
