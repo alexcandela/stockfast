@@ -7,13 +7,15 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Auth;
 
 class PurchaseController extends Controller
 {
     public function store(PurchaseRequest $request) {
         $data = $request->validated();
         try {
-            $purchase = Purchase::createWithProducts($data);
+            $user = Auth::user();
+            $purchase = Purchase::createWithProducts($data, $user);
             return response()->json([
                 'message' => 'success',
             ], 200);

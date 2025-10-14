@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class Purchase extends Model
 {
@@ -31,11 +32,11 @@ class Purchase extends Model
     }
 
     // Si alguno de los inserts falla, se hace un rollback y no se inserta nada que se haya enviado anteriormente
-    public static function createWithProducts(array $data): Purchase
+    public static function createWithProducts(array $data, $user): Purchase
     {
-        return DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data, $user) {
 
-            $data['user_id'] = 1;
+            $data['user_id'] = $user->id;
 
             $purchase = self::create($data);
 

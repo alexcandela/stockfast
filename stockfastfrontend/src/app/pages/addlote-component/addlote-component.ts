@@ -110,9 +110,6 @@ export class AddloteComponent {
       products: this.products,
     };
 
-    console.log(newPurchase);
-    
-
     this.purchaseService.crearLote(newPurchase).subscribe({
       next: (res) => {
         console.log(res);

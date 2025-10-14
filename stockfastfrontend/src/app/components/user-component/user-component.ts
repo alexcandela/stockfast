@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Authservice } from '../../core/services/authservice';
 
 @Component({
   selector: 'app-user-component',
@@ -8,4 +9,13 @@ import { Component } from '@angular/core';
 })
 export class UserComponent {
 
+username: string | null = null;
+
+  constructor(private authService: Authservice) {
+    this.username = this.authService.getUsername();
+  }
+  
+  logout() {
+    this.authService.logout();
+  }
 }

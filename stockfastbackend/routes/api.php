@@ -15,6 +15,10 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::middleware('auth:api')->get('/me', [AuthController::class, 'me']);
 
-Route::post('/crear-lote', [PurchaseController::class, 'store']);
+Route::middleware('auth:api')->group(function () {
+    Route::post('/crear-lote', [PurchaseController::class, 'store']);
+    Route::get('/get-products', [ProductController::class, 'getProducts']);
+});
 
-Route::get('/get-products', [ProductController::class, 'getProducts']);
+
+

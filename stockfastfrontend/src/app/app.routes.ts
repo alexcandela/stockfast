@@ -6,15 +6,41 @@ import { SeoComponent } from './pages/seo-component/seo-component';
 import { EstadisticasComponent } from './pages/estadisticas-component/estadisticas-component';
 import { AjustesComponent } from './pages/ajustes-component/ajustes-component';
 import { AddloteComponent } from './pages/addlote-component/addlote-component';
+import { DashboardLayout } from './layouts/dashboard-layout/dashboard-layout';
+import { AuthLayout } from './layouts/auth-layout/auth-layout';
+import { LoginComponent } from './pages/login-component/login-component';
+import { RegisterComponent } from './pages/register-component/register-component';
+
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  { path: 'general', component: GeneralComponent },
-  { path: 'stock', component: StockComponent },
-  { path: 'addlote', component: AddloteComponent },
-  { path: 'ventas', component: VentasComponent },
-  { path: 'seo', component: SeoComponent },
-  { path: 'estadisticas', component: EstadisticasComponent },
-  { path: 'ajustes', component: AjustesComponent },
-  { path: '', redirectTo: '/general', pathMatch: 'full' },
-  { path: '**', redirectTo: '/general' }
+  // Layout para autenticación
+  {
+    path: '',
+    component: AuthLayout,
+    children: [
+      { path: 'login', component: LoginComponent },
+      { path: 'register', component: RegisterComponent },
+      { path: '', redirectTo: 'login', pathMatch: 'full' }
+    ]
+  },
+
+  // Layout del dashboard
+  {
+    path: '',
+    component: DashboardLayout,
+    canActivate: [authGuard],
+    children: [
+      { path: 'general', component: GeneralComponent },
+      { path: 'stock', component: StockComponent },
+      { path: 'addlote', component: AddloteComponent },
+      { path: 'ventas', component: VentasComponent },
+      { path: 'seo', component: SeoComponent },
+      { path: 'estadisticas', component: EstadisticasComponent },
+      { path: 'ajustes', component: AjustesComponent },
+    ]
+  },
+
+  // Fallback
+  { path: '**', redirectTo: 'login' }
 ];

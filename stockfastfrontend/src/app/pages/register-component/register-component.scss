@@ -1,0 +1,22 @@
+.register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    .registerform {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr auto;
+        gap: 5px;
+        .forminputs {
+            display: grid;
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .formbtn {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+    }
+}
