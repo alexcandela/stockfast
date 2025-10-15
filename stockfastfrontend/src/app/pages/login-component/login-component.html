@@ -1,5 +1,5 @@
 <div class="login">
-    <form class="loginform" [formGroup]="loginForm">
+    <form class="loginform" [formGroup]="loginForm" (ngSubmit)="submitData()">
         <div class="forminputs">
             <div class="input">
                 <label for="email">Correo</label>
@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="formbtn">
-            <button type="submit" class="authbtn" (click)="submitData()">Login</button>
+            <button type="submit" class="authbtn">Login</button>
         </div>
         <div>
             <a class="" routerLink="/register" routerLinkActive="active">Register</a>

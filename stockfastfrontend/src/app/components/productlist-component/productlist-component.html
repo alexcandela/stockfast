@@ -37,6 +37,54 @@
         </div>
     </div>
     <div class="productlist-form" [ngClass]="{ 'opened': show() }">
-        formulario
+        <form [formGroup]="saleForm" class="saleForm" (ngSubmit)="registrarVenta()">
+            <div class="forminputs">
+                <div class="input">
+                    <label for="sale_price">Precio de venta</label>
+                    <input type="number" id="sale_price" placeholder="0.00" formControlName="sale_price">
+                    <div class="errorMessageContainer">
+                        @if (saleForm.get('sale_price')?.touched &&
+                        saleForm.get('sale_price')?.errors?.['required']) {
+                        <small class="errorMessage">
+                            Error
+                        </small>
+                        }
+                    </div>
+                </div>
+                <div class="input">
+                    <label for="quantity">Cantidad</label>
+                    <input type="number" id="quantity" placeholder="1" formControlName="quantity">
+                    <div class="errorMessageContainer">
+                        @if (saleForm.get('quantity')?.touched &&
+                        saleForm.get('quantity')?.errors?.['required']) {
+                        <small class="errorMessage">
+                            Error
+                        </small>
+                        }
+                    </div>
+                </div>
+                <div class="input">
+                    <label for="sale_date">Fecha de venta</label>
+                    <input type="date" id="sale_date" formControlName="sale_date">
+                    <div class="errorMessageContainer">
+                        @if (saleForm.get('sale_date')?.touched &&
+                        saleForm.get('sale_date')?.errors?.['required']) {
+                        <small class="errorMessage">
+                            Error
+                        </small>
+                        }
+                        @else if (saleForm.get('purchase_date')?.touched &&
+                        saleForm.get('sale_date')?.errors?.['fechaFutura']) {
+                        <small class="errorMessage">
+                            Error
+                        </small>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="saleForm-buttonContainer">
+                <button type="submit" class="productFormBtn" >Registrar Venta</button>
+            </div>
+        </form>
     </div>
 </div>

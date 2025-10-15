@@ -42,13 +42,34 @@
   }
   &-form {
     max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: all 0.4s ease;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
   }
 }
 
 .opened {
   max-height: 500px;
   opacity: 1;
+}
+
+.saleForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  padding: 20px 100px;
+  max-width: 1000px;
+  margin: 0 auto; 
+  
+  .forminputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  &-buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

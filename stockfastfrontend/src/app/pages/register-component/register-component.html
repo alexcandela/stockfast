@@ -1,5 +1,5 @@
 <div class="register">
-    <form class="registerform" [formGroup]="registerForm">
+    <form class="registerform" [formGroup]="registerForm" (ngSubmit)="submitData()">
         <div class="forminputs">
             <div class="input">
                 <label for="name">Nombre</label>
@@ -75,7 +75,7 @@
             </div>
         </div>
         <div class="formbtn">
-            <button type="submit" class="authbtn" (click)="submitData()">Register</button>
+            <button type="submit" class="authbtn">Register</button>
         </div>
         <div>
             <a class="" routerLink="/login" routerLinkActive="active">Login</a>

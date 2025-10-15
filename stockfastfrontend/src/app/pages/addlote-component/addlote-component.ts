@@ -15,6 +15,8 @@ import { PurchaseService } from '../../core/services/purchase-service';
 
 import { ProductloteComponent } from '../../components/productlote-component/productlote-component';
 
+import { CustomValidators } from '../../core/validators/custom-validators';
+
 @Component({
   selector: 'app-addlote-component',
   imports: [ReactiveFormsModule, FormsModule, ProductloteComponent],
@@ -50,27 +52,11 @@ export class AddloteComponent {
       supplier_name: [''],
       shipping_agency: [''],
       shipping_cost: [null, [Validators.required, Validators.min(0)]],
-      purchase_date: ['', [Validators.required, this.fechaAnteriorValidator()]],
+      purchase_date: ['', [Validators.required, CustomValidators.fechaAnteriorValidator()]],
       products: this.fb.array([]),
     });
   }
-
-  // Validator para fecha de compra, verificar que la fecha es anterior al día actual
-  fechaAnteriorValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const valor = control.value;
-      if (!valor) return null;
-
-      const fechaIngresada = new Date(valor);
-      const hoy = new Date();
-
-      fechaIngresada.setHours(0, 0, 0, 0);
-      hoy.setHours(0, 0, 0, 0);
-
-      return fechaIngresada <= hoy ? null : { fechaFutura: true };
-    };
-  }
-
+  
   // Seleccionar la categoria del producto
   seleccionarCategoria(id: number) {
     this.productForm.get('category_id')?.setValue(id);
