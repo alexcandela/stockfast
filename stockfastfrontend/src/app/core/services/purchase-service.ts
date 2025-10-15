@@ -9,7 +9,7 @@ import { Authservice } from './authservice'; // tu AuthService
 })
 export class PurchaseService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api/crear-lote';
+  private apiUrl = 'http://127.0.0.1:8000/api';
 
   constructor(private http: HttpClient, private authService: Authservice) { }
 
@@ -19,6 +19,6 @@ export class PurchaseService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post(this.apiUrl, purchase, { headers });
+    return this.http.post(`${this.apiUrl}/crear-lote`, purchase, { headers });
   }
 }

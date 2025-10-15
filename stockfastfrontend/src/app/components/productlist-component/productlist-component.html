@@ -4,25 +4,25 @@
             <input type="checkbox" name="" id="">
         </div>
         <div class="dataname">
-            <span class="hideoverflowtext productname">Zapatillas Birkenstock Boston</span>
+            <span class="hideoverflowtext productname">{{ product.name }}</span>
         </div>
         <div class="dataname">
-            <span>10</span>
+            <span>{{ product.quantity }}</span>
         </div>
         <div class="dataname">
-            <span class="categoria">Calzado</span>
+            <span class="categoria">{{ product.category?.name }}</span>
         </div>
         <div class="dataname">
-            <span>17€</span>
+            <span>{{ product.purchase_price }}€</span>
         </div>
         <div class="dataname">
-            <span>80€</span>
+            <span>{{ product.estimated_sale_price }}€</span>
         </div>
         <div class="dataname">
-            <span>26/09/2025</span>
+            <span>{{ product.purchase?.purchase_date }}</span>
         </div>
         <div class="dataname">
-            <span>#456</span>
+            <span>#{{ product.purchase?.id}}</span>
         </div>
         <div class="productlist-product-buttons">
             <button class="productbutton" (click)="toggle()">

@@ -26,7 +26,7 @@
                 <img src="assets/icons/sort.svg" alt="sort-icon">
             </div>
             <div class="typetitle">
-                <span>F. Entrada</span>
+                <span>F. Compra</span>
                 <img src="assets/icons/sort.svg" alt="sort-icon">
             </div>
             <div class="typetitle">
@@ -36,8 +36,8 @@
         </div>
         <div class="stock-listcontainer-list">
             <div class="listscroll">
-                @for (item of [].constructor(20); track $index) {
-                <app-productlist-component />
+                @for (product of products; track $index) {
+                <app-productlist-component [product]="product"/>
                 }
                 
             </div>

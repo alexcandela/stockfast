@@ -48,7 +48,7 @@ export class RegisterComponent {
           }
         }
       },
-      error: (err) => console.error('Error al enviar lote:', err),
+      error: (err) => console.error('Error al hacer registro:', err),
     });
   }
 }

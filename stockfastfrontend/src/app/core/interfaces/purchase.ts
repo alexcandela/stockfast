@@ -1,5 +1,6 @@
 import { Product } from "./product";
 export interface Purchase {
+  id?: number;
   supplier_name?: string;
   shipping_agency?: string;
   shipping_cost: number;

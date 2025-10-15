@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -16,7 +16,7 @@ import { Authservice } from '../../core/services/authservice';
   templateUrl: './login-component.html',
   styleUrl: './login-component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
   constructor(private fb: FormBuilder, private authService: Authservice, private router: Router) {
@@ -31,6 +31,7 @@ export class LoginComponent {
       this.loginForm.markAllAsTouched();
       return;
     }
+    
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         if (res.success) {
@@ -43,7 +44,13 @@ export class LoginComponent {
           }
         }
       },
-      error: (err) => console.error('Error al enviar lote:', err),
+      error: (err) => console.error('Error al hacer login:', err),
     });
+  }
+
+  ngOnInit(): void {
+    if (this.authService.isLoggedIn()) {
+      this.router.navigate(['/general']);
+    }
   }
 }
