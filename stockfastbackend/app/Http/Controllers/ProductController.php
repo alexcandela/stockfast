@@ -15,19 +15,28 @@ class ProductController extends Controller
     {
         try {
             $user = Auth::user();
+
             $products = Product::with('purchase', 'category')
                 ->whereHas('purchase', function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 })
+                ->where('quantity', '>=', 1)
+                ->orderBy('updated_at', 'desc')
                 ->get();
 
             return response()->json([
                 'success' => true,
                 'products' => $products
-            ]);
+            ], 200);
         } catch (\Throwable $th) {
-            //throw $th;
-            Log::error('Error en getProducts@ProductController', ['exception' => $th->getMessage()]);
+            Log::error('Error en getProducts@ProductController', [
+                'exception' => $th->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los productos.'
+            ], 500);
         }
     }
 }

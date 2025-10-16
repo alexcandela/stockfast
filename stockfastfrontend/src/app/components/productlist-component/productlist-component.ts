@@ -9,9 +9,9 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-import { Authservice } from '../../core/services/authservice';
 
 import { CustomValidators } from '../../core/validators/custom-validators';
+import { SaleService } from '../../core/services/sale-service';
 
 @Component({
   selector: 'app-productlist-component',
@@ -22,11 +22,12 @@ import { CustomValidators } from '../../core/validators/custom-validators';
 export class ProductlistComponent {
   @Input() product!: Product;
   @Output() eliminar = new EventEmitter<any>();
+  @Output() deleteProductFromArray = new EventEmitter<number>();
 
   show: WritableSignal<boolean> = signal(false);
 
   saleForm: FormGroup;
-  constructor(private fb: FormBuilder, private authService: Authservice) {
+  constructor(private fb: FormBuilder, private saleService: SaleService) {
     this.saleForm = this.fb.group({
       sale_price: ['', Validators.required],
       quantity: ['', Validators.required],
@@ -43,7 +44,20 @@ export class ProductlistComponent {
       this.saleForm.markAllAsTouched();
       return;
     }
-    console.log(this.saleForm.value);
+
+    this.saleService.makeSale(this.saleForm.value).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.product.quantity -= this.saleForm.get('quantity')?.value
+          if (this.product.quantity <= 0) {
+            this.deleteProductFromArray.emit(this.product.id);
+          }
+          this.saleForm.reset();
+          this.show.set(false);
+        }
+      },
+      error: (err) => console.error('Error al crear venta:', err),
+    });
   }
 
   toggle() {

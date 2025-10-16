@@ -37,7 +37,7 @@
         <div class="stock-listcontainer-list">
             <div class="listscroll">
                 @for (product of products; track $index) {
-                <app-productlist-component [product]="product"/>
+                <app-productlist-component [product]="product" (deleteProductFromArray)="removeProduct($event)"/>
                 }
                 
             </div>

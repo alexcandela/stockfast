@@ -15,12 +15,16 @@ export class StockComponent implements OnInit {
 
   constructor(private productService: ProductService, private cd: ChangeDetectorRef) {}
 
+  removeProduct(productId: number) {
+  this.products = this.products.filter(p => p.id !== productId);
+}
+
   ngOnInit() {
     this.productService.getProducts().subscribe({
       next: (response) => {
         if (response.success) {
           this.products = response.products;
-          this.cd.detectChanges(); // fuerza actualización de la vista
+          this.cd.detectChanges();
         }
       },
       error: (err) => {

@@ -6,6 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sale extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'product_id',
+        'sale_price',
+        'sale_date',
+        'quantity',
+    ];
+
+    protected $casts = [
+        'sale_price' => 'decimal:2',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -14,4 +26,6 @@ class Sale extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
 }
