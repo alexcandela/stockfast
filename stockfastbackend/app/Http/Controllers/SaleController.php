@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SaleRequest;
 use App\Models\Product;
 use App\Models\Sale;
 use Illuminate\Http\Request;
@@ -34,7 +35,7 @@ class SaleController extends Controller
         $product->save();
     }
 
-    public function store(Request $request)
+    public function store(SaleRequest $request)
     {
         try {
             $user = Auth::user();
