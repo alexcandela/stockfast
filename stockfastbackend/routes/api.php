@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
@@ -20,6 +21,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/crear-lote', [PurchaseController::class, 'store']);
     Route::get('/get-products', [ProductController::class, 'getProducts']);
     Route::post('/make-sale', [SaleController::class, 'store']);
+
+    Route::post('/getbasicdata', [DataController::class, 'getBasicData']);
+
+    Route::middleware('plan:Pro')->group(function () {
+        
+    });
 });
 
 

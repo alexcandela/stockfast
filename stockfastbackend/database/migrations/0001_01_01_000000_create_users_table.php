@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('plan_id')->default(1)->constrained('plans');
+            $table->timestamp('plan_expires_at')->nullable();
             $table->string('username')->unique();
             $table->string('name');
             $table->string('last_name');

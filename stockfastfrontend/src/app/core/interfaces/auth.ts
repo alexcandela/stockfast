@@ -19,6 +19,7 @@ export interface AuthResponse {
 
 export interface JwtPayloadInterface {
   username?: string;
+  plan?: string;
   exp?: number;
   iat?: number;
 }

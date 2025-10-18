@@ -22,7 +22,8 @@ class AuthController extends Controller
         $user = User::create($data);
 
         $token = JWTAuth::claims([
-            'username' => $user->username
+            'username' => $user->username,
+            'plan' => $user->plan->name
         ])->fromUser($user);
 
         return response()->json([
@@ -42,7 +43,8 @@ class AuthController extends Controller
         $user = Auth::user();
 
         $token = JWTAuth::claims([
-            'username' => $user->username
+            'username' => $user->username,
+            'plan' => $user->plan->name
         ])->fromUser($user);
 
         return response()->json([

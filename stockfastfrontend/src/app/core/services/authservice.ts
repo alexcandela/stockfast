@@ -28,6 +28,7 @@ export class Authservice {
     localStorage.setItem('token', token);
   }
 
+  // Obtener token
   getToken(): string | null {
     if (typeof window === 'undefined') {
       return null;
@@ -35,6 +36,7 @@ export class Authservice {
     return localStorage.getItem('token');
   }
 
+  // Validar si el token es valido
   isTokenValid(token: string): boolean {
     try {
       const decodedToken = jwtDecode<JwtPayload>(token);
@@ -49,6 +51,7 @@ export class Authservice {
     }
   }
 
+  // Obtener el nombre de usuario
   getUsername(): string | null {
     const token = this.getToken();
     if (!token) return null;
@@ -62,11 +65,27 @@ export class Authservice {
     }
   }
 
+  // Obtener el plan de usuario
+  getUserPlan(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      const decoded = jwtDecode<JwtPayloadInterface>(token);
+      return decoded.plan || null;
+    } catch (error) {
+      console.error('Token inválido', error);
+      return null;
+    }
+  }
+
+  // Comporbar si el usuario esta logeado
   isLoggedIn(): boolean {
     const token = this.getToken();
     return token ? this.isTokenValid(token) : false;
   }
 
+  // Logout
   logout() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
