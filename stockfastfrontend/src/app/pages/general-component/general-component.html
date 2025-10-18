@@ -1,6 +1,6 @@
 <div class="generalpage">
     <div class="generalpage-item1 card">
-        <app-sales-chart-component />
+        <app-sales-chart-component [data]="data" [filter]="filter()" />
     </div>
     <div class="generalpage-item2 card">
         <div class="pro-container">
@@ -11,6 +11,6 @@
         <app-tips-component />
     </div>
     <div class="generalpage-item4">
-        <app-ingresos-component />
+        <app-ingresos-component (filterChange)="onFilterSelected($event)"/>
     </div>
 </div>

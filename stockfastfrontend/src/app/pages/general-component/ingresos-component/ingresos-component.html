@@ -5,13 +5,54 @@
                 <div class="iconcontainer" class="icon"><img src="assets/icons/ingresos.svg" alt="dolar-icon"></div>
                 <h3>Ingresos</h3>
             </div>
-            <div class="titletoggle-toggle">
-                <select class="select" name="" id="">
-                    <option value="mesactual">Mes Actual</option>
-                    <option value="mesanterior">Mes Anterior</option>
-                    <option value="anual">Total</option>
-                </select>
+            <div class="filtercontainer">
+                <!-- Selector Mes -->
+                <div class="dropdown">
+                    <div class="selected" (click)="toggleMonthDropdown()">
+                        {{ selectedMonthLabel }}
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z" />
+                        </svg>
+                    </div>
+                    @if (showMonthDropdown) {
+                    <ul class="dropdown-list">
+                        @for (month of months; track $index) {
+                        <li (click)="selectMonth(month)" [class.locked]="month.locked">
+                            {{ month.label }}
+                            @if (month.locked) {
+                            <span class="pro-icon">PRO</span>
+                            }
+
+                        </li>
+                        }
+                        <li (click)="selectTotal()" class="total-option">Total</li>
+                    </ul>
+                    }
+                </div>
+
+                <!-- Selector Año -->
+                <div class="dropdown">
+                    <div class="selected" (click)="toggleYearDropdown()">
+                        {{ selectedYearLabel }}
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z" />
+                        </svg>
+                    </div>
+                    @if (showYearDropdown) {
+                    <ul class="dropdown-list">
+                        @for (year of years; track $index) {
+                        <li (click)="selectYear(year)">
+                            {{ year }}
+                        </li>
+                        }
+                        <li (click)="selectTotal()" class="total-option">Total</li>
+                    </ul>
+                    }
+                </div>
             </div>
+
+
+
         </div>
         <div class="netos">
             <p class="netos-dinero">36731,56 €</p>

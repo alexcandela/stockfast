@@ -117,7 +117,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #7B91FF;
+  background-color: #7b91ff;
   width: 100%;
   transition: all ease 0.4s;
   cursor: pointer;
@@ -142,7 +142,7 @@
 
 .productFormBtn {
   width: 100%;
-  background-color: #7B91FF;
+  background-color: #7b91ff;
   color: #ffffff;
   padding: 5px;
   border-radius: 5px;
@@ -152,5 +152,80 @@
   transition: all ease 0.3s;
   &:hover {
     background-color: #667ffc;
+  }
+}
+
+// Filter container
+.filtercontainer {
+  display: flex;
+  gap: 1rem;
+  position: relative;
+}
+
+.dropdown {
+  position: relative;
+  width: 150px;
+  cursor: pointer;
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    fill: #666;
+    margin-left: 4px;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .selected {
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 1px 5px;
+    border-radius: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      padding: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.locked {
+        color: #aaa;
+        cursor: not-allowed;
+      }
+
+      &:hover:not(.locked) {
+        background: #f0f0f0;
+      }
+
+      .pro-icon {
+        background: gold;
+        padding: 0 0.25rem;
+        border-radius: 0.25rem;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+      }
+
+      &.total-option {
+        font-weight: bold;
+        color: #007bff;
+      }
+    }
   }
 }

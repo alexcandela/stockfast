@@ -22,7 +22,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/get-products', [ProductController::class, 'getProducts']);
     Route::post('/make-sale', [SaleController::class, 'store']);
 
-    Route::post('/getbasicdata', [DataController::class, 'getBasicData']);
+    Route::get('/getgeneraldata', [DataController::class, 'getGeneralData']);
 
     Route::middleware('plan:Pro')->group(function () {
         
