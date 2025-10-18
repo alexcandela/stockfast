@@ -55,9 +55,9 @@
 
         </div>
         <div class="netos">
-            <p class="netos-dinero">36731,56 €</p>
+            <p class="netos-dinero">{{ ingresos?.netos }} €</p>
             <p class="netos-info"><span class="greencontainer">
-                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon">12%</span>vs Mes Anterior
+                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon">{{ ingresos?.variacion_mes }}%</span>vs Mes Anterior
             </p>
         </div>
         <div class="bruto">
@@ -66,14 +66,14 @@
                     <img src="assets/icons/bank.svg" alt="bank-icon" class="icon">
                     <h3>Ingresos Brutos</h3>
                 </div>
-                <p>11654,65 €</p>
+                <p>{{ ingresos?.brutos }} €</p>
             </div>
             <div class="bruto-margen">
                 <div class="minititle">
                     <img src="assets/icons/percent.svg" alt="percent-icon" class="icon">
                     <h3>Margen Bruto</h3>
                 </div>
-                <p>37,3%</p>
+                <p>{{ ingresos?.margen_bruto }}%</p>
             </div>
         </div>
     </div>

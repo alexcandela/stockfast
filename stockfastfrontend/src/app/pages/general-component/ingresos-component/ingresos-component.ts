@@ -1,7 +1,8 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/services/authservice';
+import { Ingresos } from '../../../core/interfaces/generaldata';
 
 @Component({
   selector: 'app-ingresos-component',
@@ -10,8 +11,9 @@ import { Authservice } from '../../../core/services/authservice';
   templateUrl: './ingresos-component.html',
   styleUrls: ['./ingresos-component.scss'],
 })
-export class IngresosComponent {
+export class IngresosComponent implements OnInit {
   @Output() filterChange = new EventEmitter<string>();
+  @Input() ingresos: Ingresos | null = null;
 
   userplan: string | null = null;
 
@@ -26,7 +28,7 @@ export class IngresosComponent {
   showMonthDropdown = false;
   showYearDropdown = false;
 
-  constructor(private authService: Authservice) {
+  constructor(private authService: Authservice) {        
     this.userplan = this.authService.getUserPlan();
     const now = new Date();
     const currentYear = now.getFullYear();
@@ -41,9 +43,7 @@ export class IngresosComponent {
 
       // Si el usuario tiene plan Free, solo puede ver el mes actual y el anterior
       const locked =
-        this.userplan === 'Free'
-          ? !(value === currentMonth || value === previousMonth)
-          : false;
+        this.userplan === 'Free' ? !(value === currentMonth || value === previousMonth) : false;
 
       this.months.push({ value, label, locked });
     }
@@ -99,5 +99,11 @@ export class IngresosComponent {
 
   private emitFilter() {
     this.filterChange.emit(`${this.selectedYear}-${this.selectedMonth}`);
+  }
+  
+
+  ngOnInit() {
+    console.log(this.ingresos?.margen_bruto);
+    
   }
 }

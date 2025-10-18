@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Plan;
 use App\Models\User;
+use Carbon\Carbon;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -59,9 +60,9 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // Datos ficticios de lotes, productos y ventas
         $faker = Faker::create();
 
+        // Crear compras y productos
         for ($i = 1; $i <= 10; $i++) {
             $purchaseId = DB::table('purchases')->insertGetId([
                 'user_id' => 1,
@@ -73,7 +74,7 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // Crear productos asociados a esta compra
+            // Crear productos asociados a la compra
             for ($j = 1; $j <= rand(1, 5); $j++) {
                 DB::table('products')->insert([
                     'purchase_id' => $purchaseId,
@@ -91,20 +92,26 @@ class DatabaseSeeder extends Seeder
 
         $products = DB::table('products')->get();
 
-        foreach ($products as $product) {
-            // Generar ventas aleatorias por producto
-            for ($i = 1; $i <= rand(0, $product->quantity); $i++) {
+        // Generar ventas distribuidas durante el año
+        $startDate = Carbon::now()->startOfYear();
+        $endDate = Carbon::now()->endOfYear();
+
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $numSalesToday = rand(0, 10); // entre 0 y 10 ventas por día
+
+            for ($i = 0; $i < $numSalesToday; $i++) {
+                $product = $products->random();
+
                 DB::table('sales')->insert([
                     'user_id' => 1,
                     'product_id' => $product->id,
                     'sale_price' => $product->estimated_sale_price,
-                    'sale_date' => $faker->dateTimeThisYear,
+                    'sale_date' => $date->copy()->setTime(rand(8, 22), rand(0, 59), rand(0, 59)),
                     'quantity' => 1,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             }
         }
-
     }
 }
