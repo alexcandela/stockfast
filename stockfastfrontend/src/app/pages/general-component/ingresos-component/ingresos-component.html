@@ -2,7 +2,9 @@
     <div class="ingresoscomponent-beneficio card">
         <div class="titletoggle">
             <div class="titletoggle-title minititle">
-                <div class="iconcontainer" class="icon"><img src="assets/icons/ingresos.svg" alt="dolar-icon"></div>
+                <div class="iconcontainer" class="icon">
+                    <img src="assets/icons/ingresos.svg" alt="dolar-icon" />
+                </div>
                 <h3>Ingresos</h3>
             </div>
             <div class="filtercontainer">
@@ -22,7 +24,6 @@
                             @if (month.locked) {
                             <span class="pro-icon">PRO</span>
                             }
-
                         </li>
                         }
                         <li (click)="selectTotal()" class="total-option">Total</li>
@@ -50,54 +51,66 @@
                     }
                 </div>
             </div>
-
-
-
         </div>
         <div class="netos">
             <p class="netos-dinero">{{ ingresos?.netos }} €</p>
-            <p class="netos-info"><span class="greencontainer">
-                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon">{{ ingresos?.variacion_mes }}%</span>vs Mes Anterior
+            <p class="netos-info">
+                @if (ingresos?.variacion_mes !== null && ingresos?.variacion_mes !== undefined) {
+                <span [ngClass]="{
+            greencontainer: (ingresos?.variacion_mes ?? 0) >= 0,
+            redcontainer: (ingresos?.variacion_mes ?? 0) < 0
+          }">
+                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon" />{{
+                    Math.abs(ingresos?.variacion_mes ?? 0)
+                    }}%</span>
+                } vs Mes Anterior
             </p>
         </div>
         <div class="bruto">
             <div class="bruto-ingresos">
                 <div class="minititle">
-                    <img src="assets/icons/bank.svg" alt="bank-icon" class="icon">
+                    <img src="assets/icons/bank.svg" alt="bank-icon" class="icon" />
                     <h3>Ingresos Brutos</h3>
                 </div>
                 <p>{{ ingresos?.brutos }} €</p>
             </div>
             <div class="bruto-margen">
                 <div class="minititle">
-                    <img src="assets/icons/percent.svg" alt="percent-icon" class="icon">
+                    <img src="assets/icons/percent.svg" alt="percent-icon" class="icon" />
                     <h3>Margen Bruto</h3>
                 </div>
-                <p>{{ ingresos?.margen_bruto }}%</p>
+                <p [ngClass]="(ingresos?.margen_bruto ?? 0) >= 0 ? 'green' : 'red'">{{ ingresos?.margen_bruto }}%</p>
             </div>
         </div>
     </div>
     <div class="ingresoscomponent-facturacion card">
-        <img src="assets/icons/salesprpl.svg" alt="sales-icon" class="icon bigicon">
+        <img src="assets/icons/salesprpl.svg" alt="sales-icon" class="icon bigicon" />
         <div class="ingresoscomponent-facturacion-data">
             <p class="datatitle">Ventas este mes</p>
-            <span class="salesnum">128</span>
+            <span class="salesnum">{{ numVentas?.quantity }}</span>
             <p class="percentdata">
-                <span class="greencontainer">
-                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon">24%</span>vs Mes Anterior
+                @if (numVentas?.variacion_mes !== null && numVentas?.variacion_mes !== undefined) {
+                <span [ngClass]="{
+            greencontainer: (numVentas?.variacion_mes ?? 0) >= 0,
+            redcontainer: (numVentas?.variacion_mes ?? 0) < 0
+          }">
+                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon" />{{ Math.abs(numVentas?.variacion_mes ?? 0) }}%
+                </span>}vs Mes Anterior
             </p>
         </div>
     </div>
     <div class="ingresoscomponent-topproduct card">
         <div class="ingresoscomponent-topproduct-title minititle">
-            <div class="iconcontainer" class="icon"><img src="assets/icons/product.svg" alt="product-icon"></div>
+            <div class="iconcontainer" class="icon">
+                <img src="assets/icons/product.svg" alt="product-icon" />
+            </div>
             <h3>Producto más vendido</h3>
         </div>
         <div class="ingresoscomponent-topproduct-info">
-            <p>Birkenstock Boston</p>
+            <p>{{ numVentas?.product?.name }}</p>
             <div class="ventascont">
-                <img src="assets/icons/tag.svg" alt="tag-icon">
-                <span>39 ventas</span>
+                <img src="assets/icons/tag.svg" alt="tag-icon" />
+                <span>{{ numVentas?.product?.quantity }} ventas</span>
             </div>
         </div>
     </div>

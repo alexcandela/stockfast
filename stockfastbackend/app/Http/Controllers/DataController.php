@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
 use Carbon\Carbon;
@@ -33,7 +34,7 @@ class DataController extends Controller
         $ingresos['netos'] = round($netos, 2);
         $ingresos['margen_bruto'] = round($margenBruto, 2);
 
-        // Calcular % variación respecto al mes anterior
+        // Variación respecto al mes anterior
         if ($salesPrevMonth) {
             $prevNetos = 0;
             foreach ($salesPrevMonth as $sale) {
@@ -43,34 +44,83 @@ class DataController extends Controller
             }
 
             $ingresos['variacion_mes'] = $prevNetos > 0
-                ? round((($netos - $prevNetos) / $prevNetos) * 100, 2)
-                : null; // si el mes anterior es 0
+                ? round((($netos - (float)$prevNetos) / (float)$prevNetos) * 100, 2)
+                : 0;
         } else {
-            $ingresos['variacion_mes'] = null;
+            $ingresos['variacion_mes'] = 0;
         }
+
         return $ingresos;
     }
 
+    public function calcularNumVentas($sales, $salesPrevMonth = null)
+    {
+        $salesNum = [];
 
+        $numActual = 0;
+        $productsCount = [];
 
+        foreach ($sales as $sale) {
+            $quantity = $sale->quantity ?? 1;
+            $numActual += $quantity;
+
+            $productName = optional($sale->product)->name ?? 'Desconocido';
+            if (!isset($productsCount[$productName])) {
+                $productsCount[$productName] = 0;
+            }
+            $productsCount[$productName] += $quantity;
+        }
+
+        // Producto más vendido
+        $maxProductName = null;
+        $maxProductQty = 0;
+        foreach ($productsCount as $name => $qty) {
+            if ($qty > $maxProductQty) {
+                $maxProductQty = $qty;
+                $maxProductName = $name;
+            }
+        }
+
+        $salesNum['quantity'] = $numActual ?? 0;
+        $salesNum['product'] = [
+            'name' => $maxProductName ?? 'Ninguno',
+            'quantity' => $maxProductQty ?? 0
+        ];
+
+        // Variación respecto al mes anterior
+        if ($salesPrevMonth) {
+            $numPrev = 0;
+            foreach ($salesPrevMonth as $sale) {
+                $numPrev += $sale->quantity ?? 1;
+            }
+
+            $salesNum['variacion_mes'] = $numPrev > 0
+                ? round((($numActual - (float)$numPrev) / (float)$numPrev) * 100, 2)
+                : 0;
+        } else {
+            $salesNum['variacion_mes'] = 0;
+        }
+
+        return $salesNum;
+    }
 
     public function getGeneralData(Request $request)
     {
         $user = Auth::user();
-        $month = $request->query('month'); // formato YYYY-MM, null o 'total'
+        $month = $request->query('month');
         $plan = $user->plan->name ?? 'Free';
 
         try {
             $query = Sale::with(['product.category'])
                 ->where('user_id', $user->id);
 
-            $salesPrevMonth = null; // inicializamos
+            $salesPrevMonth = null;
 
             if ($month && $month !== 'total') {
                 $start = Carbon::parse($month . '-01')->startOfMonth();
                 $end = Carbon::parse($month . '-01')->endOfMonth();
 
-                // Si el usuario es Free, solo puede ver mes actual o anterior
+                // Restricción plan Free
                 if ($plan === 'Free') {
                     $now = Carbon::now();
                     $currentMonth = $now->format('Y-m');
@@ -86,7 +136,7 @@ class DataController extends Controller
 
                 $query->whereBetween('sale_date', [$start, $end]);
 
-                // Ventas del mes anterior para calcular variación
+                // Ventas del mes anterior
                 $startPrev = $start->copy()->subMonth()->startOfMonth();
                 $endPrev = $start->copy()->subMonth()->endOfMonth();
 
@@ -96,13 +146,22 @@ class DataController extends Controller
                     ->get();
             }
 
+            // Si month es total, $salesPrevMonth se queda null
             $sales = $query->get();
+
             $ingresos = $this->calcularIngresos($sales, $salesPrevMonth);
+            $quantitySales = $this->calcularNumVentas($sales, $salesPrevMonth);
+
+            $stockTotal = Product::join('purchases', 'products.purchase_id', '=', 'purchases.id')
+                ->where('purchases.user_id', $user->id)
+                ->sum('products.quantity') ?? 0;
 
             return response()->json([
                 'success' => true,
                 'data' => $sales,
-                'ingresos' => $ingresos
+                'ingresos' => $ingresos,
+                'numeroVentas' => $quantitySales,
+                'stockTotal' => $stockTotal
             ], 200);
         } catch (\Throwable $th) {
             Log::error('Error en getGeneralData@DataController', [

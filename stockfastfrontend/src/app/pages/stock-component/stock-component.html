@@ -37,9 +37,13 @@
         <div class="stock-listcontainer-list">
             <div class="listscroll">
                 @for (product of products; track $index) {
-                <app-productlist-component [product]="product" (deleteProductFromArray)="removeProduct($event)"/>
+                <app-productlist-component [product]="product" (deleteProductFromArray)="removeProduct($event)" />
+                } @empty {
+                <div class="emptylist">
+                    <img src="assets/icons/info.svg" alt="info-icon">
+                    <p>La lista esta vacía</p>
+                </div>
                 }
-                
             </div>
         </div>
     </div>

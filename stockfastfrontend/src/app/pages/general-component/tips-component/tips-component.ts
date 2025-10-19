@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { ChartComponent } from 'ng-apexcharts';
 
 import {
@@ -25,6 +25,7 @@ export type ChartOptions = {
   styleUrl: './tips-component.scss',
 })
 export class TipsComponent {
+  @Input() stockTotal: number | null = null;
   @ViewChild('chart') chart!: ChartComponent;
   public chartOptions: ChartOptions;
 

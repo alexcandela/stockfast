@@ -12,6 +12,7 @@ import { TipsComponent } from './tips-component/tips-component';
 import { Authservice } from '../../core/services/authservice';
 import { GeneralDataService } from '../../core/services/general-data-service';
 import { Ingresos } from '../../core/interfaces/generaldata';
+import { NumVentas } from '../../core/interfaces/num-ventas';
 
 @Component({
   selector: 'app-general-component',
@@ -24,6 +25,8 @@ export class GeneralComponent implements OnInit {
   userplan: string | null = null;
   data: any[] = [];
   ingresos: Ingresos | null = null;
+  numVentas: NumVentas | null = null;
+  stockTotal: number | null = null;
   filter: WritableSignal<string> = signal(this.getCurrentMonth());
 
   constructor(
@@ -53,7 +56,11 @@ export class GeneralComponent implements OnInit {
     this.generalDataService.getGeneralData(filter).subscribe({
       next: (res) => {
         this.data = res.data;
-        this.ingresos = res.ingresos;                
+        this.ingresos = res.ingresos;  
+        this.numVentas = res.numeroVentas;  
+        this.stockTotal = res.stockTotal;  
+        console.log(this.stockTotal);
+                 
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al obtener datos:', err),

@@ -33,6 +33,22 @@ body {
     width: 1.6vh;
   }
 }
+.redcontainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1px 5px;
+  background-color: #ffcaca;
+  border: solid 1px #9b0000;
+  border-radius: 5px;
+  color: #9b0000;
+  letter-spacing: -0.5px;
+  img {
+    width: 1.6vh;
+    transform: rotate(180deg);
+    filter: invert(18%) sepia(100%) saturate(3000%) hue-rotate(350deg) brightness(90%);
+  }
+}
 
 .minititle {
   display: flex;

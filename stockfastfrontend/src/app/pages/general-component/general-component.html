@@ -8,9 +8,9 @@
         </div>
     </div>
     <div class="generalpage-item3">
-        <app-tips-component />
+        <app-tips-component  [stockTotal]="stockTotal"/>
     </div>
     <div class="generalpage-item4">
-        <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos"/>
+        <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos" [numVentas]="numVentas"/>
     </div>
 </div>

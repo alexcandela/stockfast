@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/services/authservice';
 import { Ingresos } from '../../../core/interfaces/generaldata';
+import { NumVentas } from '../../../core/interfaces/num-ventas';
 
 @Component({
   selector: 'app-ingresos-component',
@@ -14,6 +15,9 @@ import { Ingresos } from '../../../core/interfaces/generaldata';
 export class IngresosComponent implements OnInit {
   @Output() filterChange = new EventEmitter<string>();
   @Input() ingresos: Ingresos | null = null;
+  @Input() numVentas: NumVentas | null = null;
+
+  Math = Math;
 
   userplan: string | null = null;
 
