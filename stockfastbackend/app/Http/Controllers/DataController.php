@@ -12,24 +12,40 @@ use Illuminate\Support\Facades\Log;
 class DataController extends Controller
 {
     // ==================== CÁLCULO DE COSTOS ====================
-    
-    private function obtenerCostoRealProducto($product)
+
+    private function obtenerCostoRealProducto($product, $saleQuantity = null)
     {
         if (!$product || !$product->purchase) {
+            Log::warning('Product sin purchase', ['product_id' => $product->id ?? 'null']);
             return $product->purchase_price ?? 0;
         }
 
         $purchase = $product->purchase;
-        $totalQty = $purchase->products->sum('quantity');
-        $shippingShare = $totalQty > 0 
-            ? $purchase->shipping_cost / $totalQty 
+
+        // Obtener TODOS los productos de esta compra
+        $allProductsInPurchase = Product::where('purchase_id', $purchase->id)->get();
+
+        // Calcular la cantidad total original del LOTE completo
+        // (ventas + stock actual de cada producto)
+        $totalQty = 0;
+        foreach ($allProductsInPurchase as $p) {
+            $ventasProducto = Sale::where('product_id', $p->id)->sum('quantity');
+            $cantidadOriginal = $ventasProducto + $p->quantity;
+            $totalQty += $cantidadOriginal;
+        }
+
+        // Dividir envío en partes iguales entre todas las unidades del lote
+        $shippingShare = $totalQty > 0
+            ? $purchase->shipping_cost / $totalQty
             : 0;
 
-        return $product->purchase_price + $shippingShare;
+        $costoReal = $product->purchase_price + $shippingShare;
+
+        return $costoReal;
     }
 
     // ==================== CÁLCULO DE INGRESOS ====================
-    
+
     private function calcularIngresosBrutos($sales)
     {
         return $sales->sum(function ($sale) {
@@ -39,8 +55,25 @@ class DataController extends Controller
 
     private function calcularCostosTotales($sales)
     {
+        Log::info('Iniciando calcularCostosTotales', ['num_sales' => $sales->count()]);
+
         return $sales->sum(function ($sale) {
-            $productCost = $this->obtenerCostoRealProducto($sale->product);
+            Log::info('Procesando sale', [
+                'sale_id' => $sale->id,
+                'sale_quantity' => $sale->quantity ?? 1,
+                'has_product' => $sale->product ? 'SI' : 'NO'
+            ]);
+
+            // Pasar la cantidad de la venta para el cálculo correcto
+            $productCost = $this->obtenerCostoRealProducto($sale->product, $sale->quantity ?? 1);
+
+            Log::info('Costo calculado para sale', [
+                'sale_id' => $sale->id,
+                'product_cost' => $productCost,
+                'quantity' => $sale->quantity ?? 1,
+                'total' => $productCost * ($sale->quantity ?? 1)
+            ]);
+
             return $productCost * ($sale->quantity ?? 1);
         });
     }
@@ -60,13 +93,27 @@ class DataController extends Controller
 
     public function calcularIngresos($sales, $salesPrevMonth = null)
     {
+        Log::info('=== INICIO calcularIngresos ===', ['num_sales' => $sales->count()]);
+
         $brutos = $this->calcularIngresosBrutos($sales);
+        Log::info('Brutos calculados', ['brutos' => $brutos]);
+
         $costes = $this->calcularCostosTotales($sales);
+        Log::info('Costes calculados', ['costes' => $costes]);
+
         $netos = $brutos - $costes;
         $margenBruto = $brutos > 0 ? ($netos / $brutos) * 100 : 0;
 
+        Log::info('Cálculo Ingresos FINAL', [
+            'brutos' => $brutos,
+            'costes' => $costes,
+            'netos' => $netos,
+            'margen_bruto' => $margenBruto
+        ]);
+
         $ingresos = [
             'brutos' => round($brutos, 2),
+            'costes' => round($costes, 2),
             'netos' => round($netos, 2),
             'margen_bruto' => round($margenBruto, 2),
         ];
@@ -74,18 +121,20 @@ class DataController extends Controller
         if ($salesPrevMonth) {
             $prevNetos = $this->calcularNetosVentas($salesPrevMonth);
             $ingresos['variacion_mes'] = round(
-                $this->calcularVariacionPorcentual($netos, $prevNetos), 
+                $this->calcularVariacionPorcentual($netos, $prevNetos),
                 2
             );
         } else {
             $ingresos['variacion_mes'] = 0;
         }
 
+        Log::info('=== FIN calcularIngresos ===', $ingresos);
+
         return $ingresos;
     }
 
     // ==================== CÁLCULO DE VENTAS ====================
-    
+
     private function contarVentasTotales($sales)
     {
         return $sales->sum(fn($sale) => $sale->quantity ?? 1);
@@ -119,7 +168,7 @@ class DataController extends Controller
         if ($salesPrevMonth) {
             $numPrev = $this->contarVentasTotales($salesPrevMonth);
             $salesNum['variacion_mes'] = round(
-                $this->calcularVariacionPorcentual($numActual, $numPrev), 
+                $this->calcularVariacionPorcentual($numActual, $numPrev),
                 2
             );
         } else {
@@ -130,7 +179,7 @@ class DataController extends Controller
     }
 
     // ==================== VALIDACIÓN DE ACCESO ====================
-    
+
     private function validarAccesoPlanFree($month, $plan)
     {
         if ($plan !== 'Free' || !$month || $month === 'total') {
@@ -145,10 +194,12 @@ class DataController extends Controller
     }
 
     // ==================== OBTENCIÓN DE DATOS ====================
-    
+
     private function obtenerVentasPorMes($userId, $month)
     {
-        $query = Sale::with(['product.category'])->where('user_id', $userId);
+        $query = Sale::with(['product.purchase' => function ($query) {
+            $query->with('products');
+        }])->where('user_id', $userId);
 
         if ($month && $month !== 'total') {
             $start = Carbon::parse($month . '-01')->startOfMonth();
@@ -169,14 +220,16 @@ class DataController extends Controller
         $startPrev = $start->copy()->subMonth()->startOfMonth();
         $endPrev = $start->copy()->subMonth()->endOfMonth();
 
-        return Sale::with(['product.category'])
+        return Sale::with(['product.purchase' => function ($query) {
+            $query->with('products');
+        }])
             ->where('user_id', $userId)
             ->whereBetween('sale_date', [$startPrev, $endPrev])
             ->get();
     }
 
     // ==================== ENDPOINT PRINCIPAL ====================
-    
+
     public function getGeneralData(Request $request)
     {
         $user = Auth::user();
@@ -211,7 +264,6 @@ class DataController extends Controller
                 'numeroVentas' => $quantitySales,
                 'stockTotal' => $stockTotal
             ], 200);
-
         } catch (\Throwable $th) {
             Log::error('Error en getGeneralData@DataController', [
                 'exception' => $th->getMessage(),
