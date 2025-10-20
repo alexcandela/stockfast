@@ -56,11 +56,9 @@ export class GeneralComponent implements OnInit {
     this.generalDataService.getGeneralData(filter).subscribe({
       next: (res) => {
         this.data = res.data;
-        this.ingresos = res.ingresos;  
-        this.numVentas = res.numeroVentas;  
-        this.stockTotal = res.stockTotal;  
-        console.log(this.stockTotal);
-                 
+        this.ingresos = res.ingresos;
+        this.numVentas = res.numeroVentas;
+        this.stockTotal = res.stockTotal;
         this.cdr.detectChanges();
       },
       error: (err) => console.error('Error al obtener datos:', err),

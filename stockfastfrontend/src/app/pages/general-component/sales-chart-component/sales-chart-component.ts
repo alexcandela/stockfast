@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, Input, OnChanges, signal, SimpleChanges, ViewChild } from '@angular/core';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 
 @Component({
@@ -13,6 +13,23 @@ export class SalesChartComponent implements OnChanges {
   @Input() filter: string = '';
   @ViewChild('chart') chart!: ChartComponent;
 
+  filterLabel = signal('');
+
+   meses = [
+    { id: 1, nombre: 'Enero' },
+    { id: 2, nombre: 'Febrero' },
+    { id: 3, nombre: 'Marzo' },
+    { id: 4, nombre: 'Abril' },
+    { id: 5, nombre: 'Mayo' },
+    { id: 6, nombre: 'Junio' },
+    { id: 7, nombre: 'Julio' },
+    { id: 8, nombre: 'Agosto' },
+    { id: 9, nombre: 'Septiembre' },
+    { id: 10, nombre: 'Octubre' },
+    { id: 11, nombre: 'Noviembre' },
+    { id: 12, nombre: 'Diciembre' },
+  ];
+
   public chartOptions: any = {
     series: [{ name: 'Productos vendidos', data: [] }],
     chart: { type: 'area', height: '100%', zoom: { enabled: false } },
@@ -26,6 +43,17 @@ export class SalesChartComponent implements OnChanges {
     if (changes['data']) {
       this.updateChart(this.data, this.filter);
     }
+    this.getFilterLabelNames(this.filter);
+  }
+
+  getFilterLabelNames(data: string) {
+    if (data === 'total') {
+      this.filterLabel.set(data.charAt(0).toUpperCase() + data.slice(1));
+    } else {
+      const array = data.split('-');
+      const mes = this.meses.find((m) => m.id === Number(array[1]));
+      this.filterLabel.set(`${mes?.nombre}, ${array[0]}`);
+    }
   }
 
   private updateChart(data: any[], filter: string) {
@@ -34,6 +62,8 @@ export class SalesChartComponent implements OnChanges {
       this.chartOptions.labels = [];
       return;
     }
+
+    this.getFilterLabelNames(filter);
 
     let labels: string[] = [];
     let quantities: number[] = [];

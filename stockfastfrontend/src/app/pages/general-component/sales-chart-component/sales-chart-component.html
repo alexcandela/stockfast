@@ -1,7 +1,12 @@
 <div class="saleschart">
-    <div class="minititle">
-        <div class="iconcontainer" class="icon"><img src="assets/icons/stats.svg" alt="stats-icon"></div>
-        <h3>Resumen de ventas</h3>
+    <div class="titleContainer">
+        <div class="minititle">
+            <div class="iconcontainer" class="icon"><img src="assets/icons/stats.svg" alt="stats-icon"></div>
+            <h3>Resumen de ventas</h3>
+        </div>
+        <div>
+            <p>{{ filterLabel() }}</p>
+        </div>
     </div>
     <apx-chart #chart [series]="chartOptions.series" [chart]="chartOptions.chart" [xaxis]="chartOptions.xaxis"
         [stroke]="chartOptions.stroke" [dataLabels]="chartOptions.dataLabels" [yaxis]="chartOptions.yaxis"

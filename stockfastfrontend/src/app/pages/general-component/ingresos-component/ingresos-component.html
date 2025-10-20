@@ -11,12 +11,12 @@
                 <!-- Selector Mes -->
                 <div class="dropdown">
                     <div class="selected" (click)="toggleMonthDropdown()">
-                        {{ selectedMonthLabel }}
+                        {{ selectedMonthLabel() }}
                         <svg class="icon" viewBox="0 0 24 24">
                             <path d="M7 10l5 5 5-5z" />
                         </svg>
                     </div>
-                    @if (showMonthDropdown) {
+                    @if (showMonthDropdown()) {
                     <ul class="dropdown-list">
                         @for (month of months; track $index) {
                         <li (click)="selectMonth(month)" [class.locked]="month.locked">
@@ -34,12 +34,12 @@
                 <!-- Selector Año -->
                 <div class="dropdown">
                     <div class="selected" (click)="toggleYearDropdown()">
-                        {{ selectedYearLabel }}
+                        {{ selectedYearLabel() }}
                         <svg class="icon" viewBox="0 0 24 24">
                             <path d="M7 10l5 5 5-5z" />
                         </svg>
                     </div>
-                    @if (showYearDropdown) {
+                    @if (showYearDropdown()) {
                     <ul class="dropdown-list">
                         @for (year of years; track $index) {
                         <li (click)="selectYear(year)">
