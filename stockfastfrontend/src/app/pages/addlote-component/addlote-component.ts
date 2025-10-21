@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -16,6 +16,8 @@ import { PurchaseService } from '../../core/services/purchase-service';
 import { ProductloteComponent } from '../../components/productlote-component/productlote-component';
 
 import { CustomValidators } from '../../core/validators/custom-validators';
+
+import { NotificationService } from '../../core/services/notification-service';
 
 @Component({
   selector: 'app-addlote-component',
@@ -37,8 +39,9 @@ export class AddloteComponent {
     { id: 6, nombre: 'Joyas' },
     { id: 7, nombre: 'Relojes' },
   ];
-
+  private notificationService = inject(NotificationService);
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService) {
+    console.log('NotificationService:', this.notificationService);
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       quantity: [null, [Validators.required, Validators.min(1)]],
@@ -56,7 +59,7 @@ export class AddloteComponent {
       products: this.fb.array([]),
     });
   }
-  
+
   // Seleccionar la categoria del producto
   seleccionarCategoria(id: number) {
     this.productForm.get('category_id')?.setValue(id);
@@ -71,7 +74,7 @@ export class AddloteComponent {
 
     const nuevoProducto = this.productForm.value;
     this.products.push(nuevoProducto);
-    this.productForm.reset();    
+    this.productForm.reset();
   }
 
   // Eliminar producto de la lista
@@ -98,12 +101,15 @@ export class AddloteComponent {
 
     this.purchaseService.crearLote(newPurchase).subscribe({
       next: (res) => {
-        console.log(res);
+        this.notificationService.success('Creado correctamente');
 
         this.purchaseForm.reset();
         this.products = [];
       },
-      error: (err) => console.error('Error al enviar lote:', err),
+      error: (err) => {
+        this.notificationService.error('Error al crear');
+        console.error('Error al enviar lote:', err);
+      },
     });
   }
 }

@@ -4,6 +4,8 @@ import { ProductlistComponent } from '../../components/productlist-component/pro
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../core/services/product-service';
 import { Product } from '../../core/interfaces/product';
+
+import { NotificationService } from '../../core/services/notification-service';
 @Component({
   selector: 'app-stock-component',
   imports: [BuscadorComponent, ProductlistComponent, CommonModule],
@@ -13,7 +15,7 @@ import { Product } from '../../core/interfaces/product';
 export class StockComponent implements OnInit {
   products: Product[] = [];
 
-  constructor(private productService: ProductService, private cd: ChangeDetectorRef) {}
+  constructor(private productService: ProductService, private cd: ChangeDetectorRef, private notificationService: NotificationService) {}
 
   removeProduct(productId: number) {
   this.products = this.products.filter(p => p.id !== productId);
@@ -28,6 +30,7 @@ export class StockComponent implements OnInit {
         }
       },
       error: (err) => {
+        this.notificationService.error('Error al obtener productos');
         console.error('Error al obtener productos:', err);
       },
     });

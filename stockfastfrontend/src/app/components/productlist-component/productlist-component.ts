@@ -13,6 +13,8 @@ import {
 import { CustomValidators } from '../../core/validators/custom-validators';
 import { SaleService } from '../../core/services/sale-service';
 
+import { NotificationService } from '../../core/services/notification-service';
+
 @Component({
   selector: 'app-productlist-component',
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
@@ -27,7 +29,11 @@ export class ProductlistComponent {
   show: WritableSignal<boolean> = signal(false);
 
   saleForm: FormGroup;
-  constructor(private fb: FormBuilder, private saleService: SaleService) {
+  constructor(
+    private fb: FormBuilder,
+    private saleService: SaleService,
+    private notificationService: NotificationService
+  ) {
     this.saleForm = this.fb.group({
       sale_price: ['', Validators.required],
       quantity: ['', Validators.required],
@@ -48,7 +54,8 @@ export class ProductlistComponent {
     this.saleService.makeSale(this.saleForm.value).subscribe({
       next: (res) => {
         if (res.success) {
-          this.product.quantity -= this.saleForm.get('quantity')?.value
+          this.notificationService.success('Venta registrada correctamente');
+          this.product.quantity -= this.saleForm.get('quantity')?.value;
           if (this.product.quantity <= 0) {
             this.deleteProductFromArray.emit(this.product.id);
           }
@@ -56,7 +63,10 @@ export class ProductlistComponent {
           this.show.set(false);
         }
       },
-      error: (err) => console.error('Error al crear venta:', err),
+      error: (err) => {
+        this.notificationService.error('Error al registrar la venta');
+        console.error('Error al crear venta:', err);
+      },
     });
   }
 

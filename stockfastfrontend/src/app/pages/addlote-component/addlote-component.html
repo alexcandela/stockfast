@@ -34,7 +34,8 @@
                     <div class="forminputs-section2">
                         <div class="input">
                             <label for="purchase_price">Precio Unidad</label>
-                            <input type="number" id="purchase_price" placeholder="0.00" formControlName="purchase_price">
+                            <input type="number" id="purchase_price" placeholder="0.00"
+                                formControlName="purchase_price">
                             <div class="errorMessageContainer">
                                 @if (productForm.get('purchase_price')?.touched &&
                                 productForm.get('purchase_price')?.errors?.['required']) {
@@ -51,7 +52,8 @@
                         </div>
                         <div class="input">
                             <label for="estimated_sale_price">Venta Estimada</label>
-                            <input type="number" id="estimated_sale_price" placeholder="0.00" formControlName="estimated_sale_price">
+                            <input type="number" id="estimated_sale_price" placeholder="0.00"
+                                formControlName="estimated_sale_price">
                             <div class="errorMessageContainer">
                                 @if (productForm.get('estimated_sale_price')?.touched &&
                                 productForm.get('estimated_sale_price')?.errors?.['required']) {
@@ -156,10 +158,10 @@
                         @for (product of products; track $index) {
                         <app-productlote-component [product]="product" (eliminar)="eliminarProducto($index)" />
                         } @empty {
-                            <div class="emptylist">
-                                <img src="assets/icons/info.svg" alt="info-icon">
-                                <p>La lista esta vacía</p>
-                            </div>
+                        <div class="emptylist">
+                            <img src="assets/icons/info.svg" alt="info-icon">
+                            <p>La lista esta vacía</p>
+                        </div>
                         }
                     </div>
                 </div>
@@ -180,7 +182,7 @@
                         <label for="shipping_agency">Agencía Envío</label>
                         <input type="text" id="shipping_agency" formControlName="shipping_agency">
                         <div class="errorMessageContainer">
-                            
+
                         </div>
                     </div>
                     <div class="input">
