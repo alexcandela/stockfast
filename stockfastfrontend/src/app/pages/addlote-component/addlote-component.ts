@@ -41,7 +41,6 @@ export class AddloteComponent {
   ];
   private notificationService = inject(NotificationService);
   constructor(private fb: FormBuilder, private purchaseService: PurchaseService) {
-    console.log('NotificationService:', this.notificationService);
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       quantity: [null, [Validators.required, Validators.min(1)]],
