@@ -55,8 +55,6 @@ class DataController extends Controller
 
     private function calcularCostosTotales($sales)
     {
-        Log::info('Iniciando calcularCostosTotales', ['num_sales' => $sales->count()]);
-
         return $sales->sum(function ($sale) {
 
             // Pasar la cantidad de la venta para el cálculo correcto
@@ -81,23 +79,12 @@ class DataController extends Controller
 
     public function calcularIngresos($sales, $salesPrevMonth = null)
     {
-        Log::info('=== INICIO calcularIngresos ===', ['num_sales' => $sales->count()]);
-
+        
         $brutos = $this->calcularIngresosBrutos($sales);
-        Log::info('Brutos calculados', ['brutos' => $brutos]);
-
         $costes = $this->calcularCostosTotales($sales);
-        Log::info('Costes calculados', ['costes' => $costes]);
 
         $netos = $brutos - $costes;
         $margenBruto = $brutos > 0 ? ($netos / $brutos) * 100 : 0;
-
-        Log::info('Cálculo Ingresos FINAL', [
-            'brutos' => $brutos,
-            'costes' => $costes,
-            'netos' => $netos,
-            'margen_bruto' => $margenBruto
-        ]);
 
         $ingresos = [
             'brutos' => round($brutos, 2),
@@ -115,8 +102,6 @@ class DataController extends Controller
         } else {
             $ingresos['variacion_mes'] = 0;
         }
-
-        Log::info('=== FIN calcularIngresos ===', $ingresos);
 
         return $ingresos;
     }
