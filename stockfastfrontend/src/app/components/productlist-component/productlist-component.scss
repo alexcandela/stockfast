@@ -59,8 +59,8 @@
   gap: 5px;
   padding: 20px 100px;
   max-width: 1000px;
-  margin: 0 auto; 
-  
+  margin: 0 auto;
+
   .forminputs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -71,5 +71,28 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.deleteForm {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 5px;
+  padding: 20px 100px;
+  max-width: 1000px;
+  margin: 0 auto;
+  transition: all 0.4s ease;
+  .productFormBtn {
+    background-color: #ff0000;
+    &:hover {
+      background-color: #c50000;
+    }
+  }
+  .cancelBtn {
+    background-color: #cccccc;
+    
+    &:hover {
+      background-color: #bbbbbb;
+    }
   }
 }

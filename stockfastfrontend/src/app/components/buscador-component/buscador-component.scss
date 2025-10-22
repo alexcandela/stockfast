@@ -2,7 +2,6 @@
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 5px;
-  
 }
 
 .buscador {
@@ -10,22 +9,60 @@
   grid-template-columns: auto 1fr;
   padding: 8px;
   gap: 10px;
-  
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+
+  &:focus-within {
+    box-shadow: 0 0 0 2px #7c3aed, 0 4px 10px rgba(124, 58, 237, 0.25);
+    background: #faf8ff;
+    transform: translateY(-1px);
+
+    .buscador-img img {
+      opacity: 0.9;
+      transform: scale(1.1);
+    }
+
+    .buscador-input {
+      color: #4b0082;
+    }
+  }
+
   &-img {
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 0.2s ease;
+
     @media (max-width: 768px) {
-    display: none;
-  }
+      display: none;
+    }
+
     img {
       width: clamp(10px, 1rem, 1vw);
       opacity: 0.5;
+      transition: all 0.2s ease;
     }
   }
+
   &-input {
     font-weight: 300;
     font-size: clamp(10px, 1rem, 1vw);
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #333;
+    transition: color 0.2s ease;
+
+    &::placeholder {
+      color: #aaa;
+      transition: color 0.2s ease;
+    }
+
+    &:focus::placeholder {
+      color: #b78fff;
+    }
   }
 }
 
@@ -35,8 +72,23 @@
   align-items: center;
   padding: 8px;
   cursor: pointer;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition: all 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 0 0 2px #7c3aed, 0 4px 10px rgba(124, 58, 237, 0.25);
+    transform: translateY(-1px);
+  }
+
   img {
     width: 20px;
     opacity: 0.5;
+    transition: opacity 0.2s ease;
+
+    .filter:hover & {
+      opacity: 0.9;
+    }
   }
 }

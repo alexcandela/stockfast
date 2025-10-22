@@ -19,7 +19,10 @@ Route::middleware('auth:api')->get('/me', [AuthController::class, 'me']);
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/crear-lote', [PurchaseController::class, 'store']);
+
     Route::get('/get-products', [ProductController::class, 'getProducts']);
+    Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct']);
+
     Route::post('/make-sale', [SaleController::class, 'store']);
 
     Route::get('/getgeneraldata', [DataController::class, 'getGeneralData']);

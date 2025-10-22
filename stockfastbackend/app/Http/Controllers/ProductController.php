@@ -39,4 +39,45 @@ class ProductController extends Controller
             ], 500);
         }
     }
+
+    // Eliminar un producto
+    public function deleteProduct($id)
+    {
+        try {
+            $user = Auth::user();
+
+            $product = Product::where('id', $id)
+                ->whereHas('purchase', function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->firstOrFail();
+
+            // Si el producto tiene ventas asociadas
+            if ($product->sales()->exists()) {
+                $product->quantity = 0;
+                $product->save();
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'El producto tiene ventas registradas, su cantidad se ha establecido en 0.',
+                ], 200);
+            }
+
+            $product->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto eliminado correctamente.'
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error('Error en deleteProduct@ProductController', [
+                'exception' => $th->getMessage(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar el producto.'
+            ], 500);
+        }
+    }
 }

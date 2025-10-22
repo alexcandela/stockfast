@@ -1,6 +1,6 @@
 <div class="stock">
     <div class="stock-header">
-        <app-buscador-component />
+        <app-buscador-component  (search)="getBusqueda($event)"/>
     </div>
     <div class="stock-listcontainer card">
         <div class="stock-listcontainer-types">
@@ -36,7 +36,7 @@
         </div>
         <div class="stock-listcontainer-list">
             <div class="listscroll">
-                @for (product of products; track $index) {
+                @for (product of filteredProducts; track $index) {
                 <app-productlist-component [product]="product" (deleteProductFromArray)="removeProduct($event)" />
                 } @empty {
                 <div class="emptylist">

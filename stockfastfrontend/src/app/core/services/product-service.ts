@@ -20,4 +20,13 @@ export class ProductService {
 
     return this.http.get<ProductResponse>(`${this.apiUrl}/get-products`, { headers });
   }
+
+  deleteProduct(productId: number): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.delete<any>(`${this.apiUrl}/delete-product/${productId}`, { headers });
+  }
 }
