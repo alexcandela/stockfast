@@ -58,21 +58,9 @@ class DataController extends Controller
         Log::info('Iniciando calcularCostosTotales', ['num_sales' => $sales->count()]);
 
         return $sales->sum(function ($sale) {
-            Log::info('Procesando sale', [
-                'sale_id' => $sale->id,
-                'sale_quantity' => $sale->quantity ?? 1,
-                'has_product' => $sale->product ? 'SI' : 'NO'
-            ]);
 
             // Pasar la cantidad de la venta para el cálculo correcto
             $productCost = $this->obtenerCostoRealProducto($sale->product, $sale->quantity ?? 1);
-
-            Log::info('Costo calculado para sale', [
-                'sale_id' => $sale->id,
-                'product_cost' => $productCost,
-                'quantity' => $sale->quantity ?? 1,
-                'total' => $productCost * ($sale->quantity ?? 1)
-            ]);
 
             return $productCost * ($sale->quantity ?? 1);
         });
