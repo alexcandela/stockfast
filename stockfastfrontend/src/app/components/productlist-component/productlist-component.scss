@@ -8,6 +8,11 @@
     padding: 15px 20px;
     gap: 20px;
     border-bottom: solid 1px #eeeeee;
+    transition: all 0.4s ease;
+
+    &:hover {
+      background-color: #ebebeb;
+    }
 
     .inputcontainer {
       display: flex;
@@ -17,6 +22,7 @@
 
     .productname {
       width: 250px;
+      font-weight: 600;
     }
 
     .dataname {
@@ -29,10 +35,23 @@
     }
 
     .categoria {
-      padding: 2px 5px;
+      padding: 3px 8px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #c919a6, #7a03a8);
+      color: #fff;
+      font-weight: 600;
+      padding: 2px 7px;
       background-color: #fca0fc;
       border-radius: 10px;
     }
+
+    .sale_price {
+      
+    }
+    .loteid {
+      font-weight: 600;
+    }
+
     &-buttons {
       display: flex;
       justify-content: end;
@@ -90,7 +109,7 @@
   }
   .cancelBtn {
     background-color: #cccccc;
-    
+
     &:hover {
       background-color: #bbbbbb;
     }

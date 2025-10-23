@@ -7,75 +7,25 @@
     <div class="tipscontainer-stock card">
         <div class="tipscontainer-stock-title minititle">
             <div class="iconcontainer" class="icon"><img src="assets/icons/down.svg" alt="down-icon"></div>
-            <h3>Stock reciente</h3>
+            <h3>Stock</h3>
         </div>
-        <div class="lote">
-            <div class="lote-info">
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Nombre</h5>
-                    </div>
-                    <p>Pedido Invierno</p>
+        <div class="infocont">
+            <div class="infocont-info1">
+                <div class="valor">
+                    <p>Valor total de stock</p>
+                    <span>{{ stockData?.valor_stock?.toFixed(2) }} €</span>
                 </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Fecha de compra</h5>
-                    </div>
-                    <p>12/6/2025</p>
+                <div class="valor">
+                    <p>Valor potencial</p>
+                    <span>{{ stockData?.valor_potencial?.toFixed(2) }} €</span>
                 </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Inversión tot.</h5>
-                    </div>
-                    <p>456€</p>
-                </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Costo productos</h5>
-                    </div>
-                    <p>400€</p>
-                </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Gast. envío</h5>
-                    </div>
-                    <p>56€</p>
-                </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Fact. estimada</h5>
-                    </div>
-                    <p>845€</p>
-                </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Benef. estimado</h5>
-                    </div>
-                    <p>389€</p>
-                </div>
-                <div class="lote-info-name">
-                    <div class="titlename">
-                        <span class="circle"></span>
-                        <h5>Cant. productos</h5>
-                    </div>
-                    <p>13</p>
-                </div>
-
             </div>
-            <div class="lote-pie">
-                <apx-chart [series]="chartOptions.series" [chart]="chartOptions.chart" [labels]="chartOptions.labels"
-                    [dataLabels]="chartOptions.dataLabels" [legend]="chartOptions.legend"
-                    [responsive]="chartOptions.responsive" [tooltip]="chartOptions.tooltip">
-                </apx-chart>
-
+            <div class="infocont-info2">
+                <p>Posibles Beneficios</p>
+                <span class="benef">{{ stockData?.posibles_beneficios?.toFixed(2) }} €</span>
+                 <span class="percent">+{{ stockData?.beneficio_porcentual?.toFixed(2) }}%</span>
             </div>
         </div>
+
     </div>
 </div>

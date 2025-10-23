@@ -66,10 +66,13 @@
         flex-direction: column;
         gap: 5px;
         .green {
-          color: #009b05;
+          color: #00b800; /* verde intenso, más oscuro que neón */
+          text-shadow: 0 0 4px rgba(60, 255, 0, 0.5);
         }
+
         .red {
-          color: #9b0000;
+          color: #a30000; /* rojo intenso, más elegante */
+          text-shadow: 0 0 4px rgba(163, 0, 0, 0.5);
         }
       }
     }
@@ -136,8 +139,6 @@
         }
         span {
           font-size: clamp(0.5rem, 1.1rem, 1.1rem);
-          
-
         }
       }
     }

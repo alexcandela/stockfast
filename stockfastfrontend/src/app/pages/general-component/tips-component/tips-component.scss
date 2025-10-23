@@ -14,7 +14,7 @@
     align-items: center;
     padding: 10px;
     background: linear-gradient(135deg, #2980b9, #6dd5fa);
-    
+
     .a {
       font-size: clamp(1rem, 2rem, 2rem);
 
@@ -45,65 +45,96 @@
   }
   &-stock {
     display: grid;
-    grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
-    padding: 20px;
+    padding: 24px;
+    gap: 24px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #2b1055, #7597de);
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
     @media (max-width: 768px) {
-      gap: 10px;
+      gap: 12px;
+      padding: 16px;
     }
 
     &-title {
       h3 {
-        font-size: clamp(1rem, 1vw, 1vw);
+        font-size: clamp(1rem, 1.2vw, 1.4rem);
         font-weight: 600;
+        letter-spacing: -0.5px;
+        margin: 0;
       }
     }
-    .lote {
+
+    .infocont {
       display: grid;
-      grid-template-columns: 1fr auto;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
       padding: 0 10px;
+
       @media (max-width: 768px) {
         grid-template-columns: 1fr;
         padding: 0;
+        gap: 16px;
       }
 
-      &-info {
+      &-info1,
+      &-info2 {
         display: flex;
-        justify-content: center;
         flex-direction: column;
-        gap: 7px;
-        &-name {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 16px 20px;
+        backdrop-filter: blur(6px);
+        transition: background 0.3s ease;
 
-          // border-bottom: solid 1px rgb(180, 180, 180);
+        &:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
 
-          .titlename {
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            gap: 5px;
-            .circle {
-              width: 10px;
-              height: 10px;
-              background-color: #2e9aff;
-              border-radius: 50%;
-            }
-          }
+        p {
+          font-size: clamp(0.9rem, 1vw, 1.2rem);
+          font-weight: 500;
+          opacity: 0.9;
+          letter-spacing: -0.3px;
+          margin: 0;
+        }
 
-          h5 {
-            font-size: 14px;
-          }
-          p {
-            font-size: 14px;
-            font-weight: 600;
-          }
+        span {
+          font-size: clamp(1.2rem, 2.8vw, 2.6rem);
+          font-weight: 800;
+          letter-spacing: -0.5px;
+          line-height: 1.2;
+        }
+
+        .valor {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .percent {
+          font-size: clamp(0.7rem, 1.2vw, 1.2vw);
+          font-weight: 700;
+          letter-spacing: -0.4px;
+          color: #4cff4c;
+          text-shadow: 0 0 6px rgba(76, 255, 76, 0.6);
         }
       }
-      &-pie {
-        display: flex;
-        @media (max-width: 768px) {
-          display: none;
+
+      &-info2 {
+        background: rgba(255, 255, 255, 0.1);
+        gap: 0px;
+        .benef {
+          font-size: clamp(1.2rem, 3vw, 3vw);
         }
       }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Purchase;
 use App\Models\Sale;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -79,7 +80,7 @@ class DataController extends Controller
 
     public function calcularIngresos($sales, $salesPrevMonth = null)
     {
-        
+
         $brutos = $this->calcularIngresosBrutos($sales);
         $costes = $this->calcularCostosTotales($sales);
 
@@ -246,6 +247,58 @@ class DataController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Error al obtener los datos.'
+            ], 500);
+        }
+    }
+
+    // ==================== DATOS DE STOCK ====================
+
+    public function calcularDatosStock($user)
+    {
+        $purchases = Purchase::with('products')
+            ->where('user_id', $user->id)
+            ->get();
+        $data['valor_stock'] = $purchases->sum(function ($purchase) {
+            return $purchase->products->sum(function ($product) {
+                return $product->quantity * $this->obtenerCostoRealProducto($product);
+            });
+        });
+        $data['valor_potencial'] = $purchases->sum(function ($purchase) {
+            return $purchase->products->sum(function ($product) {
+                return $product->quantity * ($product->estimated_sale_price ?? 0);
+            });
+        });
+        $data['posibles_beneficios'] = $data['valor_potencial'] - $data['valor_stock'];
+        $data['beneficio_porcentual'] = $data['valor_stock'] > 0
+            ? ($data['posibles_beneficios'] / $data['valor_stock']) * 100
+            : 0;
+
+        $data['valor_stock'] = round($data['valor_stock'], 2);
+        $data['valor_potencial'] = round($data['valor_potencial'], 2);
+        $data['posibles_beneficios'] = round($data['posibles_beneficios'], 2);
+        $data['beneficio_porcentual'] = round($data['beneficio_porcentual'], 2);
+
+        return $data;
+    }
+
+    public function getStockData()
+    {
+        $user = Auth::user();
+        try {
+            $data = $this->calcularDatosStock($user);
+            return response()->json([
+                'success' => true,
+                'data' => $data
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error('Error en getStockData@DataController', [
+                'exception' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener los datos de stock.'
             ], 500);
         }
     }

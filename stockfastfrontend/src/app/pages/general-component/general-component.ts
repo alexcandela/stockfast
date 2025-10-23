@@ -13,6 +13,9 @@ import { Authservice } from '../../core/services/authservice';
 import { GeneralDataService } from '../../core/services/general-data-service';
 import { Ingresos } from '../../core/interfaces/generaldata';
 import { NumVentas } from '../../core/interfaces/num-ventas';
+import { StockService } from '../../core/services/stock-service';
+import { Stock, StockResponse } from '../../core/interfaces/stock';
+import { get } from 'http';
 
 @Component({
   selector: 'app-general-component',
@@ -26,13 +29,15 @@ export class GeneralComponent implements OnInit {
   data: any[] = [];
   ingresos: Ingresos | null = null;
   numVentas: NumVentas | null = null;
+  stockData: Stock | null = null;
   stockTotal: number | null = null;
   filter: WritableSignal<string> = signal(this.getCurrentMonth());
 
   constructor(
     private authService: Authservice,
     private generalDataService: GeneralDataService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private stockService: StockService
   ) {
     this.userplan = this.authService.getUserPlan();
     effect(() => {
@@ -67,7 +72,23 @@ export class GeneralComponent implements OnInit {
 
   getBasicData() {}
 
+  getStockData() {
+    this.stockService.getStockData().subscribe(
+      (response) => {
+        if (response.success) {
+          this.stockData = response.data;
+          this.cdr.detectChanges();
+        }
+        
+      },
+      (error) => {
+        console.error('Error al obtener los datos de stock:', error);
+      }
+    );
+  }
+
   ngOnInit(): void {
     this.loadData(this.filter());
+    this.getStockData();
   }
 }

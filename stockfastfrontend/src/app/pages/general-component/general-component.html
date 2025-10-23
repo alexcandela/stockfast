@@ -8,7 +8,7 @@
         </div>
     </div>
     <div class="generalpage-item3">
-        <app-tips-component  [stockTotal]="stockTotal"/>
+        <app-tips-component  [stockTotal]="stockTotal" [stockData]="stockData"/>
     </div>
     <div class="generalpage-item4">
         <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos" [numVentas]="numVentas"/>

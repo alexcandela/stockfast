@@ -5,7 +5,6 @@ use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,11 +25,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/make-sale', [SaleController::class, 'store']);
 
     Route::get('/getgeneraldata', [DataController::class, 'getGeneralData']);
+    Route::get('/get-stock-data', [DataController::class, 'getStockData']);
 
-    Route::middleware('plan:Pro')->group(function () {
-        
-    });
+    Route::middleware('plan:Pro')->group(function () {});
 });
-
-
-
