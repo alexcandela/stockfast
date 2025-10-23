@@ -30,9 +30,9 @@
       flex-direction: column;
       gap: 5px;
       &-dinero {
-        font-size: clamp(3rem, 3vw, 3vw);
+        font-size: clamp(3rem, 4vw, 4vw);
         font-weight: 800;
-        letter-spacing: -1px;
+        letter-spacing: -3px;
       }
       &-info {
         display: flex;
