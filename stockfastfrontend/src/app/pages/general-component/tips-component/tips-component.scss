@@ -27,6 +27,9 @@
     .c {
       font-size: clamp(3rem, 10rem, 10rem);
       font-weight: 900;
+      &.large-number {
+            font-size: clamp(1rem, 7rem, 7rem);
+          }
     }
 
     p {
@@ -114,6 +117,11 @@
           font-weight: 800;
           letter-spacing: -0.5px;
           line-height: 1.2;
+          transition: font-size 0.2s ease;
+
+          &.large-number {
+            font-size: clamp(1rem, 2vw, 2vw);
+          }
         }
 
         .valor {
@@ -133,8 +141,13 @@
       &-info2 {
         background: rgba(255, 255, 255, 0.1);
         gap: 0px;
+
         .benef {
           font-size: clamp(1.2rem, 3vw, 3vw);
+
+          &.large-number {
+            font-size: clamp(1rem, 2.5vw, 2.5vw);
+          }
         }
       }
     }

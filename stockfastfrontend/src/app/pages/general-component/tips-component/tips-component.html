@@ -2,7 +2,7 @@
     <div class="tipscontainer-tips card">
         <p class="a">Productos en</p>
         <p class="b">stock</p>
-        <p class="c">{{ stockTotal }}</p>
+        <p class="c" [ngClass]="{'large-number': isStockLargeNumber(stockTotal)}">{{ stockTotal }}</p>
     </div>
     <div class="tipscontainer-stock card">
         <div class="tipscontainer-stock-title minititle">
@@ -13,19 +13,24 @@
             <div class="infocont-info1">
                 <div class="valor">
                     <p>Valor total de stock</p>
-                    <span>{{ stockData?.valor_stock?.toFixed(2) }} €</span>
+                    <span [ngClass]="{'large-number': isLargeNumber(stockData?.valor_stock)}">
+                        {{ stockData?.valor_stock?.toFixed(2) }} €
+                    </span>
                 </div>
                 <div class="valor">
                     <p>Valor potencial</p>
-                    <span>{{ stockData?.valor_potencial?.toFixed(2) }} €</span>
+                    <span [ngClass]="{'large-number': isLargeNumber(stockData?.valor_potencial)}">
+                        {{ stockData?.valor_potencial?.toFixed(2) }} €
+                    </span>
                 </div>
             </div>
             <div class="infocont-info2">
                 <p>Posibles Beneficios</p>
-                <span class="benef">{{ stockData?.posibles_beneficios?.toFixed(2) }} €</span>
-                 <span class="percent">+{{ stockData?.beneficio_porcentual?.toFixed(2) }}%</span>
+                <span class="benef" [ngClass]="{'large-number': isLargeNumber(stockData?.posibles_beneficios)}">
+                    {{ stockData?.posibles_beneficios?.toFixed(2) }} €
+                </span>
+                <span class="percent">+{{ stockData?.beneficio_porcentual?.toFixed(2) }}%</span>
             </div>
         </div>
-
     </div>
 </div>
