@@ -92,13 +92,19 @@ class DatabaseSeeder extends Seeder
 
             // Crear productos asociados a la compra
             for ($j = 1; $j <= rand(1, 5); $j++) {
+                // Precio de compra entre 5 y 30
+                $purchasePrice = $faker->randomFloat(2, 5, 30);
+                // Precio de venta entre compra+0,01 y máximo 150 (y nunca menor que compra)
+                $maxSalePrice = min($purchasePrice + 150, 150);
+                $salePrice = $faker->randomFloat(2, $purchasePrice + 0.01, $maxSalePrice);
+
                 DB::table('products')->insert([
                     'purchase_id' => $purchaseId,
                     'category_id' => rand(1, 7),
                     'name' => ucfirst($faker->words(rand(1, 3), true)),
                     'description' => $faker->sentence,
-                    'purchase_price' => $faker->randomFloat(2, 10, 200),
-                    'estimated_sale_price' => $faker->randomFloat(2, 20, 400),
+                    'purchase_price' => $purchasePrice,
+                    'estimated_sale_price' => $salePrice,
                     'quantity' => rand(1, 10),
                     'created_at' => now(),
                     'updated_at' => now(),
@@ -113,15 +119,22 @@ class DatabaseSeeder extends Seeder
         $endDate = Carbon::now()->endOfYear();
 
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-            $numSalesToday = rand(0, 10); // entre 0 y 10 ventas por día
+            $numSalesToday = rand(2, 10); // entre 2 y 10 ventas por día
 
             for ($i = 0; $i < $numSalesToday; $i++) {
                 $product = $products->random();
 
+                // El precio de venta siempre por encima del de compra, hasta un máximo de 150
+                $salePrice = min($product->estimated_sale_price, 150);
+                if ($salePrice <= $product->purchase_price) {
+                    // Si por algún motivo el precio estimado es inferior o igual al de compra, generamos uno válido
+                    $salePrice = $product->purchase_price + $faker->randomFloat(2, 0.01, (150 - $product->purchase_price));
+                }
+
                 DB::table('sales')->insert([
                     'user_id' => 1,
                     'product_id' => $product->id,
-                    'sale_price' => $product->estimated_sale_price,
+                    'sale_price' => $salePrice,
                     'sale_date' => $date->copy()->setTime(rand(8, 22), rand(0, 59), rand(0, 59)),
                     'quantity' => 1,
                     'created_at' => now(),

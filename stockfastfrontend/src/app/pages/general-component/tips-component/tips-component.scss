@@ -28,8 +28,8 @@
       font-size: clamp(3rem, 10rem, 10rem);
       font-weight: 900;
       &.large-number {
-            font-size: clamp(1rem, 7rem, 7rem);
-          }
+        font-size: clamp(1rem, 7rem, 7rem);
+      }
     }
 
     p {
@@ -143,10 +143,27 @@
         gap: 0px;
 
         .benef {
-          font-size: clamp(1.2rem, 3vw, 3vw);
+          display: flex;
+          align-items: baseline;
+          gap: 4px;
+          white-space: nowrap;
 
-          &.large-number {
-            font-size: clamp(1rem, 2.5vw, 2.5vw);
+          .number {
+            font-size: clamp(1.2rem, 3vw, 3vw);
+            max-width: 250px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            &.large-number {
+              font-size: clamp(1rem, 2.5vw, 2.5vw);
+            }
+          }
+          .currency {
+            font-size: clamp(1.2rem, 3vw, 3vw);
+            &.large-number {
+              font-size: clamp(1rem, 2.5vw, 2.5vw);
+            }
           }
         }
       }

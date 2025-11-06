@@ -54,7 +54,7 @@ export class GeneralComponent implements OnInit {
 
   onFilterSelected(selectedFilter: string) {
     this.filter.set(selectedFilter);
-    this.loadData(this.filter());
+    // this.loadData(this.filter());
   }
 
   loadData(filter: string) {
@@ -88,7 +88,7 @@ export class GeneralComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadData(this.filter());
+    // this.loadData(this.filter());
     this.getStockData();
   }
 }

@@ -26,8 +26,11 @@
             </div>
             <div class="infocont-info2">
                 <p>Posibles Beneficios</p>
-                <span class="benef" [ngClass]="{'large-number': isLargeNumber(stockData?.posibles_beneficios)}">
-                    {{ stockData?.posibles_beneficios?.toFixed(2) }} €
+                <span class="benef">
+                    <span class="number" [ngClass]="{'large-number': isLargeNumber(stockData?.posibles_beneficios)}">{{
+                        stockData?.posibles_beneficios?.toFixed(2) }}</span>
+                    <span class="currency"
+                        [ngClass]="{'large-number': isLargeNumber(stockData?.posibles_beneficios)}">€</span>
                 </span>
                 <span class="percent">+{{ stockData?.beneficio_porcentual?.toFixed(2) }}%</span>
             </div>

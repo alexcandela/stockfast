@@ -19,7 +19,7 @@ export class TipsComponent {
   isLargeNumber(value: number | undefined): boolean {
     if (value == null) return false; // Verifica undefined y null
     const numberString = value.toFixed(2);
-    return numberString.length > 7;
+    return numberString.length > 6;
   }
 
   isStockLargeNumber(value: number | null | undefined): boolean {
