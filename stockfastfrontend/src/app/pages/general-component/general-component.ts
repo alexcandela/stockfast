@@ -15,7 +15,7 @@ import { Ingresos } from '../../core/interfaces/generaldata';
 import { NumVentas } from '../../core/interfaces/num-ventas';
 import { StockService } from '../../core/services/stock-service';
 import { Stock, StockResponse } from '../../core/interfaces/stock';
-import { get } from 'http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-general-component',
@@ -37,12 +37,17 @@ export class GeneralComponent implements OnInit {
     private authService: Authservice,
     private generalDataService: GeneralDataService,
     private cdr: ChangeDetectorRef,
-    private stockService: StockService
+    private stockService: StockService,
+    private router: Router
   ) {
     this.userplan = this.authService.getUserPlan();
     effect(() => {
       this.loadData(this.filter());
     });
+  }
+
+  goToPro() {
+    this.router.navigate(['/stockfastpro']);
   }
 
   getCurrentMonth(): string {
@@ -79,7 +84,6 @@ export class GeneralComponent implements OnInit {
           this.stockData = response.data;
           this.cdr.detectChanges();
         }
-        
       },
       (error) => {
         console.error('Error al obtener los datos de stock:', error);

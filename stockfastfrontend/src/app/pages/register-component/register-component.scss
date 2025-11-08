@@ -1,22 +1,465 @@
-.register {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    .registerform {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
-        gap: 5px;
-        .forminputs {
-            display: grid;
-            grid-template-columns: 1fr;
-        }
-    }
+/* ========== REGISTER PAGE ========== */
 
-    .formbtn {
-        display: grid;
+/* Contenedor principal */
+.register {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 50%, #0a0a0a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Formas de fondo animadas */
+.register-background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.register-background .shape {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.25;
+}
+
+.register-background .shape-1 {
+    width: 550px;
+    height: 550px;
+    background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+    top: -200px;
+    left: -200px;
+    animation: floatRegister 14s ease-in-out infinite;
+}
+
+.register-background .shape-2 {
+    width: 450px;
+    height: 450px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.3) 0%, transparent 70%);
+    bottom: -150px;
+    right: -150px;
+    animation: floatRegister 18s ease-in-out infinite reverse;
+}
+
+.register-background .shape-3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+    top: 30%;
+    right: 10%;
+    animation: pulseRegister 10s ease-in-out infinite;
+}
+
+.register-background .shape-4 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+    bottom: 20%;
+    left: 15%;
+    animation: pulseRegister 12s ease-in-out infinite 2s;
+}
+
+@keyframes floatRegister {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, -40px); }
+}
+
+@keyframes pulseRegister {
+    0%, 100% { transform: scale(1); opacity: 0.25; }
+    50% { transform: scale(1.3); opacity: 0.15; }
+}
+
+/* Contenedor de la tarjeta */
+.register-container {
+    width: 100%;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Tarjeta glassmorphism */
+.register-card {
+    background: rgba(26, 26, 26, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+    padding: 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Header de la tarjeta */
+.register-card .card-header {
+    padding: 40px 40px 32px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+}
+
+.register-card .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.register-card .logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+}
+
+.register-card .logo-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #ffffff;
+}
+
+.register-card .app-name {
+    font-size: 24px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+.register-card .card-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 8px;
+    letter-spacing: -0.5px;
+}
+
+.register-card .card-subtitle {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+}
+
+/* Formulario */
+.registerform {
+    padding: 32px 40px 40px;
+}
+
+.registerform .forminputs {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 0;
+}
+
+/* Input row para campos lado a lado */
+.registerform .input-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+/* Input wrapper */
+.registerform .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.registerform .input-group {
+    display: flex;
+    align-items: stretch;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.registerform .input-group::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(99, 102, 241, 0.5));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.registerform .input-group:focus-within::before {
+    opacity: 1;
+}
+
+.registerform .input-group:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.registerform .input-group:focus-within {
+    border-color: rgba(139, 92, 246, 0.6);
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.registerform .input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    padding: 0 14px;
+    background: rgba(255, 255, 255, 0.02);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}
+
+.registerform .input-icon svg {
+    width: 18px;
+    height: 18px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.3s ease;
+    display: block;
+}
+
+.registerform .input-group:focus-within .input-icon svg {
+    color: #8b5cf6;
+}
+
+.registerform .input-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+}
+
+.registerform .input-content label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    transition: color 0.3s ease;
+}
+
+.registerform .input-group:focus-within .input-content label {
+    color: #8b5cf6;
+}
+
+.registerform .input-content input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #ffffff;
+    padding: 0;
+    font-weight: 500;
+    width: 100%;
+}
+
+.registerform .input-content input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Error messages */
+.registerform .errorMessageContainer {
+    min-height: 22px;
+    padding: 0 4px;
+    pointer-events: none;
+}
+
+.registerform .error-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: slideDownRegister 0.3s ease;
+}
+
+@keyframes slideDownRegister {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.registerform .error-icon {
+    width: 13px;
+    height: 13px;
+    color: #ef4444;
+    flex-shrink: 0;
+}
+
+.registerform .errorMessage {
+    font-size: 11px;
+    color: #ef4444;
+    font-weight: 500;
+}
+
+/* Footer del formulario */
+.registerform .form-footer {
+    margin-top: 28px;
+}
+
+.registerform .formbtn {
+    margin-bottom: 24px;
+}
+
+.registerform .authbtn {
+    width: 100%;
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.registerform .btn-text {
+    position: relative;
+    z-index: 1;
+}
+
+.registerform .btn-shine {
+    position: absolute;
+    top: -50%;
+    left: -100%;
+    width: 100%;
+    height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+}
+
+.registerform .authbtn:hover .btn-shine {
+    left: 200%;
+}
+
+.registerform .authbtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(139, 92, 246, 0.5);
+}
+
+.registerform .authbtn:active {
+    transform: translateY(0);
+}
+
+/* Divider */
+.registerform .divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.registerform .divider-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.registerform .divider-text {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Redirect link */
+.registerform .redirect-link {
+    text-align: center;
+}
+
+.registerform .redirect-link p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0 0 8px;
+}
+
+.registerform .redirect-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #8b5cf6;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.registerform .redirect-link a svg {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.registerform .redirect-link a:hover {
+    color: #6366f1;
+    gap: 8px;
+}
+
+.registerform .redirect-link a:hover svg {
+    transform: translateX(2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .register-container {
+        max-width: 100%;
+    }
+    
+    .register-card {
+        border-radius: 20px;
+    }
+    
+    .register-card .card-header {
+        padding: 32px 24px 24px;
+    }
+    
+    .registerform {
+        padding: 24px;
+    }
+    
+    .registerform .input-row {
         grid-template-columns: 1fr;
-        grid-template-rows: 1fr;
+        gap: 18px;
+    }
+    
+    .register-card .app-name {
+        font-size: 20px;
+    }
+    
+    .register-card .card-title {
+        font-size: 24px;
+    }
+    
+    .registerform .input-icon {
+        padding: 0 12px;
+        min-width: 40px;
+    }
+}
+
+@media (max-width: 640px) {
+    .registerform .forminputs {
+        gap: 16px;
     }
 }

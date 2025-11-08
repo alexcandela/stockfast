@@ -2,7 +2,7 @@
     <div class="generalpage-item1 card">
         <app-sales-chart-component [data]="data" [filter]="filter()" />
     </div>
-    <div class="generalpage-item2 card">
+    <div class="generalpage-item2 card" (click)="goToPro()">
         <div class="pro-container">
             <p>stockfast.</p><span>PRO</span>
         </div>

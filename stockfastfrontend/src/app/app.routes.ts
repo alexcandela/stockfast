@@ -12,6 +12,7 @@ import { LoginComponent } from './pages/login-component/login-component';
 import { RegisterComponent } from './pages/register-component/register-component';
 
 import { authGuard } from './core/guards/auth-guard';
+import { Stockfastpropage } from './layouts/stockfastpropage/stockfastpropage';
 
 export const routes: Routes = [
   // Layout para autenticación
@@ -22,6 +23,13 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: '', redirectTo: 'login', pathMatch: 'full' }
+    ]
+  },
+
+  {
+    path: 'stockfastpro',
+    component: Stockfastpropage,
+    children: [
     ]
   },
 

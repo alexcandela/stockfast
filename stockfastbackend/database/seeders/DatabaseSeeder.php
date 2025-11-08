@@ -29,6 +29,17 @@ class DatabaseSeeder extends Seeder
             'Relojes',
         ];
 
+        // Listas de nombres reales por categoría
+        $realNames = [
+            1 => ['Smartphone', 'Laptop', 'Tablet', 'Auriculares', 'Cámara', 'Monitor'], // Electrónica
+            2 => ['Camiseta', 'Pantalones', 'Sudadera', 'Chaqueta', 'Vestido', 'Camisa'], // Ropa
+            3 => ['Zapatillas deportivas', 'Botas', 'Sandalias', 'Zapatos de cuero', 'Tenis'], // Calzado
+            4 => ['Muñeca', 'Puzzle', 'Coche de juguete', 'Pelota', 'Juego de mesa'], // Juguetes
+            5 => ['Gafas de sol', 'Cinturón', 'Bufanda', 'Sombrero', 'Bolso'], // Accesorios
+            6 => ['Anillo', 'Collar', 'Pulsera', 'Aretes'], // Joyas
+            7 => ['Reloj digital', 'Reloj analógico', 'Smartwatch', 'Reloj deportivo'], // Relojes
+        ];
+
         foreach ($categories as $name) {
             DB::table('categories')->updateOrInsert(
                 ['name' => $name],
@@ -92,6 +103,10 @@ class DatabaseSeeder extends Seeder
 
             // Crear productos asociados a la compra
             for ($j = 1; $j <= rand(1, 5); $j++) {
+                $category_id = rand(1, 7);
+                // Seleccionar un nombre aleatorio de la lista correspondiente a la categoría
+                $productName = $realNames[$category_id][array_rand($realNames[$category_id])];
+
                 // Precio de compra entre 5 y 30
                 $purchasePrice = $faker->randomFloat(2, 5, 30);
                 // Precio de venta entre compra+0,01 y máximo 150 (y nunca menor que compra)
@@ -100,8 +115,8 @@ class DatabaseSeeder extends Seeder
 
                 DB::table('products')->insert([
                     'purchase_id' => $purchaseId,
-                    'category_id' => rand(1, 7),
-                    'name' => ucfirst($faker->words(rand(1, 3), true)),
+                    'category_id' => $category_id,
+                    'name' => $productName,
                     'description' => $faker->sentence,
                     'purchase_price' => $purchasePrice,
                     'estimated_sale_price' => $salePrice,
