@@ -2,9 +2,11 @@
   height: 100%;
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 15px;
+  gap: 16px;
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   &-tips {
@@ -12,79 +14,163 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 10px;
-    background: linear-gradient(135deg, #2980b9, #6dd5fa);
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+
+    // Glassmorphism base
+    background: rgba(26, 26, 26, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    // Gradiente de fondo sutil
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(59, 130, 246, 0.3) 0%, 
+        rgba(99, 102, 241, 0.3) 100%
+      );
+      opacity: 0.6;
+      z-index: 0;
+    }
+
+    // Contenido sobre el gradiente
+    .a, .b, .c {
+      position: relative;
+      z-index: 1;
+    }
 
     .a {
-      font-size: clamp(1rem, 2rem, 2rem);
-
+      font-size: clamp(1rem, 2vw, 1.5rem);
       font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
+
     .b {
-      font-size: clamp(3rem, 5rem, 5rem);
+      font-size: clamp(2.5rem, 4vw, 4rem);
       font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
     }
+
     .c {
-      font-size: clamp(3rem, 10rem, 10rem);
+      font-size: clamp(3rem, 8vw, 8rem);
       font-weight: 900;
+      color: #ffffff;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
       &.large-number {
-        font-size: clamp(1rem, 7rem, 7rem);
+        font-size: clamp(2rem, 5vw, 6rem);
       }
     }
 
     p {
       color: #fff;
       padding: 0;
-      margin: 0; /* elimina los márgenes */
+      margin: 0;
       line-height: 0.85;
     }
-
-    &-title {
-      h3 {
-        font-size: clamp(1rem, 1vw, 1vw);
-        font-weight: 600;
-      }
-    }
   }
+
   &-stock {
     display: grid;
     grid-template-rows: auto 1fr;
     padding: 24px;
-    gap: 24px;
-    border-radius: 16px;
-    background: linear-gradient(135deg, #2b1055, #7597de);
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    gap: 20px;
+    
+    // Glassmorphism con gradiente morado
+    background: rgba(26, 26, 26, 0.4);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+
+    // Gradiente de fondo
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, 
+        rgba(139, 92, 246, 0.25) 0%, 
+        rgba(99, 102, 241, 0.25) 50%,
+        rgba(168, 85, 247, 0.25) 100%
+      );
+      z-index: 0;
+    }
+
+    // Efecto de brillo
+    &::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(
+        circle,
+        rgba(139, 92, 246, 0.2) 0%,
+        transparent 50%
+      );
+      z-index: 0;
+    }
+
+    // Contenido sobre el fondo
+    & > * {
+      position: relative;
+      z-index: 1;
+    }
 
     &:hover {
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.2);
     }
 
     @media (max-width: 768px) {
-      gap: 12px;
-      padding: 16px;
+      gap: 16px;
+      padding: 20px;
     }
 
     &-title {
       h3 {
-        font-size: clamp(1rem, 1.2vw, 1.4rem);
+        font-size: clamp(1rem, 1.2vw, 1.2rem);
         font-weight: 600;
         letter-spacing: -0.5px;
         margin: 0;
+        color: #ffffff;
+      }
+
+      .iconcontainer, .icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          filter: brightness(0) invert(0.8);
+        }
       }
     }
 
     .infocont {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 24px;
-      padding: 0 10px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
 
       @media (max-width: 768px) {
         grid-template-columns: 1fr;
-        padding: 0;
-        gap: 16px;
+        gap: 12px;
       }
 
       &-info1,
@@ -93,78 +179,100 @@
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        gap: 8px;
+        gap: 12px;
         background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
         border-radius: 12px;
-        padding: 16px 20px;
-        backdrop-filter: blur(6px);
-        transition: background 0.3s ease;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
 
         &:hover {
           background: rgba(255, 255, 255, 0.12);
+          border-color: rgba(255, 255, 255, 0.15);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
         }
 
         p {
-          font-size: clamp(0.9rem, 1vw, 1.2rem);
+          font-size: clamp(0.85rem, 1vw, 1rem);
           font-weight: 500;
-          opacity: 0.9;
+          color: rgba(255, 255, 255, 0.8);
           letter-spacing: -0.3px;
           margin: 0;
         }
 
         span {
-          font-size: clamp(1.2rem, 2.8vw, 2.6rem);
+          font-size: clamp(1.4rem, 2.5vw, 2.2rem);
           font-weight: 800;
+          color: #ffffff;
           letter-spacing: -0.5px;
           line-height: 1.2;
           transition: font-size 0.2s ease;
 
           &.large-number {
-            font-size: clamp(1rem, 2vw, 2vw);
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
           }
         }
 
         .valor {
           display: flex;
           flex-direction: column;
-        }
-
-        .percent {
-          font-size: clamp(0.7rem, 1.2vw, 1.2vw);
-          font-weight: 700;
-          letter-spacing: -0.4px;
-          color: #4cff4c;
-          text-shadow: 0 0 6px rgba(76, 255, 76, 0.6);
+          gap: 6px;
+          width: 100%;
         }
       }
 
       &-info2 {
-        background: rgba(255, 255, 255, 0.1);
-        gap: 0px;
+        background: rgba(139, 92, 246, 0.15);
+        border-color: rgba(139, 92, 246, 0.3);
+        gap: 8px;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.2);
+          border-color: rgba(139, 92, 246, 0.4);
+        }
 
         .benef {
           display: flex;
           align-items: baseline;
-          gap: 4px;
+          gap: 6px;
           white-space: nowrap;
 
           .number {
-            font-size: clamp(1.2rem, 3vw, 3vw);
-            max-width: 250px;
+            font-size: clamp(1.6rem, 3vw, 2.8rem);
+            max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             display: inline-block;
+
             &.large-number {
-              font-size: clamp(1rem, 2.5vw, 2.5vw);
+              font-size: clamp(1.3rem, 2.5vw, 2.2rem);
             }
           }
+
           .currency {
-            font-size: clamp(1.2rem, 3vw, 3vw);
+            font-size: clamp(1.6rem, 3vw, 2.8rem);
+            
             &.large-number {
-              font-size: clamp(1rem, 2.5vw, 2.5vw);
+              font-size: clamp(1.3rem, 2.5vw, 2.2rem);
             }
           }
+        }
+
+        .percent {
+          font-size: clamp(0.9rem, 1.2vw, 1.1rem);
+          font-weight: 700;
+          letter-spacing: -0.4px;
+          color: #10b981;
+          text-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+          padding: 4px 10px;
+          background: rgba(16, 185, 129, 0.15);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+          border-radius: 6px;
+          width: fit-content;
         }
       }
     }

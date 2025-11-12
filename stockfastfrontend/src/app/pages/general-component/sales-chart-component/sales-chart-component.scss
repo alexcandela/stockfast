@@ -1,29 +1,229 @@
 .saleschart {
   height: 100%;
-  padding: 20px;
+  padding: 24px;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: auto 0.99fr;
-  h3 {
-    font-size: clamp(1rem, 1vw, 1vw);
-    font-weight: 600;
+  grid-template-rows: auto 1fr;
+  gap: 16px;
+  min-height: 0;
+
+  @media (max-width: 640px) {
+    padding: 16px;
+    gap: 12px;
   }
 
   .titleContainer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .minititle {
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+        margin: 0;
+
+        @media (min-width: 1200px) {
+          font-size: 1.1rem;
+        }
+      }
+
+      .iconcontainer,
+      .icon {
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          filter: brightness(0) invert(0.8);
+        }
+      }
+    }
 
     p {
-      font-size: clamp(1rem, 1rem, 1.4rem);
-      font-weight: 500;
-      letter-spacing: -0.5px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
       margin: 0;
-      color: #000;
-      background: transparent;
-      padding: 5px 10px;
-      border: solid 1px #6d28d9;
-      border-radius: 6px;      
+      color: rgba(255, 255, 255, 0.9);
+      background: rgba(139, 92, 246, 0.15);
+      padding: 6px 12px;
+      border: 1px solid rgba(139, 92, 246, 0.4);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(139, 92, 246, 0.25);
+        border-color: rgba(139, 92, 246, 0.6);
+        transform: translateY(-1px);
+      }
+
+      @media (min-width: 1200px) {
+        font-size: 0.95rem;
+      }
     }
+  }
+
+  // Contenedor del gráfico
+  apx-chart {
+    min-height: 0;
+    overflow: hidden;
+  }
+}
+
+// Estilos globales para ApexCharts en dark theme
+:host ::ng-deep {
+  // Canvas principal
+  .apexcharts-canvas {
+    background: transparent !important;
+  }
+
+  // Tema oscuro
+  .apexcharts-theme-dark {
+    background: transparent !important;
+  }
+
+  // Texto general
+  .apexcharts-text {
+    fill: rgba(255, 255, 255, 0.7) !important;
+    font-family: inherit !important;
+  }
+
+  // Etiquetas del eje X
+  .apexcharts-xaxis-label {
+    fill: rgba(255, 255, 255, 0.6) !important;
+    font-size: 12px !important;
+  }
+
+  // Etiquetas del eje Y
+  .apexcharts-yaxis-label {
+    fill: rgba(255, 255, 255, 0.6) !important;
+    font-size: 12px !important;
+  }
+
+  // Grid lines
+  .apexcharts-gridline {
+    stroke: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  // Leyenda
+  .apexcharts-legend-text {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 13px !important;
+  }
+
+  // Tooltip
+  .apexcharts-tooltip {
+    background: rgba(26, 26, 26, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4) !important;
+    border-radius: 10px !important;
+    color: #ffffff !important;
+
+    .apexcharts-tooltip-title {
+      background: rgba(139, 92, 246, 0.2) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      padding: 8px 12px !important;
+    }
+
+    .apexcharts-tooltip-series-group {
+      background: transparent !important;
+      padding: 6px 12px !important;
+    }
+
+    .apexcharts-tooltip-text-y-label,
+    .apexcharts-tooltip-text-y-value {
+      color: rgba(255, 255, 255, 0.9) !important;
+    }
+  }
+
+  // Título del gráfico
+  .apexcharts-title-text {
+    fill: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 600 !important;
+  }
+
+  // Subtítulo
+  .apexcharts-subtitle-text {
+    fill: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  // Zoom toolbar
+  .apexcharts-toolbar {
+    fill: rgba(255, 255, 255, 0.7) !important;
+
+    .apexcharts-zoom-icon,
+    .apexcharts-zoomin-icon,
+    .apexcharts-zoomout-icon,
+    .apexcharts-reset-icon,
+    .apexcharts-pan-icon,
+    .apexcharts-selection-icon,
+    .apexcharts-menu-icon {
+      fill: rgba(255, 255, 255, 0.7) !important;
+
+      &:hover {
+        fill: #ffffff !important;
+      }
+    }
+
+    .apexcharts-menu {
+      background: rgba(26, 26, 26, 0.95) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      backdrop-filter: blur(20px) !important;
+
+      .apexcharts-menu-item {
+        color: rgba(255, 255, 255, 0.9) !important;
+
+        &:hover {
+          background: rgba(139, 92, 246, 0.2) !important;
+        }
+      }
+    }
+  }
+
+  // Data labels
+  .apexcharts-datalabels {
+    .apexcharts-datalabel {
+      fill: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 600 !important;
+    }
+  }
+
+  // Animación de carga
+  .apexcharts-loading {
+    fill: rgba(139, 92, 246, 0.6) !important;
+  }
+
+  // Crosshairs
+  .apexcharts-xcrosshairs,
+  .apexcharts-ycrosshairs {
+    stroke: rgba(139, 92, 246, 0.6) !important;
+  }
+
+  // Puntos de datos
+  .apexcharts-marker {
+    stroke: rgba(26, 26, 26, 0.8) !important;
+  }
+
+  // Selection brush
+  .apexcharts-selection-rect {
+    fill: rgba(139, 92, 246, 0.2) !important;
+    stroke: rgba(139, 92, 246, 0.6) !important;
   }
 }

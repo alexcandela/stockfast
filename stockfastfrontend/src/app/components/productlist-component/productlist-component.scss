@@ -1,117 +1,341 @@
 .productlist {
   &-product {
     display: grid;
-    grid-template-columns:
-      auto
-      2fr
-      repeat(7, 1fr);
+    grid-template-columns: auto 2fr repeat(6, 1fr) auto;
     padding: 15px 20px;
     gap: 20px;
-    border-bottom: solid 1px #eeeeee;
-    transition: all 0.4s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.03);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+    }
 
     &:hover {
-      background-color: #ebebeb;
+      &::before {
+        opacity: 1;
+      }
+
+      .productbutton {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    &:last-child {
+      border-bottom: none;
     }
 
     .inputcontainer {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #8b5cf6;
+        border-radius: 4px;
+      }
     }
 
     .productname {
-      width: 250px;
+      width: clamp(100px, 200px, 200px);
       font-weight: 600;
+      color: #ffffff;
     }
 
     .dataname {
       display: flex;
       justify-content: start;
       align-items: center;
+
       span {
-        font-size: clamp(10px, 1rem, 1vw);
+        font-size: clamp(10px, 0.875rem, 1vw);
+        color: rgba(255, 255, 255, 0.8);
       }
-    }
 
-    .categoria {
-      padding: 3px 8px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #c919a6, #7a03a8);
-      color: #fff;
-      font-weight: 600;
-      padding: 2px 7px;
-      background-color: #fca0fc;
-      border-radius: 10px;
-    }
+      .categoria {
+        padding: 4px 10px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 11px;
+        box-shadow: 0 2px 8px rgba(139, 92, 246, 0.2);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        white-space: nowrap;
+      }
 
-    .sale_price {
-      
-    }
-    .loteid {
-      font-weight: 600;
+      .sale_price {
+        color: #10b981;
+        font-weight: 600;
+      }
+
+      .loteid {
+        padding: 3px 8px;
+        border-radius: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 11px;
+        font-weight: 600;
+        font-family: monospace;
+      }
     }
 
     &-buttons {
       display: flex;
       justify-content: end;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
+
+      .productbutton {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0.7;
+        transform: translateX(5px);
+
+        img {
+          width: 18px;
+          height: 18px;
+          filter: brightness(0) invert(0.6);
+          transition: all 0.3s ease;
+        }
+
+        &:first-child {
+          // Botón vender (money)
+          &:hover {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.3);
+
+            img {
+              filter: brightness(0) invert(1);
+            }
+          }
+        }
+
+        &:nth-child(2) {
+          // Botón editar
+          &:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.3);
+
+            img {
+              filter: brightness(0) invert(1);
+            }
+          }
+        }
+
+        &:last-child {
+          // Botón eliminar
+          &:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+
+            img {
+              filter: brightness(0) invert(1);
+            }
+          }
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+      }
     }
   }
+
   &-form {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
-    transition: all 0.4s ease;
-  }
-}
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.02);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0 20px;
 
-.opened {
-  max-height: 500px;
-  opacity: 1;
-}
+    &.opened {
+      max-height: 500px;
+      opacity: 1;
+      padding: 20px;
+    }
 
-.saleForm {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 5px;
-  padding: 20px 100px;
-  max-width: 1000px;
-  margin: 0 auto;
+    // Sale Form
+    .saleForm {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
 
-  .forminputs {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
+      .forminputs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
 
-  &-buttonContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-}
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
 
-.deleteForm {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 5px;
-  padding: 20px 100px;
-  max-width: 1000px;
-  margin: 0 auto;
-  transition: all 0.4s ease;
-  .productFormBtn {
-    background-color: #ff0000;
-    &:hover {
-      background-color: #c50000;
+        .input {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          input {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            outline: none;
+
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.3);
+            }
+
+            &:hover {
+              border-color: rgba(255, 255, 255, 0.25);
+            }
+
+            &:focus {
+              border-color: rgba(16, 185, 129, 0.6);
+              box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+              background: rgba(255, 255, 255, 0.08);
+            }
+
+            &[type="date"] {
+              color-scheme: dark;
+            }
+          }
+
+          .errorMessageContainer {
+            min-height: 20px;
+
+            .errorMessage {
+              font-size: 11px;
+              color: #ef4444;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      &-buttonContainer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+
+        .productFormBtn {
+          padding: 12px 24px;
+          border-radius: 10px;
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          border: none;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
+    }
+
+    // Delete Form
+    .deleteForm {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      padding: 10px 0;
+
+      .productFormBtn {
+        padding: 12px 24px;
+        border-radius: 10px;
+        border: none;
+        color: #ffffff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:not(.cancelBtn) {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+          }
+        }
+
+        &.cancelBtn {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.25);
+          }
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+
+    // Edit Form
+    .editForm {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 10px 0;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
     }
   }
-  .cancelBtn {
-    background-color: #cccccc;
+}
 
-    &:hover {
-      background-color: #bbbbbb;
-    }
-  }
+// Utilidad para overflow text
+.hideoverflowtext {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

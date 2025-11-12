@@ -4,9 +4,11 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   gap: 10px;
+
   &-header {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 16px;
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
@@ -22,27 +24,79 @@
 
     &-types {
       display: grid;
-      grid-template-columns:
-        auto
-        2fr
-        repeat(7, 1fr);
-
+      grid-template-columns: auto 2fr repeat(7, 1fr);
       padding: 15px 20px;
-      background-color: #eeeeee;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       gap: 20px;
+      position: relative;
+      z-index: 2;
 
       @media (max-width: 768px) {
         grid-template-columns: repeat(9, auto);
+        overflow-x: auto;
+        
+        &::-webkit-scrollbar {
+          height: 6px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 3px;
+        }
+      }
+
+      input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        accent-color: #8b5cf6;
+        border-radius: 4px;
+        align-self: center;
       }
 
       .typetitle {
         display: flex;
         justify-content: start;
         align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.3s ease;
+
+        &:hover {
+          span {
+            color: rgba(255, 255, 255, 0.8);
+          }
+
+          img {
+            filter: brightness(0) invert(0.8);
+            transform: translateY(1px);
+          }
+        }
 
         span {
-          font-size: clamp(10px, 1rem, 1vw);
-          opacity: 0.5;
+          font-size: clamp(10px, 0.875rem, 1vw);
+          color: rgba(255, 255, 255, 0.5);
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          white-space: nowrap;
+          transition: color 0.3s ease;
+        }
+
+        img {
+          width: 14px;
+          height: 14px;
+          filter: brightness(0) invert(0.5);
+          transition: all 0.3s ease;
+          flex-shrink: 0;
         }
       }
     }
@@ -53,6 +107,8 @@
       bottom: 0;
       left: 0;
       right: 0;
+      background: rgba(0, 0, 0, 0.1);
+
       .listscroll {
         display: flex;
         flex-direction: column;
@@ -60,13 +116,63 @@
         overflow-x: hidden;
         width: 100%;
         height: 100%;
+
+        &::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+          background: rgba(255, 255, 255, 0.05);
+          border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.1);
+          border-radius: 4px;
+          transition: background 0.3s ease;
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.15);
+          }
+        }
+
+        .emptylist {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+          gap: 16px;
+          color: rgba(255, 255, 255, 0.4);
+          padding: 40px 20px;
+
+          img {
+            width: 64px;
+            height: 64px;
+            filter: brightness(0) invert(0.4);
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+          }
+
+          p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              opacity: 0.5;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.7;
+              transform: scale(1.05);
+            }
+          }
+        }
       }
     }
   }
-}
-
-.prueba {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 10px;
 }
