@@ -1,1 +1,86 @@
-<p>ventas-component works!</p>
+<div class="ventaspage">
+  <!-- Header con buscador y filtros -->
+  <div class="ventaspage-header">
+    <app-buscador-component (search)="getBusqueda($event)"/>
+    <div class="filter-group">
+      <select class="filter-select" (change)="onFilterChange($event)">
+        <option value="all">Todos</option>
+        <option value="month">Este mes</option>
+        <option value="year">Este año</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Métricas Principales -->
+  <div class="ventaspage-metrics">
+    <div class="metric-card card">
+      <div class="metric-icon">
+        <img src="assets/icons/sales.svg" alt="sales-icon">
+      </div>
+      <div class="metric-content">
+        <p class="metric-label">Total Ventas</p>
+        <span class="metric-value">{{ metrics().totalVentas }}</span>
+        <span class="metric-change" [ngClass]="getChangeClass(metrics().ventasChange)">
+          {{ metrics().ventasChange }}% vs anterior
+        </span>
+      </div>
+    </div>
+
+    <div class="metric-card card">
+      <div class="metric-icon">
+        <img src="assets/icons/ingresos.svg" alt="ingresos-icon">
+      </div>
+      <div class="metric-content">
+        <p class="metric-label">Ingresos</p>
+        <span class="metric-value">{{ metrics().ingresosTotales }} €</span>
+      </div>
+    </div>
+
+    <div class="metric-card card">
+      <div class="metric-icon">
+        <img src="assets/icons/profit.svg" alt="benefit-icon">
+      </div>
+      <div class="metric-content">
+        <p class="metric-label">Beneficio Neto</p>
+        <span class="metric-value green">{{ metrics().beneficioNeto }} €</span>
+      </div>
+    </div>
+
+    <div class="metric-card card">
+      <div class="metric-icon">
+        <img src="assets/icons/percent.svg" alt="roi-icon">
+      </div>
+      <div class="metric-content">
+        <p class="metric-label">ROI Promedio</p>
+        <span class="metric-value">{{ metrics().roi }}%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lista de Ventas -->
+  <div class="ventaspage-list card">
+    <div class="list-header">
+      <input type="checkbox" (change)="selectAll($event)">
+      <div class="header-item">Producto</div>
+      <div class="header-item">Fecha</div>
+      <div class="header-item">P. Compra</div>
+      <div class="header-item">P. Venta</div>
+      <div class="header-item">Beneficio</div>
+      <div class="header-item">Acciones</div>
+    </div>
+
+    <div class="list-scroll">
+      @for (venta of filteredVentas(); track venta.id) {
+        <app-venta-item 
+          [venta]="venta" 
+          (edit)="editVenta($event)"
+          (delete)="deleteVenta($event)"/>
+      } @empty {
+        <div class="empty-state">
+          <img src="assets/icons/info.svg" alt="empty">
+          <p>No hay ventas registradas</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

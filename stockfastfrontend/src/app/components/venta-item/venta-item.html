@@ -1,0 +1,40 @@
+<div class="venta-item">
+  <input type="checkbox" [(ngModel)]="venta.selected">
+  
+  <div class="venta-product">
+    <div class="product-info">
+      <span class="product-name">{{ venta.product.name }}</span>
+      <span class="product-category">{{ venta.product.category }}</span>
+    </div>
+  </div>
+
+  <div class="venta-date">
+    {{ venta.sale_date | date:'dd/MM/yyyy' }}
+  </div>
+
+  <div class="venta-purchase">
+    <span class="strikethrough">{{ venta.purchase_price.toFixed(2) }} €</span>
+  </div>
+
+  <div class="venta-sale">
+    <span class="sale-price">{{ venta.sale_price.toFixed(2) }} €</span>
+  </div>
+
+  <div class="venta-benefit">
+    <span class="benefit-amount" [ngClass]="getBenefitClass()">
+      {{ venta.benefit > 0 ? '+' : '' }}{{ venta.benefit.toFixed(2) }} €
+    </span>
+    <span class="benefit-percent">
+      ({{ venta.benefitPercent.toFixed(1) }}%)
+    </span>
+  </div>
+
+  <div class="venta-actions">
+    <button class="action-btn edit" (click)="onEdit()">
+      <img src="assets/icons/edit.svg" alt="edit">
+    </button>
+    <button class="action-btn delete" (click)="onDelete()">
+      <img src="assets/icons/delete.svg" alt="delete">
+    </button>
+  </div>
+</div>
