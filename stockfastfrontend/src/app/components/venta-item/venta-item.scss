@@ -1,8 +1,8 @@
 .venta-item {
   display: grid;
-  grid-template-columns: auto 2fr 1fr 1fr 1fr 1.2fr auto;
+  grid-template-columns: auto 2fr repeat(7, 1fr);
   padding: 16px 20px;
-  gap: 16px;
+  gap: 12px;
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s ease;
@@ -29,8 +29,8 @@
     }
   }
 
-  @media (max-width: 1024px) {
-    grid-template-columns: auto 2fr repeat(4, 1fr) auto;
+  @media (max-width: 1200px) {
+    overflow-x: auto;
   }
 
   input[type="checkbox"] {
@@ -79,11 +79,23 @@
   }
 
   .venta-purchase {
-    .strikethrough {
+    .price {
       font-size: 0.875rem;
-      color: rgba(255, 255, 255, 0.5);
-      text-decoration: line-through;
+      color: rgba(255, 255, 255, 0.7);
       font-weight: 500;
+    }
+  }
+
+  .venta-shipping {
+    .shipping-cost {
+      font-size: 0.8rem;
+      color: rgba(255, 193, 7, 0.9);
+      font-weight: 600;
+      padding: 3px 8px;
+      background: rgba(255, 193, 7, 0.15);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 6px;
+      white-space: nowrap;
     }
   }
 

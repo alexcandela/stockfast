@@ -14,7 +14,7 @@ import { NotificationService } from '../../core/services/notification-service';
 })
 export class StockComponent implements OnInit {
   products: Product[] = [];
-  filteredProducts: Product[] = []; // Nueva propiedad para productos filtrados
+  filteredProducts: Product[] = [];
 
   constructor(
     private productService: ProductService,
@@ -27,18 +27,15 @@ export class StockComponent implements OnInit {
     this.filteredProducts = this.filteredProducts.filter((p) => p.id !== productId);
   }
 
-  // Buscador async
   getBusqueda(data: string) {
     const searchTerm = data.trim();
 
     if (searchTerm === '') {
       this.filteredProducts = [...this.products];
     } else if (searchTerm.startsWith('#')) {
-      // Filtrar por purchase_id
-      const purchaseId = searchTerm.substring(1).trim(); // Quitar el # y espacios
+      const purchaseId = searchTerm.substring(1).trim();
 
       if (purchaseId === '') {
-        // Si solo escribió # sin número, mostrar todos
         this.filteredProducts = [...this.products];
       } else {
         this.filteredProducts = this.products.filter((product) =>
@@ -46,7 +43,6 @@ export class StockComponent implements OnInit {
         );
       }
     } else {
-      // Filtrar por nombre
       this.filteredProducts = this.products.filter((product) =>
         product.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -58,7 +54,7 @@ export class StockComponent implements OnInit {
       next: (response) => {
         if (response.success) {
           this.products = response.products;
-          this.filteredProducts = [...this.products]; // Inicializar filteredProducts
+          this.filteredProducts = [...this.products];
           this.cd.detectChanges();
         }
       },

@@ -2,19 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-interface Venta {
-  id: number;
-  product: {
-    name: string;
-    category: string;
-  };
-  sale_date: Date;
-  purchase_price: number;
-  sale_price: number;
-  benefit: number;
-  benefitPercent: number;
-  selected?: boolean;
-}
+import { Venta } from '../../core/interfaces/venta';
 
 @Component({
   selector: 'app-venta-item',

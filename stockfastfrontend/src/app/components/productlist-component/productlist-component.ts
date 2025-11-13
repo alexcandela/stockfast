@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { Product } from '../../core/interfaces/product';
 import {
   FormBuilder,
@@ -9,10 +8,8 @@ import {
   ReactiveFormsModule,
   FormsModule,
 } from '@angular/forms';
-
 import { CustomValidators } from '../../core/validators/custom-validators';
 import { SaleService } from '../../core/services/sale-service';
-
 import { NotificationService } from '../../core/services/notification-service';
 import { ProductService } from '../../core/services/product-service';
 
@@ -33,6 +30,7 @@ export class ProductlistComponent {
   saleForm: FormGroup;
   deleteForm: FormGroup;
   editForm: FormGroup;
+
   constructor(
     private fb: FormBuilder,
     private saleService: SaleService,
@@ -58,7 +56,6 @@ export class ProductlistComponent {
     });
   }
 
-  // Método para alternar formularios
   toggleForm(formType: 'sale' | 'edit' | 'delete' | null) {
     if (this.activeForm() === formType) {
       this.activeForm.set(null);
@@ -69,7 +66,6 @@ export class ProductlistComponent {
     }
   }
 
-  // Eliminar producto
   deleteProduct = (productId: number) => {
     this.productService.deleteProduct(productId).subscribe({
       next: (res) => {
@@ -84,12 +80,10 @@ export class ProductlistComponent {
     });
   };
 
-  // Editar producto
   editProduct(product: Product) {
     this.activeForm.set(null);
   }
 
-  // Registrar venta
   registrarVenta() {
     this.saleForm.patchValue({
       product_id: this.product.id,

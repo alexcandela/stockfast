@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Authservice } from './authservice';
 import { Sale } from '../interfaces/sale';
 import { Observable } from 'rxjs';
+import { Venta, VentaResponse } from '../interfaces/venta';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,15 @@ export class SaleService {
     });
 
     return this.http.post(`${this.apiUrl}/make-sale`, sale, { headers });
+  }
+
+  getSales(): Observable<VentaResponse> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.get<VentaResponse>(`${this.apiUrl}/getsales`, { headers });
   }
   
 }

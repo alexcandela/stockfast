@@ -1,7 +1,7 @@
 .productlist {
   &-product {
     display: grid;
-    grid-template-columns: auto 2fr repeat(6, 1fr) auto;
+    grid-template-columns: auto 1.5fr repeat(8, 1fr);
     padding: 15px 20px;
     gap: 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -78,6 +78,17 @@
         white-space: nowrap;
       }
 
+      .shipping-cost {
+        color: rgba(255, 193, 7, 0.9);
+        font-weight: 600;
+        padding: 3px 8px;
+        background: rgba(255, 193, 7, 0.15);
+        border: 1px solid rgba(255, 193, 7, 0.3);
+        border-radius: 6px;
+        font-size: 11px;
+        white-space: nowrap;
+      }
+
       .sale_price {
         color: #10b981;
         font-weight: 600;
@@ -123,7 +134,6 @@
         }
 
         &:first-child {
-          // Botón vender (money)
           &:hover {
             background: rgba(16, 185, 129, 0.15);
             border-color: rgba(16, 185, 129, 0.3);
@@ -135,7 +145,6 @@
         }
 
         &:nth-child(2) {
-          // Botón editar
           &:hover {
             background: rgba(59, 130, 246, 0.15);
             border-color: rgba(59, 130, 246, 0.3);
@@ -147,7 +156,6 @@
         }
 
         &:last-child {
-          // Botón eliminar
           &:hover {
             background: rgba(239, 68, 68, 0.15);
             border-color: rgba(239, 68, 68, 0.3);
@@ -180,7 +188,6 @@
       padding: 20px;
     }
 
-    // Sale Form
     .saleForm {
       display: flex;
       flex-direction: column;
@@ -278,7 +285,6 @@
       }
     }
 
-    // Delete Form
     .deleteForm {
       display: flex;
       gap: 12px;
@@ -321,7 +327,6 @@
       }
     }
 
-    // Edit Form
     .editForm {
       display: flex;
       flex-direction: column;
@@ -333,7 +338,6 @@
   }
 }
 
-// Utilidad para overflow text
 .hideoverflowtext {
   overflow: hidden;
   text-overflow: ellipsis;

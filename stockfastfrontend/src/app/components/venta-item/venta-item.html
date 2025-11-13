@@ -4,7 +4,7 @@
   <div class="venta-product">
     <div class="product-info">
       <span class="product-name">{{ venta.product.name }}</span>
-      <span class="product-category">{{ venta.product.category }}</span>
+      <span class="product-category">{{ venta.product.category!.name}}</span>
     </div>
   </div>
 
@@ -13,16 +13,24 @@
   </div>
 
   <div class="venta-purchase">
-    <span class="strikethrough">{{ venta.purchase_price.toFixed(2) }} €</span>
+    <span class="price">{{ venta.product.purchase_price }} €</span>
+  </div>
+
+  <div class="venta-shipping">
+    <span class="shipping-cost">+{{ venta.shipping_cost || 0}} €</span>
+  </div>
+  
+  <div class="venta-purchase">
+    <span class="price">{{ venta.quantity }}</span>
   </div>
 
   <div class="venta-sale">
-    <span class="sale-price">{{ venta.sale_price.toFixed(2) }} €</span>
+    <span class="sale-price">{{ venta.sale_price }} €</span>
   </div>
 
   <div class="venta-benefit">
     <span class="benefit-amount" [ngClass]="getBenefitClass()">
-      {{ venta.benefit > 0 ? '+' : '' }}{{ venta.benefit.toFixed(2) }} €
+      {{ venta.benefit > 0 ? '+' : '' }}{{ venta.benefit || 0}} €
     </span>
     <span class="benefit-percent">
       ({{ venta.benefitPercent.toFixed(1) }}%)
