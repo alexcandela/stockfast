@@ -1,7 +1,10 @@
 <div class="stock">
     <div class="stock-header">
-        <app-buscador-component (search)="getBusqueda($event)"/>
+        <app-buscador-component (search)="getBusqueda($event)" />
     </div>
+    @if (loading()) {
+    <app-skeleton-component />
+    } @else {
     <div class="stock-listcontainer card">
         <div class="stock-listcontainer-types">
             <input type="checkbox" name="" id="">
@@ -52,4 +55,5 @@
             </div>
         </div>
     </div>
+    }
 </div>

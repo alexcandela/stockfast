@@ -1,16 +1,38 @@
 <div class="generalpage">
     <div class="generalpage-item1 card">
+        @if (loading()) {
+        <app-skeleton-component />
+        } @else {
+
         <app-sales-chart-component [data]="data" [filter]="filter()" />
+
+        }
     </div>
+
     <div class="generalpage-item2 card" (click)="goToPro()">
         <div class="pro-container">
             <p>stockfast.</p><span>PRO</span>
         </div>
     </div>
+
     <div class="generalpage-item3">
-        <app-tips-component  [stockTotal]="stockTotal" [stockData]="stockData"/>
+        @if (loading()) {
+        <app-skeleton-component />
+        } @else {
+
+        <app-tips-component [stockTotal]="stockTotal" [stockData]="stockData" />
+
+        }
     </div>
+
     <div class="generalpage-item4">
-        <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos" [numVentas]="numVentas"/>
+        @if (loading()) {
+        <app-skeleton-component />
+        } @else {
+
+        <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos"
+            [numVentas]="numVentas" />
+
+        }
     </div>
 </div>

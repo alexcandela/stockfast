@@ -1,1 +1,317 @@
-<p>ajustes-component works!</p>
+<div class="ajustes-container">
+  <div class="ajustes-header">
+    <h1>Configuración</h1>
+    <p>Gestiona tu cuenta y preferencias</p>
+  </div>
+
+  <div class="ajustes-content">
+    <!-- Sidebar de navegación -->
+    <div class="ajustes-sidebar card">
+      <nav class="ajustes-nav">
+        <button 
+          class="nav-item" 
+          [class.active]="activeSection === 'perfil'"
+          (click)="setActiveSection('perfil')">
+          <i class="icon-user"></i>
+          <span>Perfil</span>
+        </button>
+        <button 
+          class="nav-item" 
+          [class.active]="activeSection === 'seguridad'"
+          (click)="setActiveSection('seguridad')">
+          <i class="icon-lock"></i>
+          <span>Seguridad</span>
+        </button>
+        <button 
+          class="nav-item" 
+          [class.active]="activeSection === 'notificaciones'"
+          (click)="setActiveSection('notificaciones')">
+          <i class="icon-bell"></i>
+          <span>Notificaciones</span>
+        </button>
+        <button 
+          class="nav-item" 
+          [class.active]="activeSection === 'plan'"
+          (click)="setActiveSection('plan')">
+          <i class="icon-credit-card"></i>
+          <span>Plan y Facturación</span>
+        </button>
+        <button 
+          class="nav-item danger" 
+          [class.active]="activeSection === 'avanzado'"
+          (click)="setActiveSection('avanzado')">
+          <i class="icon-alert"></i>
+          <span>Avanzado</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="ajustes-main">
+      
+      <!-- Sección: Perfil -->
+      @if (activeSection === 'perfil') {
+        <div class="card section">
+          <div class="section-header">
+            <h2>Información del Perfil</h2>
+            <p>Actualiza tu información personal</p>
+          </div>
+
+          <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nombre</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  formControlName="name" 
+                  placeholder="Tu nombre">
+                @if (profileForm.get('name')?.touched && profileForm.get('name')?.errors?.['required']) {
+                  <span class="error">El nombre es requerido</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label for="last_name">Apellido</label>
+                <input 
+                  type="text" 
+                  id="last_name" 
+                  formControlName="last_name" 
+                  placeholder="Tu apellido">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="username">Nombre de usuario</label>
+              <input 
+                type="text" 
+                id="username" 
+                formControlName="username" 
+                placeholder="@username">
+            </div>
+
+            <div class="form-group">
+              <label for="email">Correo electrónico</label>
+              <input 
+                type="email" 
+                id="email" 
+                formControlName="email" 
+                placeholder="tu@email.com">
+              @if (profileForm.get('email')?.touched && profileForm.get('email')?.errors?.['email']) {
+                <span class="error">Ingresa un email válido</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Teléfono (opcional)</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                formControlName="phone" 
+                placeholder="+34 600 000 000">
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="!profileForm.valid || loading">
+                {{ loading ? 'Guardando...' : 'Guardar cambios' }}
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      <!-- Sección: Seguridad -->
+      @if (activeSection === 'seguridad') {
+        <div class="card section">
+          <div class="section-header">
+            <h2>Seguridad</h2>
+            <p>Actualiza tu contraseña y gestiona la seguridad de tu cuenta</p>
+          </div>
+
+          <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
+            <div class="form-group">
+              <label for="current_password">Contraseña actual</label>
+              <input 
+                type="password" 
+                id="current_password" 
+                formControlName="current_password" 
+                placeholder="Tu contraseña actual">
+            </div>
+
+            <div class="form-group">
+              <label for="new_password">Nueva contraseña</label>
+              <input 
+                type="password" 
+                id="new_password" 
+                formControlName="new_password" 
+                placeholder="Mínimo 8 caracteres">
+              <span class="hint">Usa al menos 8 caracteres con letras y números</span>
+            </div>
+
+            <div class="form-group">
+              <label for="confirm_password">Confirmar contraseña</label>
+              <input 
+                type="password" 
+                id="confirm_password" 
+                formControlName="confirm_password" 
+                placeholder="Repite la nueva contraseña">
+              @if (passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirm_password')?.touched) {
+                <span class="error">Las contraseñas no coinciden</span>
+              }
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" [disabled]="!passwordForm.valid || loading">
+                {{ loading ? 'Cambiando...' : 'Cambiar contraseña' }}
+              </button>
+            </div>
+          </form>
+
+          <div class="security-info">
+            <h3>Seguridad adicional</h3>
+            <div class="info-item">
+              <i class="icon-shield"></i>
+              <div>
+                <strong>Autenticación de dos factores</strong>
+                <p>Próximamente disponible</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Sección: Notificaciones -->
+      @if (activeSection === 'notificaciones') {
+        <div class="card section">
+          <div class="section-header">
+            <h2>Notificaciones</h2>
+            <p>Configura cómo y cuándo quieres recibir notificaciones</p>
+          </div>
+
+          <form [formGroup]="notificationForm">
+            <div class="notification-group">
+              <h3>Notificaciones por email</h3>
+              
+              <div class="toggle-item">
+                <div class="toggle-info">
+                  <strong>Notificaciones generales</strong>
+                  <p>Actualizaciones importantes sobre tu cuenta</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" formControlName="email_notifications">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <div class="toggle-info">
+                  <strong>Nuevas ventas</strong>
+                  <p>Recibe un email cada vez que realices una venta</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" formControlName="sales_notifications">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <div class="toggle-info">
+                  <strong>Alertas de stock</strong>
+                  <p>Te avisamos cuando el stock de un producto sea bajo</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" formControlName="stock_alerts">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="toggle-item">
+                <div class="toggle-info">
+                  <strong>Marketing y ofertas</strong>
+                  <p>Novedades, consejos y ofertas especiales</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" formControlName="marketing_emails">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="notification-group">
+              <h3>Notificaciones push</h3>
+              
+              <div class="toggle-item">
+                <div class="toggle-info">
+                  <strong>Notificaciones push</strong>
+                  <p>Recibe notificaciones en tu navegador</p>
+                </div>
+                <label class="toggle">
+                  <input type="checkbox" formControlName="push_notifications">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn-primary" (click)="updateNotifications()">
+                Guardar preferencias
+              </button>
+            </div>
+          </form>
+        </div>
+      }
+
+      <!-- Sección: Plan y Facturación -->
+      @if (activeSection === 'plan') {
+        <div class="card section">
+          <div class="section-header">
+            <h2>Plan y Facturación</h2>
+            <p>Gestiona tu suscripción y métodos de pago</p>
+          </div>
+
+          <div class="plan-current">
+            <div class="plan-badge">Plan Actual</div>
+            <h3>Free</h3>
+            <p class="plan-price">€0/mes</p>
+            <button class="btn btn-primary">Actualizar a Pro</button>
+          </div>
+
+          <div class="plan-features">
+            <h3>Características de tu plan</h3>
+            <ul>
+              <li>✓ Hasta 50 productos</li>
+              <li>✓ Ventas ilimitadas</li>
+              <li>✗ Análisis avanzados</li>
+              <li>✗ Exportación de datos</li>
+            </ul>
+          </div>
+        </div>
+      }
+
+      <!-- Sección: Avanzado -->
+      @if (activeSection === 'avanzado') {
+        <div class="card section danger-section">
+          <div class="section-header">
+            <h2>Configuración Avanzada</h2>
+            <p>Opciones irreversibles - procede con precaución</p>
+          </div>
+
+          <div class="danger-zone">
+            <h3>Zona de Peligro</h3>
+            
+            <div class="danger-item">
+              <div>
+                <strong>Eliminar cuenta</strong>
+                <p>Una vez eliminada, no podrás recuperar tu cuenta ni tus datos</p>
+              </div>
+              <button class="btn btn-danger" (click)="deleteAccount()">
+                Eliminar cuenta
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

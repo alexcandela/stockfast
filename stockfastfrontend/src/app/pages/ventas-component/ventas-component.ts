@@ -7,16 +7,19 @@ import { Metrics } from '../../core/interfaces/metrics';
 
 import { NotificationService } from '../../core/services/notification-service';
 import { SaleService } from '../../core/services/sale-service';
+
+import { SkeletonComponent } from '../../components/skeleton-component/skeleton-component';
 @Component({
   selector: 'app-ventas-component',
   standalone: true,
-  imports: [CommonModule, VentaItem, BuscadorComponent],
+  imports: [CommonModule, VentaItem, BuscadorComponent, SkeletonComponent],
   templateUrl: './ventas-component.html',
   styleUrl: './ventas-component.scss',
 })
 export class VentasComponent implements OnInit {
   constructor(private saleService: SaleService, private notificationService: NotificationService) {}
 
+  loading = signal<boolean>(true);
   ventas = signal<Venta[]>([]);
   filteredVentas = signal<Venta[]>([]);
   metrics = signal<Metrics>({
@@ -38,6 +41,7 @@ export class VentasComponent implements OnInit {
           this.ventas.set(response.data);
           this.filteredVentas.set(response.data);
           this.calculateMetrics();
+          this.loading.set(false);
         }
       },
       error: (err) => {

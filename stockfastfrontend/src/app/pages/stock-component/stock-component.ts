@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, signal } from '@angular/core';
 import { BuscadorComponent } from '../../components/buscador-component/buscador-component';
 import { ProductlistComponent } from '../../components/productlist-component/productlist-component';
 import { CommonModule } from '@angular/common';
@@ -6,13 +6,17 @@ import { ProductService } from '../../core/services/product-service';
 import { Product } from '../../core/interfaces/product';
 import { NotificationService } from '../../core/services/notification-service';
 
+import { SkeletonComponent } from '../../components/skeleton-component/skeleton-component';
+
 @Component({
   selector: 'app-stock-component',
-  imports: [BuscadorComponent, ProductlistComponent, CommonModule],
+  imports: [BuscadorComponent, ProductlistComponent, CommonModule, SkeletonComponent],
   templateUrl: './stock-component.html',
   styleUrl: './stock-component.scss',
 })
 export class StockComponent implements OnInit {
+
+  loading = signal<boolean>(true);
   products: Product[] = [];
   filteredProducts: Product[] = [];
 
@@ -56,6 +60,7 @@ export class StockComponent implements OnInit {
           this.products = response.products;
           this.filteredProducts = [...this.products];
           this.cd.detectChanges();
+          this.loading.set(false);
         }
       },
       error: (err) => {

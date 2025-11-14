@@ -17,14 +17,18 @@ import { StockService } from '../../core/services/stock-service';
 import { Stock, StockResponse } from '../../core/interfaces/stock';
 import { Router } from '@angular/router';
 
+import { SkeletonComponent } from '../../components/skeleton-component/skeleton-component';
+
 @Component({
   selector: 'app-general-component',
   standalone: true,
-  imports: [IngresosComponent, SalesChartComponent, TipsComponent],
+  imports: [IngresosComponent, SalesChartComponent, TipsComponent, SkeletonComponent],
   templateUrl: './general-component.html',
   styleUrl: './general-component.scss',
 })
 export class GeneralComponent implements OnInit {
+
+  loading = signal<boolean>(true);
   userplan: string | null = null;
   data: any[] = [];
   ingresos: Ingresos | null = null;
@@ -63,6 +67,7 @@ export class GeneralComponent implements OnInit {
   }
 
   loadData(filter: string) {
+    this.loading.set(true);
     this.generalDataService.getGeneralData(filter).subscribe({
       next: (res) => {
         this.data = res.data;
@@ -70,12 +75,11 @@ export class GeneralComponent implements OnInit {
         this.numVentas = res.numeroVentas;
         this.stockTotal = res.stockTotal;
         this.cdr.detectChanges();
+        this.loading.set(false);
       },
       error: (err) => console.error('Error al obtener datos:', err),
     });
   }
-
-  getBasicData() {}
 
   getStockData() {
     this.stockService.getStockData().subscribe(
@@ -83,6 +87,7 @@ export class GeneralComponent implements OnInit {
         if (response.success) {
           this.stockData = response.data;
           this.cdr.detectChanges();
+          this.loading.set(false);
         }
       },
       (error) => {
