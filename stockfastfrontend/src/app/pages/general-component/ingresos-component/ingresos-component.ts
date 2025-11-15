@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, OnInit, signal, computed } from '@angular/core';
+import { Component, Output, EventEmitter, Input, OnInit, signal, computed, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/services/authservice';
@@ -18,10 +18,11 @@ interface MonthOption {
   templateUrl: './ingresos-component.html',
   styleUrls: ['./ingresos-component.scss'],
 })
-export class IngresosComponent {
+export class IngresosComponent implements OnInit, OnChanges {
   @Output() filterChange = new EventEmitter<string>();
   @Input() ingresos: Ingresos | null = null;
   @Input() numVentas: NumVentas | null = null;
+  @Input() initialFilter: string = '';
 
   readonly Math = Math;
   
@@ -30,27 +31,79 @@ export class IngresosComponent {
   selectedYear = signal<string>('');
   showMonthDropdown = signal(false);
   showYearDropdown = signal(false);
+  selectedTotal = false;
   
-  // Computed signals
+  private isInitializing = true;
+  
   selectedMonthLabel = computed(() => {
+    if (!this.selectedMonth()) {
+      this.selectedTotal = true;
+      return 'Total';
+    }
     const month = this.months.find(m => m.value === this.selectedMonth());
-    return month?.label ?? '';
+    this.selectedTotal = false;
+    return month?.label ?? 'Selecciona mes';
   });
   
-  selectedYearLabel = computed(() => this.selectedYear());
+  selectedYearLabel = computed(() => {
+    if (!this.selectedYear()) {
+      return 'Total';
+    }
+    return this.selectedYear();
+  });
   
   months: MonthOption[] = [];
   years: number[] = [];
 
-  constructor(private authService: Authservice) {
+  constructor(
+    private authService: Authservice,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit(): void {
     this.initializeUserPlan();
     this.initializeMonths();
     this.initializeYears();
+    
+    Promise.resolve().then(() => {
+      this.applyInitialFilter();
+      
+      setTimeout(() => {
+        this.isInitializing = false;
+      }, 200);
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialFilter'] && !changes['initialFilter'].firstChange) {
+      this.applyInitialFilter();
+    }
+  }
+
+  private applyInitialFilter(): void {
+    if (this.initialFilter === 'total') {
+      this.selectedMonth.set('');
+      this.selectedYear.set('');
+      this.cdr.detectChanges();
+      return;
+    }
+    
+    if (this.initialFilter && this.initialFilter.includes('-')) {
+      const [year, month] = this.initialFilter.split('-');
+      
+      if (year && month) {
+        setTimeout(() => {
+          this.selectedYear.set(year);
+          this.selectedMonth.set(month);
+          this.cdr.detectChanges();
+        }, 0);
+        return;
+      }
+    }
+    
     this.setInitialSelection();
   }
 
-  // ==================== INICIALIZACIÓN ====================
-  
   private initializeUserPlan(): void {
     this.userplan.set(this.authService.getUserPlan());
   }
@@ -95,25 +148,35 @@ export class IngresosComponent {
 
     this.selectedMonth.set(currentMonth);
     this.selectedYear.set(currentYear);
+    
+    if (!this.initialFilter) {
+      this.emitFilter();
+    }
   }
 
-  // ==================== HELPERS ====================
-  
   private capitalizeFirstLetter(text: string): string {
     return text.charAt(0).toUpperCase() + text.slice(1);
   }
 
   private emitFilter(): void {
-    const filter = `${this.selectedYear()}-${this.selectedMonth()}`;
+    if (this.isInitializing) {
+      return;
+    }
+    
+    const hasMonth = this.selectedMonth();
+    const hasYear = this.selectedYear();
+    
+    let filter: string;
+    
+    if (!hasMonth || !hasYear) {
+      filter = 'total';
+    } else {
+      filter = `${hasYear}-${hasMonth}`;
+    }
+    
     this.filterChange.emit(filter);
   }
 
-  private emitSelectedDate(): void {
-    
-  }
-
-  // ==================== ACCIONES PÚBLICAS ====================
-  
   toggleMonthDropdown(): void {
     this.showMonthDropdown.update(value => !value);
     this.showYearDropdown.set(false);
@@ -128,19 +191,34 @@ export class IngresosComponent {
     if (month.locked) return;
     
     this.selectedMonth.set(month.value);
+    
+    if (!this.selectedYear()) {
+      const currentYear = new Date().getFullYear().toString();
+      this.selectedYear.set(currentYear);
+    }
+    
     this.showMonthDropdown.set(false);
     this.emitFilter();
   }
 
   selectYear(year: number): void {
     this.selectedYear.set(year.toString());
+    
+    if (!this.selectedMonth()) {
+      const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
+      this.selectedMonth.set(currentMonth);
+    }
+    
     this.showYearDropdown.set(false);
     this.emitFilter();
   }
 
   selectTotal(): void {
+    this.selectedMonth.set('');
+    this.selectedYear.set('');
+    
     this.showMonthDropdown.set(false);
     this.showYearDropdown.set(false);
-    this.filterChange.emit('total');
+    this.emitFilter();
   }
 }

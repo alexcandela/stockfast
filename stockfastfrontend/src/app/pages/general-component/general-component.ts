@@ -27,7 +27,6 @@ import { SkeletonComponent } from '../../components/skeleton-component/skeleton-
   styleUrl: './general-component.scss',
 })
 export class GeneralComponent implements OnInit {
-
   loading = signal<boolean>(true);
   userplan: string | null = null;
   data: any[] = [];
@@ -35,7 +34,10 @@ export class GeneralComponent implements OnInit {
   numVentas: NumVentas | null = null;
   stockData: Stock | null = null;
   stockTotal: number | null = null;
-  filter: WritableSignal<string> = signal(this.getCurrentMonth());
+  
+  filter: WritableSignal<string> = signal(this.getSavedFilter());
+  
+  private isFirstLoad = true;
 
   constructor(
     private authService: Authservice,
@@ -45,8 +47,17 @@ export class GeneralComponent implements OnInit {
     private router: Router
   ) {
     this.userplan = this.authService.getUserPlan();
+    
     effect(() => {
-      this.loadData(this.filter());
+      const currentFilter = this.filter();
+      console.log('🔄 Effect disparado con filtro:', currentFilter);
+      
+      if (!this.isFirstLoad) {
+        console.log('   ✅ Cargando datos...');
+        this.loadData(currentFilter);
+      } else {
+        console.log('   ⏸️ Primera carga, saltando effect');
+      }
     });
   }
 
@@ -61,43 +72,89 @@ export class GeneralComponent implements OnInit {
     return `${year}-${month}`;
   }
 
+  getSavedFilter(): string {
+    const savedFilter = localStorage.getItem('stockfast_date_filter');
+    if (savedFilter) {
+      console.log('💾 Filtro recuperado:', savedFilter);
+      return savedFilter;
+    }
+    const currentMonth = this.getCurrentMonth();
+    console.log('📅 Usando mes actual:', currentMonth);
+    localStorage.setItem('stockfast_date_filter', currentMonth);
+    return currentMonth;
+  }
+
+  saveFilter(filter: string): void {
+    localStorage.setItem('stockfast_date_filter', filter);
+    console.log('💾 Filtro guardado:', filter);
+  }
+
   onFilterSelected(selectedFilter: string) {
+    console.log('🎯 Usuario seleccionó filtro:', selectedFilter);
+    
+    // Guardar en localStorage
+    this.saveFilter(selectedFilter);
+    
+    // Actualizar signal (esto dispara el effect)
     this.filter.set(selectedFilter);
-    // this.loadData(this.filter());
+    
+    console.log('   📊 Signal actualizado, effect se ejecutará...');
   }
 
   loadData(filter: string) {
     this.loading.set(true);
+    console.log('📊 Cargando datos con filtro:', filter);
+    
     this.generalDataService.getGeneralData(filter).subscribe({
       next: (res) => {
+        console.log('✅ Datos recibidos:', res);
+        
+        // Actualizar datos (esto dispara ngOnChanges en el hijo)
         this.data = res.data;
         this.ingresos = res.ingresos;
         this.numVentas = res.numeroVentas;
         this.stockTotal = res.stockTotal;
+        
+        // Forzar detección de cambios
         this.cdr.detectChanges();
         this.loading.set(false);
+        
+        console.log('   📈 Ingresos:', this.ingresos);
+        console.log('   📦 NumVentas:', this.numVentas);
       },
-      error: (err) => console.error('Error al obtener datos:', err),
+      error: (err) => {
+        console.error('❌ Error al obtener datos:', err);
+        this.loading.set(false);
+      }
     });
   }
 
   getStockData() {
-    this.stockService.getStockData().subscribe(
-      (response) => {
+    this.stockService.getStockData().subscribe({
+      next: (response) => {
         if (response.success) {
           this.stockData = response.data;
           this.cdr.detectChanges();
-          this.loading.set(false);
         }
       },
-      (error) => {
-        console.error('Error al obtener los datos de stock:', error);
+      error: (error) => {
+        console.error('❌ Error al obtener stock:', error);
       }
-    );
+    });
   }
 
   ngOnInit(): void {
-    // this.loadData(this.filter());
+    console.log('🚀 Iniciando GeneralComponent');
+    console.log('   Filtro inicial:', this.filter());
+    
+    // Cargar datos iniciales
+    this.loadData(this.filter());
     this.getStockData();
+    
+    // Activar effect después de un momento
+    setTimeout(() => {
+      this.isFirstLoad = false;
+      console.log('✅ Primera carga completada, effect activo');
+    }, 100);
   }
 }

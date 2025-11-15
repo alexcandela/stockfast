@@ -3,9 +3,7 @@
         @if (loading()) {
         <app-skeleton-component />
         } @else {
-
         <app-sales-chart-component [data]="data" [filter]="filter()" />
-
         }
     </div>
 
@@ -19,9 +17,7 @@
         @if (loading()) {
         <app-skeleton-component />
         } @else {
-
         <app-tips-component [stockTotal]="stockTotal" [stockData]="stockData" />
-
         }
     </div>
 
@@ -29,10 +25,13 @@
         @if (loading()) {
         <app-skeleton-component />
         } @else {
-
-        <app-ingresos-component (filterChange)="onFilterSelected($event)" [ingresos]="ingresos"
-            [numVentas]="numVentas" />
-
+        <!-- ✅ AÑADIDO: [initialFilter]="filter()" -->
+        <app-ingresos-component 
+            [initialFilter]="filter()"
+            [ingresos]="ingresos"
+            [numVentas]="numVentas"
+            (filterChange)="onFilterSelected($event)">
+        </app-ingresos-component>
         }
     </div>
 </div>

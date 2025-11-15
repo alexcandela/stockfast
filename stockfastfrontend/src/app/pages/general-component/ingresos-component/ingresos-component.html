@@ -8,7 +8,6 @@
                 <h3>Ingresos</h3>
             </div>
             <div class="filtercontainer">
-                <!-- Selector Mes -->
                 <div class="dropdown">
                     <div class="selected" (click)="toggleMonthDropdown()">
                         {{ selectedMonthLabel() }}
@@ -19,19 +18,31 @@
                     @if (showMonthDropdown()) {
                     <ul class="dropdown-list">
                         @for (month of months; track $index) {
-                        <li (click)="selectMonth(month)" [class.locked]="month.locked">
+                        <li (click)="selectMonth(month)" [class.locked]="month.locked"
+                            [class.selected]="selectedMonth() === month.value">
                             {{ month.label }}
+                            @if (selectedMonth() === month.value) {
+                            <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                            }
                             @if (month.locked) {
                             <span class="pro-icon">PRO</span>
                             }
                         </li>
                         }
-                        <li (click)="selectTotal()" class="total-option">Total</li>
+                        <li (click)="selectTotal()" class="total-option" [class.selected]="!selectedMonth()">
+                            Total
+                            @if (!selectedMonth()) {
+                            <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                            }
+                        </li>
                     </ul>
                     }
                 </div>
 
-                <!-- Selector Año -->
                 <div class="dropdown">
                     <div class="selected" (click)="toggleYearDropdown()">
                         {{ selectedYearLabel() }}
@@ -42,11 +53,23 @@
                     @if (showYearDropdown()) {
                     <ul class="dropdown-list">
                         @for (year of years; track $index) {
-                        <li (click)="selectYear(year)">
+                        <li (click)="selectYear(year)" [class.selected]="selectedYear() === year.toString()">
                             {{ year }}
+                            @if (selectedYear() === year.toString()) {
+                            <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                            }
                         </li>
                         }
-                        <li (click)="selectTotal()" class="total-option">Total</li>
+                        <li (click)="selectTotal()" class="total-option" [class.selected]="!selectedYear()">
+                            Total
+                            @if (!selectedYear()) {
+                            <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
+                                <path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                            }
+                        </li>
                     </ul>
                     }
                 </div>
@@ -86,17 +109,29 @@
     <div class="ingresoscomponent-facturacion card">
         <img src="assets/icons/salesprpl.svg" alt="sales-icon" class="icon bigicon" />
         <div class="ingresoscomponent-facturacion-data">
-            <p class="datatitle">Ventas este mes</p>
+            
+            <p class="datatitle">
+                @if(!selectedTotal) {
+                    Ventas este mes
+                } @else {
+                    Ventas totales
+                }
+                
+            </p>
             <span class="salesnum">{{ numVentas?.quantity }}</span>
-            <p class="percentdata">
+            @if (!selectedTotal) {
+                <p class="percentdata">
                 @if (numVentas?.variacion_mes !== null && numVentas?.variacion_mes !== undefined) {
                 <span [ngClass]="{
             greencontainer: (numVentas?.variacion_mes ?? 0) >= 0,
             redcontainer: (numVentas?.variacion_mes ?? 0) < 0
           }">
-                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon" />{{ Math.abs(numVentas?.variacion_mes ?? 0) }}%
+                    <img src="assets/icons/green-arrow.svg" alt="arrow-icon" />{{ Math.abs(numVentas?.variacion_mes ??
+                    0) }}%
                 </span>}vs Mes Anterior
             </p>
+            }
+            
         </div>
     </div>
     <div class="ingresoscomponent-topproduct card">
