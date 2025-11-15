@@ -28,13 +28,13 @@
             <span class="loteid">#{{ product.purchase?.id}}</span>
         </div>
         <div class="productlist-product-buttons">
-            <button class="productbutton" (click)="toggle()" (click)="toggleForm('sale')">
+            <button class="productbutton" (click)="toggleForm('sale')">
                 <img src="assets/icons/money.svg" alt="money-icon">
             </button>
-            <button class="productbutton" (click)="toggle()" (click)="toggleForm('edit')">
+            <button class="productbutton" (click)="toggleForm('edit')">
                 <img src="assets/icons/edit.svg" alt="edit-icon">
             </button>
-            <button class="productbutton" (click)="toggle()" (click)="toggleForm('delete')">
+            <button class="productbutton" (click)="toggleForm('delete')">
                 <img src="assets/icons/delete.svg" alt="delete-icon">
             </button>
         </div>
@@ -88,16 +88,94 @@
             </div>
             <div class="saleForm-buttonContainer">
                 <button type="submit" class="productFormBtn">Registrar Venta</button>
+                <button type="button" class="productFormBtn cancelBtn" (click)="toggleForm('sale')">Cancelar</button>
             </div>
         </form>
-        } @if (activeForm() === 'delete') {
+        } 
+        
+        @if (activeForm() === 'delete') {
         <form [formGroup]="deleteForm" class="deleteForm" (ngSubmit)="deleteProduct(product.id!)">
             <button type="submit" class="productFormBtn">Eliminar</button>
-            <button type="button" class="productFormBtn cancelBtn" (click)="toggleForm(null)">Cancelar</button>
+            <button type="button" class="productFormBtn cancelBtn" (click)="toggleForm('delete')">Cancelar</button>
         </form>
-        } @if (activeForm() === 'edit') {
-        <form [formGroup]="editForm" class="editForm" (ngSubmit)="editProduct(product)">
-            Editar
+        } 
+        
+        @if (activeForm() === 'edit') {
+        <form [formGroup]="editForm" class="editForm" (ngSubmit)="editProduct()">
+            <div class="forminputs">
+                <div class="input">
+                    <label for="edit_name">Nombre del producto</label>
+                    <input type="text" id="edit_name" placeholder="Nombre" formControlName="name">
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('name')?.touched && editForm.get('name')?.errors?.['required']) {
+                        <small class="errorMessage">El nombre es requerido</small>
+                        }
+                    </div>
+                </div>
+                
+                <div class="input">
+                    <label for="edit_quantity">Cantidad</label>
+                    <input type="number" id="edit_quantity" placeholder="0" formControlName="quantity">
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('quantity')?.touched && editForm.get('quantity')?.errors?.['required']) {
+                        <small class="errorMessage">La cantidad es requerida</small>
+                        }
+                        @else if (editForm.get('quantity')?.touched && editForm.get('quantity')?.errors?.['min']) {
+                        <small class="errorMessage">Mínimo 1</small>
+                        }
+                    </div>
+                </div>
+                
+                <div class="input">
+                    <label for="edit_purchase_price">Precio de compra</label>
+                    <input type="number" id="edit_purchase_price" placeholder="0.00" formControlName="purchase_price">
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('purchase_price')?.touched && editForm.get('purchase_price')?.errors?.['required']) {
+                        <small class="errorMessage">El precio es requerido</small>
+                        }
+                    </div>
+                </div>
+                
+                <div class="input">
+                    <label for="edit_sale_price">Precio de venta estimado</label>
+                    <input type="number" id="edit_sale_price" placeholder="0.00" formControlName="estimated_sale_price">
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('estimated_sale_price')?.touched && editForm.get('estimated_sale_price')?.errors?.['required']) {
+                        <small class="errorMessage">El precio es requerido</small>
+                        }
+                    </div>
+                </div>
+                
+                <div class="input">
+                    <label for="edit_category">Categoría</label>
+                    <select id="edit_category" formControlName="category_id">
+                        <option value="">Selecciona categoría</option>
+                        @for (category of categories; track category.id) {
+                            <option [value]="category.id">{{ category.name }}</option>
+                        }
+                    </select>
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('category_id')?.touched && editForm.get('category_id')?.errors?.['required']) {
+                        <small class="errorMessage">La categoría es requerida</small>
+                        }
+                    </div>
+                </div>
+
+                <div class="input">
+                    <label for="edit_purchase_date">Fecha de compra</label>
+                    <input type="date" id="edit_purchase_date" formControlName="purchase_date">
+                    <div class="errorMessageContainer">
+                        @if (editForm.get('purchase_date')?.touched && editForm.get('purchase_date')?.errors?.['required']) {
+                        <small class="errorMessage">La fecha es requerida</small>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="editForm-buttonContainer">
+                <button type="submit" class="productFormBtn">Guardar cambios</button>
+                <button type="button" class="productFormBtn cancelBtn" (click)="toggleForm('edit')">Cancelar</button>
+            </div>
         </form>
         }
     </div>

@@ -98,7 +98,8 @@
 
     <div class="list-scroll">
       @for (venta of filteredVentas(); track venta.id) {
-      <app-venta-item [venta]="venta" (edit)="editVenta($event)" (delete)="deleteVenta($event)" />
+      <app-venta-item [venta]="venta" (deleteVentaFromArray)="removeVentaFromArray($event)"
+        (updateVentaInArray)="updateVentaInArray($event)" />
       } @empty {
       <div class="empty-state">
         <img src="assets/icons/info.svg" alt="empty">

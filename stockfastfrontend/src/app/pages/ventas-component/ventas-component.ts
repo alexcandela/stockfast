@@ -9,6 +9,7 @@ import { NotificationService } from '../../core/services/notification-service';
 import { SaleService } from '../../core/services/sale-service';
 
 import { SkeletonComponent } from '../../components/skeleton-component/skeleton-component';
+
 @Component({
   selector: 'app-ventas-component',
   standalone: true,
@@ -17,7 +18,10 @@ import { SkeletonComponent } from '../../components/skeleton-component/skeleton-
   styleUrl: './ventas-component.scss',
 })
 export class VentasComponent implements OnInit {
-  constructor(private saleService: SaleService, private notificationService: NotificationService) {}
+  constructor(
+    private saleService: SaleService,
+    private notificationService: NotificationService
+  ) {}
 
   loading = signal<boolean>(true);
   ventas = signal<Venta[]>([]);
@@ -54,16 +58,10 @@ export class VentasComponent implements OnInit {
   calculateMetrics(): void {
     const ventas = this.ventas();
 
-    // ✅ Suma la cantidad total de unidades vendidas
     const totalVentas = ventas.reduce((sum, v) => sum + v.quantity, 0);
-
-    // Ingresos totales (precio venta unitario * cantidad)
     const ingresosTotales = ventas.reduce((sum, v) => sum + v.sale_price * v.quantity, 0);
-
-    // Beneficio neto (ya viene calculado como total desde el backend)
     const beneficioNeto = ventas.reduce((sum, v) => sum + v.benefit, 0);
 
-    // Inversión total (costes totales)
     const totalInversion = ventas.reduce((sum, v) => {
       return sum + (v.total_purchase_price + v.total_shipping_cost);
     }, 0);
@@ -85,9 +83,8 @@ export class VentasComponent implements OnInit {
       return;
     }
 
-    const filtered = this.ventas().filter(
-      (venta) => venta.product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      // venta.product.category.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = this.ventas().filter((venta) =>
+      venta.product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     this.filteredVentas.set(filtered);
@@ -105,6 +102,49 @@ export class VentasComponent implements OnInit {
     this.filteredVentas.set([...ventas]);
   }
 
+  /**
+   * Actualizar una venta en el array después de editarla
+   */
+  updateVentaInArray(updatedVenta: Venta): void {
+    const currentVentas = this.ventas();
+    const index = currentVentas.findIndex(v => v.id === updatedVenta.id);
+    
+    if (index !== -1) {
+      const newVentas = [...currentVentas];
+      newVentas[index] = { ...updatedVenta };
+      this.ventas.set(newVentas);
+      
+      // Actualizar también filteredVentas
+      const currentFiltered = this.filteredVentas();
+      const filteredIndex = currentFiltered.findIndex(v => v.id === updatedVenta.id);
+      if (filteredIndex !== -1) {
+        const newFiltered = [...currentFiltered];
+        newFiltered[filteredIndex] = { ...updatedVenta };
+        this.filteredVentas.set(newFiltered);
+      }
+      
+      this.calculateMetrics();
+      console.log('Venta actualizada:', updatedVenta);
+    }
+  }
+
+  /**
+   * Eliminar una venta del array
+   */
+  removeVentaFromArray(ventaId: number): void {
+    const currentVentas = this.ventas();
+    const newVentas = currentVentas.filter(v => v.id !== ventaId);
+    this.ventas.set(newVentas);
+    
+    const currentFiltered = this.filteredVentas();
+    const newFiltered = currentFiltered.filter(v => v.id !== ventaId);
+    this.filteredVentas.set(newFiltered);
+    
+    this.calculateMetrics();
+    console.log('Venta eliminada:', ventaId);
+  }
+
+  // Mantener los métodos antiguos si aún los usas
   editVenta(venta: Venta): void {
     console.log('Edit venta:', venta);
   }

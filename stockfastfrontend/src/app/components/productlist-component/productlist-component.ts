@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, WritableSignal, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../core/interfaces/product';
+import { Category } from '../../core/interfaces/category';
 import {
   FormBuilder,
   FormGroup,
@@ -19,8 +20,9 @@ import { ProductService } from '../../core/services/product-service';
   templateUrl: './productlist-component.html',
   styleUrl: './productlist-component.scss',
 })
-export class ProductlistComponent {
+export class ProductlistComponent implements OnChanges {
   @Input() product!: Product;
+  @Input() categories: Category[] = [];
   @Output() eliminar = new EventEmitter<any>();
   @Output() deleteProductFromArray = new EventEmitter<number>();
 
@@ -47,12 +49,29 @@ export class ProductlistComponent {
       product_id: ['', Validators.required],
     });
     this.editForm = this.fb.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required, Validators.minLength(2)]],
       quantity: [null, [Validators.required, Validators.min(1)]],
       purchase_price: [null, [Validators.required, Validators.min(0)]],
       estimated_sale_price: [null, [Validators.required, Validators.min(0)]],
       category_id: [null, [Validators.required]],
-      description: ['', [Validators.maxLength(100)]],
+      purchase_date: ['', [Validators.required]],
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['product'] && this.product) {
+      this.loadProductData();
+    }
+  }
+
+  loadProductData(): void {
+    this.editForm.patchValue({
+      name: this.product.name,
+      quantity: this.product.quantity,
+      purchase_price: this.product.purchase_price,
+      estimated_sale_price: this.product.estimated_sale_price,
+      category_id: this.product.category_id,
+      purchase_date: this.product.purchase?.purchase_date || '',
     });
   }
 
@@ -63,6 +82,10 @@ export class ProductlistComponent {
     } else {
       this.activeForm.set(formType);
       this.show.set(true);
+
+      if (formType === 'edit') {
+        this.loadProductData();
+      }
     }
   }
 
@@ -71,6 +94,7 @@ export class ProductlistComponent {
       next: (res) => {
         this.notificationService.success('Producto eliminado correctamente');
         this.deleteProductFromArray.emit(productId);
+        this.toggleForm('delete');
         this.activeForm.set(null);
       },
       error: (err) => {
@@ -80,8 +104,14 @@ export class ProductlistComponent {
     });
   };
 
-  editProduct(product: Product) {
-    this.activeForm.set(null);
+  editProduct(): void {
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    // TODO: Implementar lógica de edición
+    console.log('editProduct() - Datos del formulario:', this.editForm.value);
   }
 
   registrarVenta() {
@@ -104,6 +134,7 @@ export class ProductlistComponent {
           this.saleForm.reset();
           this.show.set(false);
           this.activeForm.set(null);
+          this.toggleForm('sale');
         }
       },
       error: (err) => {

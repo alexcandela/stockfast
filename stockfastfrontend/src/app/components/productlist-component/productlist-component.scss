@@ -331,9 +331,124 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      padding: 10px 0;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
+
+      .forminputs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+
+        @media (max-width: 1024px) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+        }
+
+        .input {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          label {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+          }
+
+          input,
+          select {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 14px;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            outline: none;
+
+            &::placeholder {
+              color: rgba(255, 255, 255, 0.3);
+            }
+
+            &:hover {
+              border-color: rgba(255, 255, 255, 0.25);
+            }
+
+            &:focus {
+              border-color: rgba(59, 130, 246, 0.6);
+              box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+              background: rgba(255, 255, 255, 0.08);
+            }
+
+            &[type="date"] {
+              color-scheme: dark;
+            }
+          }
+
+          select {
+            cursor: pointer;
+            
+            option {
+              background: #1a1a1a;
+              color: #ffffff;
+            }
+          }
+
+          .errorMessageContainer {
+            min-height: 20px;
+
+            .errorMessage {
+              font-size: 11px;
+              color: #ef4444;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+
+      &-buttonContainer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+
+        .productFormBtn {
+          padding: 12px 24px;
+          border-radius: 10px;
+          border: none;
+          color: #ffffff;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+
+          &:not(.cancelBtn) {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+
+            &:hover {
+              transform: translateY(-2px);
+              box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            }
+          }
+
+          &.cancelBtn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.1);
+              border-color: rgba(255, 255, 255, 0.25);
+            }
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+      }
     }
   }
 }

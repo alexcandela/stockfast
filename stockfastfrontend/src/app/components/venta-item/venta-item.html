@@ -1,48 +1,109 @@
-<div class="venta-item">
-  <input type="checkbox" [(ngModel)]="venta.selected">
-  
-  <div class="venta-product">
-    <div class="product-info">
-      <span class="product-name">{{ venta.product.name }}</span>
-      <span class="product-category">{{ venta.product.category!.name}}</span>
+<div class="venta-container">
+  <div class="venta-item">
+    <input type="checkbox" [(ngModel)]="venta.selected">
+
+    <div class="venta-product">
+      <div class="product-info">
+        <span class="product-name">{{ venta.product.name }}</span>
+        <span class="product-category">{{ venta.product.category!.name}}</span>
+      </div>
+    </div>
+
+    <div class="venta-date">
+      {{ venta.sale_date | date:'dd/MM/yyyy' }}
+    </div>
+
+    <div class="venta-purchase">
+      <span class="price">{{ venta.product.purchase_price }} €</span>
+    </div>
+
+    <div class="venta-shipping">
+      <span class="shipping-cost">+{{ venta.shipping_cost || 0}} €</span>
+    </div>
+
+    <div class="venta-purchase">
+      <span class="price">{{ venta.quantity }}</span>
+    </div>
+
+    <div class="venta-sale">
+      <span class="sale-price">{{ venta.sale_price }} €</span>
+    </div>
+
+    <div class="venta-benefit">
+      <span class="benefit-amount" [ngClass]="getBenefitClass()">
+        {{ venta.benefit > 0 ? '+' : '' }}{{ venta.benefit || 0}} €
+      </span>
+      <span class="benefit-percent">
+        ({{ venta.benefitPercent.toFixed(1) }}%)
+      </span>
+    </div>
+
+    <div class="venta-actions">
+      <button class="action-btn edit" (click)="onEdit()">
+        <img src="assets/icons/edit.svg" alt="edit">
+      </button>
+      <button class="action-btn delete" (click)="onDelete()">
+        <img src="assets/icons/delete.svg" alt="delete">
+      </button>
     </div>
   </div>
 
-  <div class="venta-date">
-    {{ venta.sale_date | date:'dd/MM/yyyy' }}
-  </div>
+  <!-- Formularios expandibles -->
+  <div class="venta-form" [ngClass]="{ 'opened': show() }">
+    <!-- Formulario de eliminación -->
+    @if (activeForm() === 'delete') {
+    <form [formGroup]="deleteForm" class="deleteForm" (ngSubmit)="deleteVenta(venta.id!)">
+      <button type="submit" class="ventaFormBtn">Eliminar</button>
+      <button type="button" class="ventaFormBtn cancelBtn" (click)="toggleForm('delete')">Cancelar</button>
+    </form>
+    }
 
-  <div class="venta-purchase">
-    <span class="price">{{ venta.product.purchase_price }} €</span>
-  </div>
+    <!-- Formulario de edición -->
+    @if (activeForm() === 'edit') {
+    <form [formGroup]="editForm" class="editForm" (ngSubmit)="editVenta()">
+      <div class="forminputs">
+        <div class="input">
+          <label for="edit_sale_price">Precio de venta</label>
+          <input type="number" id="edit_sale_price" placeholder="0.00" formControlName="sale_price">
+          <div class="errorMessageContainer">
+            @if (editForm.get('sale_price')?.touched && editForm.get('sale_price')?.errors?.['required']) {
+            <small class="errorMessage">El precio es requerido</small>
+            }
+            @else if (editForm.get('sale_price')?.touched && editForm.get('sale_price')?.errors?.['min']) {
+            <small class="errorMessage">El precio debe ser mayor a 0</small>
+            }
+          </div>
+        </div>
 
-  <div class="venta-shipping">
-    <span class="shipping-cost">+{{ venta.shipping_cost || 0}} €</span>
-  </div>
-  
-  <div class="venta-purchase">
-    <span class="price">{{ venta.quantity }}</span>
-  </div>
+        <div class="input">
+          <label for="edit_quantity">Cantidad</label>
+          <input type="number" id="edit_quantity" placeholder="1" formControlName="quantity">
+          <div class="errorMessageContainer">
+            @if (editForm.get('quantity')?.touched && editForm.get('quantity')?.errors?.['required']) {
+            <small class="errorMessage">La cantidad es requerida</small>
+            }
+            @else if (editForm.get('quantity')?.touched && editForm.get('quantity')?.errors?.['min']) {
+            <small class="errorMessage">Mínimo 1</small>
+            }
+          </div>
+        </div>
 
-  <div class="venta-sale">
-    <span class="sale-price">{{ venta.sale_price }} €</span>
-  </div>
+        <div class="input">
+          <label for="edit_sale_date">Fecha de venta</label>
+          <input type="date" id="edit_sale_date" formControlName="sale_date">
+          <div class="errorMessageContainer">
+            @if (editForm.get('sale_date')?.touched && editForm.get('sale_date')?.errors?.['required']) {
+            <small class="errorMessage">La fecha es requerida</small>
+            }
+          </div>
+        </div>
+      </div>
 
-  <div class="venta-benefit">
-    <span class="benefit-amount" [ngClass]="getBenefitClass()">
-      {{ venta.benefit > 0 ? '+' : '' }}{{ venta.benefit || 0}} €
-    </span>
-    <span class="benefit-percent">
-      ({{ venta.benefitPercent.toFixed(1) }}%)
-    </span>
-  </div>
-
-  <div class="venta-actions">
-    <button class="action-btn edit" (click)="onEdit()">
-      <img src="assets/icons/edit.svg" alt="edit">
-    </button>
-    <button class="action-btn delete" (click)="onDelete()">
-      <img src="assets/icons/delete.svg" alt="delete">
-    </button>
+      <div class="editForm-buttonContainer">
+        <button type="submit" class="ventaFormBtn">Guardar cambios</button>
+        <button type="button" class="ventaFormBtn cancelBtn" (click)="toggleForm('edit')">Cancelar</button>
+      </div>
+    </form>
+    }
   </div>
 </div>
