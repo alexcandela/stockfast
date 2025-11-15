@@ -134,7 +134,7 @@ export class ProductlistComponent implements OnChanges {
           this.saleForm.reset();
           this.show.set(false);
           this.activeForm.set(null);
-          this.toggleForm('sale');
+          
         }
       },
       error: (err) => {
