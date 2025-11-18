@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SaleRequest;
-use App\Models\Product;
 use App\Models\Sale;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Requests\SaleRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UpdateSaleRequest;
 
 class SaleController extends Controller
 {
@@ -52,6 +55,130 @@ class SaleController extends Controller
             ], 400);
         }
     }
+
+    public function deleteSale($id)
+    {
+        try {
+            $sale = Sale::find($id);
+
+            if (!$sale) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Venta no encontrada'
+                ], 404);
+            }
+
+            // Restaurar el stock del producto
+            $product = Product::find($sale->product_id);
+            if ($product) {
+                $product->quantity += $sale->quantity;
+                $product->save();
+            }
+
+            $sale->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Venta eliminada y stock restaurado correctamente'
+            ], 200);
+        } catch (\Throwable $th) {
+            Log::error('Error en deleteSale@SaleController', ['exception' => $th->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la venta'
+            ], 400);
+        }
+    }
+
+    public function updateSale(UpdateSaleRequest $request, $id)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Bloquear la venta para evitar race conditions
+            $sale = Sale::lockForUpdate()->find($id);
+
+            if (!$sale) {
+                DB::rollBack();
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Venta no encontrada'
+                ], 404);
+            }
+
+            // Obtener valores antiguos y nuevos
+            $oldQuantity = $sale->quantity;
+            $newQuantity = $request->quantity;
+            $quantityDifference = $newQuantity - $oldQuantity;
+
+            // Si está aumentando la cantidad, verificar stock disponible
+            if ($quantityDifference > 0) {
+                // Obtener el producto con bloqueo
+                $product = Product::lockForUpdate()->find($sale->product_id);
+
+                if (!$product) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Producto no encontrado'
+                    ], 404);
+                }
+
+                // Verificar si hay suficiente stock
+                if ($product->stock < $quantityDifference) {
+                    DB::rollBack();
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Stock insuficiente.",
+                        'type' => 'insufficient_stock'
+                    ], 400);
+                }
+
+                // Reducir el stock
+                $product->stock -= $quantityDifference;
+                $product->save();
+            }
+            // Si está reduciendo la cantidad, devolver al stock
+            else if ($quantityDifference < 0) {
+                $product = Product::lockForUpdate()->find($sale->product_id);
+
+                if ($product) {
+                    // Devolver las unidades al stock
+                    $product->stock += abs($quantityDifference);
+                    $product->save();
+                }
+            }
+
+            // Actualizar la venta
+            $sale->update($request->all());
+
+            // Recalcular beneficios (si es necesario)
+            $sale->load('product');
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Venta actualizada correctamente',
+                'venta' => $sale
+            ], 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            Log::error('Error en updateSale@SaleController', [
+                'exception' => $th->getMessage(),
+                'trace' => $th->getTraceAsString()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al actualizar la venta'
+            ], 400);
+        }
+    }
+
+
+    /**
+     * Obtiene todas las ventas del usuario autenticado
+     */
 
     public function getSales()
     {

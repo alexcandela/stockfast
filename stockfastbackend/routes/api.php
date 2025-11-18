@@ -23,6 +23,8 @@ Route::middleware('auth:api')->group(function () {
     Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct']);
 
     Route::post('/make-sale', [SaleController::class, 'store']);
+    Route::delete('/delete-sale/{id}', [SaleController::class, 'deleteSale']);
+    Route::put('/update-sale/{id}', [SaleController::class, 'updateSale']);
     Route::get('/getsales', [SaleController::class, 'getSales']);
 
     Route::get('/getgeneraldata', [DataController::class, 'getGeneralData']);

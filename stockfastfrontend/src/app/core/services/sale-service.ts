@@ -23,6 +23,24 @@ export class SaleService {
     return this.http.post(`${this.apiUrl}/make-sale`, sale, { headers });
   }
 
+  deleteSale(saleId: number): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.delete(`${this.apiUrl}/delete-sale/${saleId}`, { headers });
+  }
+  
+  updateSale(saleId: number, saleData: Partial<Sale>): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.put(`${this.apiUrl}/update-sale/${saleId}`, saleData, { headers });
+  }  
+
   getSales(): Observable<VentaResponse> {
     const token = this.authService.getToken();
     const headers = new HttpHeaders({

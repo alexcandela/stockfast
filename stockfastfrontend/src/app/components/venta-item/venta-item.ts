@@ -1,16 +1,33 @@
-import { Component, Input, Output, EventEmitter, signal, WritableSignal, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  signal,
+  WritableSignal,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import { Venta } from '../../core/interfaces/venta';
 import { CustomValidators } from '../../core/validators/custom-validators';
+import { SaleService } from '../../core/services/sale-service';
+import { NotificationService } from '../../core/services/notification-service';
 
 @Component({
   selector: 'app-venta-item',
   standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './venta-item.html',
-  styleUrl: './venta-item.scss'
+  styleUrl: './venta-item.scss',
 })
 export class VentaItem implements OnChanges {
   @Input() venta!: Venta;
@@ -23,7 +40,11 @@ export class VentaItem implements OnChanges {
   deleteForm: FormGroup;
   editForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private saleService: SaleService,
+    private notificationService: NotificationService
+  ) {
     this.deleteForm = this.fb.group({
       venta_id: ['', Validators.required],
     });
@@ -56,7 +77,7 @@ export class VentaItem implements OnChanges {
     } else {
       this.activeForm.set(formType);
       this.show.set(true);
-      
+
       if (formType === 'edit') {
         this.loadVentaData();
       }
@@ -77,21 +98,17 @@ export class VentaItem implements OnChanges {
    */
   deleteVenta(ventaId: number): void {
     // TODO: Implementar la lógica de eliminación
-    // this.ventaService.deleteVenta(ventaId).subscribe({
-    //   next: (res) => {
-    //     this.notificationService.success('Venta eliminada correctamente');
-    //     this.deleteVentaFromArray.emit(ventaId);
-    //     this.activeForm.set(null);
-    //     this.show.set(false);
-    //   },
-    //   error: (err) => {
-    //     this.notificationService.error('Error al eliminar la venta');
-    //     console.error('Error al eliminar venta:', err);
-    //   }
-    // });
-
-    console.log('deleteVenta() - ID preparado:', ventaId);
-    alert(`Venta ${ventaId} eliminada (simulado)`);
+    this.saleService.deleteSale(ventaId).subscribe({
+      next: (res) => {
+        this.notificationService.success('Venta eliminada correctamente');
+        this.deleteVentaFromArray.emit(ventaId);
+        this.activeForm.set(null);
+        this.show.set(false);
+      },
+      error: (err) => {
+        this.notificationService.error('Error al eliminar la venta');
+      },
+    });
     this.deleteVentaFromArray.emit(ventaId);
     this.activeForm.set(null);
     this.show.set(false);
@@ -101,7 +118,7 @@ export class VentaItem implements OnChanges {
    * Editar una venta
    * TODO: Implementar llamada al servicio para editar venta
    */
-  editVenta(): void {
+  editSale(): void {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
       return;
@@ -115,29 +132,29 @@ export class VentaItem implements OnChanges {
     };
 
     // TODO: Implementar la lógica de edición
-    // this.ventaService.updateVenta(this.venta.id!, updateData).subscribe({
-    //   next: (res) => {
-    //     this.notificationService.success('Venta actualizada correctamente');
-    //     // El backend devuelve la venta completa con beneficios recalculados
-    //     this.updateVentaInArray.emit(res.venta);
-    //     this.activeForm.set(null);
-    //     this.show.set(false);
-    //   },
-    //   error: (err) => {
-    //     this.notificationService.error('Error al actualizar la venta');
-    //     console.error('Error al actualizar venta:', err);
-    //   }
-    // });
+    this.saleService.updateSale(this.venta.id!, updateData).subscribe({
+      next: (res) => {
+        this.notificationService.success('Venta actualizada correctamente');
+        // El backend devuelve la venta completa con beneficios recalculados
+        this.updateVentaInArray.emit(res.venta);
+        this.activeForm.set(null);
+        this.show.set(false);
 
-    console.log('editVenta() - Datos enviados al backend:', updateData);
-    
-    // Calcular la venta actualizada con beneficios para actualización visual inmediata
-    const updatedVenta = this.recalculateVenta(updateData);
-    
-    alert('Venta actualizada (simulado)');
-    this.updateVentaInArray.emit(updatedVenta);
-    this.activeForm.set(null);
-    this.show.set(false);
+        // Calcular la venta actualizada con beneficios para actualización visual inmediata
+        const updatedVenta = this.recalculateVenta(updateData);
+        this.updateVentaInArray.emit(updatedVenta);
+      },
+      error: (err) => {
+        if (err.error?.type === 'insufficient_stock') {
+          this.editForm.get('quantity')?.markAsTouched();
+          this.notificationService.error(err.error?.message || 'Error al actualizar la venta');
+        } else {
+          this.notificationService.error('Error al actualizar la venta');
+        }
+
+        console.error('Error al actualizar venta:', err);
+      },
+    });
   }
 
   /**
@@ -145,38 +162,38 @@ export class VentaItem implements OnChanges {
    * Esto es temporal para la vista - el backend hará el cálculo definitivo
    */
   /**
- * Recalcular beneficios para actualización visual
- */
-private recalculateVenta(updateData: any): Venta {
-  const newSalePrice = parseFloat(updateData.sale_price);
-  const newQuantity = parseInt(updateData.quantity);
-  
-  // Total de venta
-  const totalSalePrice = newSalePrice * newQuantity;
-  
-  // Precio de compra total
-  const totalPurchasePrice = this.venta.product.purchase_price * newQuantity;
-  
-  // Gastos de envío existentes (ya calculados para esta venta)
-  const shippingCost = this.venta.shipping_cost || 0;
-  
-  // Beneficio = Precio de venta - (Precio de compra + Gastos de envío)
-  const benefit = totalSalePrice - (totalPurchasePrice + shippingCost);
-  
-  // Porcentaje de beneficio
-  const totalCost = totalPurchasePrice + shippingCost;
-  const benefitPercent = totalCost > 0 ? (benefit / totalCost) * 100 : 0;
+   * Recalcular beneficios para actualización visual
+   */
+  private recalculateVenta(updateData: any): Venta {
+    const newSalePrice = parseFloat(updateData.sale_price);
+    const newQuantity = parseInt(updateData.quantity);
 
-  // Devolver venta actualizada
-  return {
-    ...this.venta,
-    sale_price: newSalePrice,
-    quantity: newQuantity,
-    sale_date: updateData.sale_date,
-    benefit: parseFloat(benefit.toFixed(2)),
-    benefitPercent: parseFloat(benefitPercent.toFixed(2))
-  };
-}
+    // Total de venta
+    const totalSalePrice = newSalePrice * newQuantity;
+
+    // Precio de compra total
+    const totalPurchasePrice = this.venta.product.purchase_price * newQuantity;
+
+    // Gastos de envío existentes (ya calculados para esta venta)
+    const shippingCost = this.venta.shipping_cost || 0;
+
+    // Beneficio = Precio de venta - (Precio de compra + Gastos de envío)
+    const benefit = totalSalePrice - (totalPurchasePrice + shippingCost);
+
+    // Porcentaje de beneficio
+    const totalCost = totalPurchasePrice + shippingCost;
+    const benefitPercent = totalCost > 0 ? (benefit / totalCost) * 100 : 0;
+
+    // Devolver venta actualizada
+    return {
+      ...this.venta,
+      sale_price: newSalePrice,
+      quantity: newQuantity,
+      sale_date: updateData.sale_date,
+      benefit: parseFloat(benefit.toFixed(2)),
+      benefitPercent: parseFloat(benefitPercent.toFixed(2)),
+    };
+  }
 
   getBenefitClass(): string {
     return this.venta.benefit >= 0 ? 'positive' : 'negative';
@@ -186,7 +203,7 @@ private recalculateVenta(updateData: any): Venta {
    * Helper: Marcar todos los campos como touched
    */
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
 

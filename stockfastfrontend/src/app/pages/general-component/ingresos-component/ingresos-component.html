@@ -77,6 +77,7 @@
         </div>
         <div class="netos">
             <p class="netos-dinero">{{ ingresos?.netos }} €</p>
+            @if (!selectedTotal) {
             <p class="netos-info">
                 @if (ingresos?.variacion_mes !== null && ingresos?.variacion_mes !== undefined) {
                 <span [ngClass]="{
@@ -88,6 +89,8 @@
                     }}%</span>
                 } vs Mes Anterior
             </p>
+            }
+
         </div>
         <div class="bruto">
             <div class="bruto-ingresos">
@@ -109,18 +112,18 @@
     <div class="ingresoscomponent-facturacion card">
         <img src="assets/icons/salesprpl.svg" alt="sales-icon" class="icon bigicon" />
         <div class="ingresoscomponent-facturacion-data">
-            
+
             <p class="datatitle">
                 @if(!selectedTotal) {
-                    Ventas este mes
+                Ventas este mes
                 } @else {
-                    Ventas totales
+                Ventas totales
                 }
-                
+
             </p>
             <span class="salesnum">{{ numVentas?.quantity }}</span>
             @if (!selectedTotal) {
-                <p class="percentdata">
+            <p class="percentdata">
                 @if (numVentas?.variacion_mes !== null && numVentas?.variacion_mes !== undefined) {
                 <span [ngClass]="{
             greencontainer: (numVentas?.variacion_mes ?? 0) >= 0,
@@ -131,7 +134,7 @@
                 </span>}vs Mes Anterior
             </p>
             }
-            
+
         </div>
     </div>
     <div class="ingresoscomponent-topproduct card">
