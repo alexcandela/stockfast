@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
@@ -87,6 +88,27 @@ class ProductController extends Controller
         }
     }
 
+    public function updateProduct(UpdateProductRequest $request, $id)
+    {
+        try {
+            $user = Auth::user();
+
+            $product = $this->findUserProduct($user, $id);
+
+            $validatedData = $request->validated();
+
+            $product->update($validatedData);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Producto actualizado correctamente.',
+                'product' => $this->formatProduct($product)
+            ], 200);
+        } catch (\Throwable $th) {
+            return $this->handleError($th, 'Error al actualizar el producto.');
+        }
+    }
+
     /**
      * Formatear producto según la interfaz TypeScript
      */
@@ -109,7 +131,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Calcular el envío proporcional para un producto
+     * Calcular el envío proporcional para un producto (por unidad)
      */
     private function calculateProportionalShipping($product): float
     {
@@ -119,34 +141,25 @@ class ProductController extends Controller
             return 0;
         }
 
-        $totalPurchaseValue = $this->calculateTotalPurchaseValue($product->purchase);
+        // Calcular la cantidad total de productos en la compra
+        $totalQuantity = $this->calculateTotalQuantity($product->purchase);
 
-        if ($totalPurchaseValue == 0) {
+        if ($totalQuantity == 0) {
             return 0;
         }
 
-        $productValue = $this->calculateProductValue($product);
-        $proportionalShipping = ($productValue / $totalPurchaseValue) * $shippingCost;
+        // Dividir el costo de envío entre todas las unidades
+        $shippingPerUnit = $shippingCost / $totalQuantity;
 
-        return round($proportionalShipping, 2);
+        return round($shippingPerUnit, 2);
     }
 
     /**
-     * Calcular el valor total de la compra
+     * Calcular la cantidad total de productos en la compra
      */
-    private function calculateTotalPurchaseValue($purchase): float
+    private function calculateTotalQuantity($purchase): int
     {
-        return $purchase->products->sum(function ($p) {
-            return $p->purchase_price * $p->quantity;
-        });
-    }
-
-    /**
-     * Calcular el valor de un producto específico
-     */
-    private function calculateProductValue($product): float
-    {
-        return $product->purchase_price * $product->quantity;
+        return $purchase->products->sum('quantity');
     }
 
     /**

@@ -160,16 +160,6 @@
                         }
                     </div>
                 </div>
-
-                <div class="input">
-                    <label for="edit_purchase_date">Fecha de compra</label>
-                    <input type="date" id="edit_purchase_date" formControlName="purchase_date">
-                    <div class="errorMessageContainer">
-                        @if (editForm.get('purchase_date')?.touched && editForm.get('purchase_date')?.errors?.['required']) {
-                        <small class="errorMessage">La fecha es requerida</small>
-                        }
-                    </div>
-                </div>
             </div>
             
             <div class="editForm-buttonContainer">

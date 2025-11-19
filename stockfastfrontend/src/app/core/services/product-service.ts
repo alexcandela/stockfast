@@ -29,4 +29,13 @@ export class ProductService {
 
     return this.http.delete<any>(`${this.apiUrl}/delete-product/${productId}`, { headers });
   }
+
+  updateProduct(productId: number, productData: Partial<Product>): Observable<any> {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    return this.http.put<any>(`${this.apiUrl}/update-product/${productId}`, productData, { headers });
+  }
 }

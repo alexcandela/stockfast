@@ -21,6 +21,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/get-products', [ProductController::class, 'getProducts']);
     Route::delete('/delete-product/{id}', [ProductController::class, 'deleteProduct']);
+    Route::put('/update-product/{id}', [ProductController::class, 'updateProduct']);
 
     Route::post('/make-sale', [SaleController::class, 'store']);
     Route::delete('/delete-sale/{id}', [SaleController::class, 'deleteSale']);

@@ -93,6 +93,8 @@ class SaleController extends Controller
     public function updateSale(UpdateSaleRequest $request, $id)
     {
         try {
+
+            $validatedData = $request->validated();
             DB::beginTransaction();
 
             // Bloquear la venta para evitar race conditions
@@ -150,7 +152,7 @@ class SaleController extends Controller
             }
 
             // Actualizar la venta
-            $sale->update($request->all());
+            $sale->update($validatedData);
 
             // Recalcular beneficios (si es necesario)
             $sale->load('product');

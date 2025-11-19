@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, Output, signal, WritableSignal, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+  WritableSignal,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../core/interfaces/product';
 import { Category } from '../../core/interfaces/category';
@@ -22,7 +31,6 @@ import { ProductService } from '../../core/services/product-service';
 })
 export class ProductlistComponent implements OnChanges {
   @Input() product!: Product;
-  @Input() categories: Category[] = [];
   @Output() eliminar = new EventEmitter<any>();
   @Output() deleteProductFromArray = new EventEmitter<number>();
 
@@ -32,6 +40,17 @@ export class ProductlistComponent implements OnChanges {
   saleForm: FormGroup;
   deleteForm: FormGroup;
   editForm: FormGroup;
+
+  // Categorias
+  categories: Category[] = [
+    { id: 1, name: 'Electrónica' },
+    { id: 2, name: 'Ropa' },
+    { id: 3, name: 'Calzado' },
+    { id: 4, name: 'Juguetes' },
+    { id: 5, name: 'Accesorios' },
+    { id: 6, name: 'Joyas' },
+    { id: 7, name: 'Relojes' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -54,7 +73,6 @@ export class ProductlistComponent implements OnChanges {
       purchase_price: [null, [Validators.required, Validators.min(0)]],
       estimated_sale_price: [null, [Validators.required, Validators.min(0)]],
       category_id: [null, [Validators.required]],
-      purchase_date: ['', [Validators.required]],
     });
   }
 
@@ -71,7 +89,6 @@ export class ProductlistComponent implements OnChanges {
       purchase_price: this.product.purchase_price,
       estimated_sale_price: this.product.estimated_sale_price,
       category_id: this.product.category_id,
-      purchase_date: this.product.purchase?.purchase_date || '',
     });
   }
 
@@ -110,8 +127,23 @@ export class ProductlistComponent implements OnChanges {
       return;
     }
 
-    // TODO: Implementar lógica de edición
-    console.log('editProduct() - Datos del formulario:', this.editForm.value);
+    this.productService.updateProduct(this.product.id!, this.editForm.value).subscribe({
+      next: (res) => {
+        this.notificationService.success('Producto actualizado correctamente');
+        // Actualizar el producto localmente
+        const selectedCategory = this.categories.find(
+          (cat) => cat.id === Number(this.editForm.get('category_id')?.value)
+        );
+
+        this.product = { ...this.product, ...this.editForm.value, category: selectedCategory! };
+        this.toggleForm('edit');
+        this.activeForm.set(null);
+      },
+      error: (err) => {
+        this.notificationService.error('Error al actualizar el producto');
+        console.error('Error al actualizar producto:', err);
+      },
+    });
   }
 
   registrarVenta() {
@@ -134,7 +166,6 @@ export class ProductlistComponent implements OnChanges {
           this.saleForm.reset();
           this.show.set(false);
           this.activeForm.set(null);
-          
         }
       },
       error: (err) => {
