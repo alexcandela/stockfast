@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+import { SettingsService } from '../../core/services/settings-service';
+import { NotificationService } from '../../core/services/notification-service';
+
 @Component({
   selector: 'app-ajustes-component',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './ajustes-component.html',
-  styleUrls: ['./ajustes-component.scss']
+  styleUrls: ['./ajustes-component.scss'],
 })
 export class AjustesComponent implements OnInit {
   profileForm: FormGroup;
@@ -16,22 +19,27 @@ export class AjustesComponent implements OnInit {
   loading = false;
   activeSection = 'perfil';
 
-  constructor(private fb: FormBuilder) {
-    // Formulario de perfil (sin avatar)
+  constructor(
+    private fb: FormBuilder,
+    private settingsService: SettingsService,
+    private notificationService: NotificationService
+  ) {
     this.profileForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       last_name: ['', [Validators.required, Validators.minLength(2)]],
       username: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: [''],
     });
 
     // Formulario de contraseña
-    this.passwordForm = this.fb.group({
-      current_password: ['', [Validators.required]],
-      new_password: ['', [Validators.required, Validators.minLength(8)]],
-      confirm_password: ['', [Validators.required]]
-    }, { validators: this.passwordMatchValidator });
+    this.passwordForm = this.fb.group(
+      {
+        current_password: ['', [Validators.required]],
+        new_password: ['', [Validators.required, Validators.minLength(8)]],
+        confirm_password: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
     // Formulario de notificaciones
     this.notificationForm = this.fb.group({
@@ -39,12 +47,25 @@ export class AjustesComponent implements OnInit {
       push_notifications: [true],
       sales_notifications: [true],
       stock_alerts: [true],
-      marketing_emails: [false]
+      marketing_emails: [false],
     });
   }
 
   ngOnInit(): void {
     this.loadUserData();
+
+    // Limpiar error de duplicado cuando el usuario modifica el campo
+    this.profileForm.get('username')?.valueChanges.subscribe(() => {
+      if (this.profileForm.get('username')?.hasError('duplicate')) {
+        this.profileForm.get('username')?.setErrors(null);
+      }
+    });
+
+    this.profileForm.get('email')?.valueChanges.subscribe(() => {
+      if (this.profileForm.get('email')?.hasError('duplicate')) {
+        this.profileForm.get('email')?.setErrors(null);
+      }
+    });
   }
 
   /**
@@ -52,7 +73,20 @@ export class AjustesComponent implements OnInit {
    * TODO: Implementar llamada al servicio para obtener datos del usuario
    */
   loadUserData(): void {
-    console.log('loadUserData() - Implementar llamada al servicio');
+    this.settingsService.getUserData().subscribe({
+      next: (response) => {
+        const user = response.user;
+        this.profileForm.patchValue({
+          name: user.name,
+          last_name: user.last_name,
+          username: user.username,
+          email: user.email,
+        });
+      },
+      error: (error) => {
+        console.error('Error al cargar datos del usuario:', error);
+      },
+    });
   }
 
   /**
@@ -60,18 +94,37 @@ export class AjustesComponent implements OnInit {
    * TODO: Implementar llamada al servicio para actualizar perfil
    */
   updateProfile(): void {
+    this.profileForm.markAllAsTouched();
+
     if (this.profileForm.valid) {
-      this.loading = true;
-      
-      console.log('updateProfile() - Datos preparados:', this.profileForm.value);
-      
-      setTimeout(() => {
-        this.loading = false;
-        alert('Perfil actualizado correctamente (simulado)');
-      }, 1000);
+      const profileData = this.profileForm.value;
+
+      this.settingsService.updateUserProfile(profileData).subscribe({
+        next: (response) => {
+          this.notificationService.success('Perfil actualizado correctamente');
+        },
+        error: (error) => {
+          console.error('Error al actualizar perfil:', error);
+
+          if (error.status === 422 && error.error.errors) {
+            const errors = error.error.errors;
+
+            // Establecer error personalizado en el campo username
+            if (errors.username) {
+              this.profileForm.get('username')?.setErrors({ duplicate: true });
+            }
+
+            // Establecer error personalizado en el campo email
+            if (errors.email) {
+              this.profileForm.get('email')?.setErrors({ duplicate: true });
+            }
+          } else {
+            this.notificationService.error('Error al actualizar el perfil');
+          }
+        },
+      });
     } else {
-      console.warn('Formulario de perfil no válido');
-      this.markFormGroupTouched(this.profileForm);
+      this.notificationService.error('Por favor, completa todos los campos correctamente');
     }
   }
 
@@ -84,11 +137,11 @@ export class AjustesComponent implements OnInit {
       this.loading = true;
       const passwordData = {
         current_password: this.passwordForm.value.current_password,
-        new_password: this.passwordForm.value.new_password
+        new_password: this.passwordForm.value.new_password,
       };
 
       console.log('changePassword() - Datos preparados:', passwordData);
-      
+
       setTimeout(() => {
         this.loading = false;
         this.passwordForm.reset();
@@ -118,7 +171,7 @@ export class AjustesComponent implements OnInit {
     const confirmDelete = confirm(
       '¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.'
     );
-    
+
     if (confirmDelete) {
       console.log('deleteAccount() - Eliminación solicitada');
       alert('Cuenta eliminada correctamente (simulado)');
@@ -146,7 +199,7 @@ export class AjustesComponent implements OnInit {
    * Helper: Marcar todos los campos del formulario como touched para mostrar errores
    */
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
 

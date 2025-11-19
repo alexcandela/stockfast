@@ -59,6 +59,7 @@ class ProductController extends Controller
                 'product' => $this->formatProduct($product)
             ], 200);
         } catch (\Throwable $th) {
+            Log::error('getProduct@ProductController Error al obtener el producto: ' . $th->getMessage());
             return $this->handleError($th, 'Error al obtener el producto.');
         }
     }
@@ -84,6 +85,7 @@ class ProductController extends Controller
                 'message' => 'Producto eliminado correctamente.'
             ], 200);
         } catch (\Throwable $th) {
+            Log::error('deleteProduct@ProductController Error al eliminar el producto: ' . $th->getMessage());
             return $this->handleError($th, 'Error al eliminar el producto.');
         }
     }
@@ -105,6 +107,7 @@ class ProductController extends Controller
                 'product' => $this->formatProduct($product)
             ], 200);
         } catch (\Throwable $th) {
+            Log::error('updateProduct@ProductController Error al actualizar el producto: ' . $th->getMessage());
             return $this->handleError($th, 'Error al actualizar el producto.');
         }
     }

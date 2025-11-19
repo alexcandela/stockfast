@@ -31,5 +31,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/getgeneraldata', [DataController::class, 'getGeneralData']);
     Route::get('/get-stock-data', [DataController::class, 'getStockData']);
 
+    Route::get('/get-userdata', [App\Http\Controllers\UserController::class, 'getUserData']);
+    Route::put('/update-userdata', [App\Http\Controllers\UserController::class, 'updateUserData']);
+
     Route::middleware('plan:Pro')->group(function () {});
 });
