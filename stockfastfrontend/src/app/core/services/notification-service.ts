@@ -1,4 +1,5 @@
-import { Injectable, ApplicationRef, createComponent, EnvironmentInjector, ComponentRef } from '@angular/core';
+import { Injectable, ApplicationRef, createComponent, EnvironmentInjector, ComponentRef, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { NotificationCard } from '../../components/notification-card/notification-card';
 
 export interface NotificationConfig {
@@ -13,15 +14,21 @@ export interface NotificationConfig {
 export class NotificationService {
   private notifications: ComponentRef<NotificationCard>[] = [];
   private container: HTMLElement | null = null;
+  private isBrowser: boolean;
 
   constructor(
     private appRef: ApplicationRef,
-    private injector: EnvironmentInjector
+    private injector: EnvironmentInjector,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.createContainer();
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      this.createContainer();
+    }
   }
 
   private createContainer() {
+    if (!this.isBrowser) return;
     if (!this.container) {
       this.container = document.createElement('div');
       this.container.id = 'notification-container';
@@ -35,8 +42,10 @@ export class NotificationService {
   }
 
   show(config: NotificationConfig) {
-    const duration = config.duration || 3000;
+    if (!this.isBrowser) return null; // No hacer nada en servidor
     
+    const duration = config.duration || 3000;
+
     const componentRef = createComponent(NotificationCard, {
       environmentInjector: this.injector
     });
@@ -45,10 +54,10 @@ export class NotificationService {
     componentRef.setInput('label', config.label);
 
     this.appRef.attachView(componentRef.hostView);
-    
+
     const domElem = (componentRef.hostView as any).rootNodes[0] as HTMLElement;
     domElem.style.pointerEvents = 'auto';
-    
+
     this.createContainer();
     this.container!.appendChild(domElem);
 
@@ -63,6 +72,8 @@ export class NotificationService {
   }
 
   private remove(componentRef: ComponentRef<NotificationCard>) {
+    if (!this.isBrowser) return;
+
     const index = this.notifications.indexOf(componentRef);
     if (index > -1) {
       this.notifications.splice(index, 1);
@@ -70,11 +81,13 @@ export class NotificationService {
 
     this.appRef.detachView(componentRef.hostView);
     componentRef.destroy();
-    
+
     this.updatePositions();
   }
 
   private updatePositions() {
+    if (!this.isBrowser) return;
+
     this.notifications.forEach((notification, index) => {
       const domElem = (notification.hostView as any).rootNodes[0] as HTMLElement;
       domElem.style.bottom = `${20 + (index * 90)}px`;

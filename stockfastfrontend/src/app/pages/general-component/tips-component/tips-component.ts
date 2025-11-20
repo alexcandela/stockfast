@@ -25,7 +25,6 @@ export class TipsComponent {
   isStockLargeNumber(value: number | null | undefined): boolean {
     if (value == null) return false; // Verifica undefined y null
     const numberString = value.toString();
-    console.log(numberString);
     
     return numberString.length > 3;
   }

@@ -20,7 +20,7 @@
           <i class="icon-credit-card"></i>
           <span>Plan y Facturación</span>
         </button>
-        <button class="nav-item danger" [class.active]="activeSection === 'avanzado'"
+        <button class="nav-item danger" [disabled]="true" style="display: none;" [class.active]="activeSection === 'avanzado'"
           (click)="setActiveSection('avanzado')">
           <i class="icon-alert"></i>
           <span>Avanzado</span>

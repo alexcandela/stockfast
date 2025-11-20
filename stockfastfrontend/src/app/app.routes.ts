@@ -13,6 +13,7 @@ import { RegisterComponent } from './pages/register-component/register-component
 
 import { authGuard } from './core/guards/auth-guard';
 import { Stockfastpropage } from './layouts/stockfastpropage/stockfastpropage';
+import { NotFoundPage } from './layouts/notfoundpage/notfoundpage';
 
 export const routes: Routes = [
   // Layout para autenticación
@@ -50,5 +51,5 @@ export const routes: Routes = [
   },
 
   // Fallback
-  { path: '**', redirectTo: 'login' }
+  { path: '**', component: NotFoundPage }
 ];

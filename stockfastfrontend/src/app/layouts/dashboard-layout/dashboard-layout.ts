@@ -1,7 +1,8 @@
-import { Component, HostListener, signal, AfterViewInit } from '@angular/core';
+import { Component, HostListener, signal, AfterViewInit, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { UserComponent } from '../../components/user-component/user-component';
 import { CommonModule } from '@angular/common';
+import { Authservice } from '../../core/services/authservice';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -10,19 +11,17 @@ import { CommonModule } from '@angular/common';
   templateUrl: './dashboard-layout.html',
   styleUrl: './dashboard-layout.scss'
 })
-
-export class DashboardLayout implements AfterViewInit {
-  // Señal para el toggle del sidebar
+export class DashboardLayout implements AfterViewInit, OnInit {
   show = signal(true);
+  userPlan: string | null = 'Free';
 
-  constructor() {}
+  constructor(private authService: Authservice) {}
 
   toggle() {
     this.show.set(!this.show());
   }
 
   ngAfterViewInit() {
-    // Solo en navegador
     if (typeof window !== 'undefined') {
       this.checkScreenSize();
     }
@@ -37,8 +36,15 @@ export class DashboardLayout implements AfterViewInit {
 
   private checkScreenSize() {
     if (typeof window !== 'undefined') {
-      // Si la pantalla es menor a 1024px, cerrar sidebar por defecto
       this.show.set(window.innerWidth >= 1024);
     }
+  }
+
+  ngOnInit(): void {
+    this.userPlan = this.authService.getUserPlan();
+  }
+
+  isPro(): boolean {
+    return this.userPlan?.toLowerCase() === 'pro';
   }
 }
