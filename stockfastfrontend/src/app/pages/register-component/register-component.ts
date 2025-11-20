@@ -9,6 +9,7 @@ import {
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 
 import { Authservice } from '../../core/services/authservice';
+import { NotificationService } from '../../core/services/notification-service';
 
 @Component({
   selector: 'app-register-component',
@@ -20,15 +21,36 @@ import { Authservice } from '../../core/services/authservice';
 export class RegisterComponent {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: Authservice, private router: Router) {
-    this.registerForm = this.fb.group({
-      name: ['', Validators.required],
-      last_name: ['', Validators.required],
-      username: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
-      password_confirmation: ['', Validators.required],
-    });
+  constructor(
+    private fb: FormBuilder,
+    private authService: Authservice,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {
+    this.registerForm = this.fb.group(
+      {
+        name: ['', [Validators.required]],
+        last_name: ['', [Validators.required]],
+        username: ['', [Validators.required]],
+        email: ['', [Validators.required, Validators.email]],
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+          ],
+        ],
+        password_confirmation: ['', [Validators.required]],
+      },
+      { validators: this.passwordMatchValidator }
+    );
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('password')?.value;
+    const confirm = form.get('password_confirmation')?.value;
+    return password === confirm ? null : { passwordMismatch: true };
   }
 
   submitData() {
@@ -48,7 +70,18 @@ export class RegisterComponent {
           }
         }
       },
-      error: (err) => console.error('Error al hacer registro:', err),
+      error: (err) => {
+        if (err.error.message === 'El nombre de usuario ya está en uso') {
+          this.registerForm.get('username')?.markAsTouched();
+          this.registerForm.get('username')?.setErrors({ unique: true });
+        } else if (err.error.message === 'El correo electrónico ya está registrado') {
+          this.registerForm.get('email')?.markAsTouched();
+          this.registerForm.get('email')?.setErrors({ unique: true });
+        } else {
+          this.notificationService.error('Error al hacer registro');
+          console.error('Error al hacer registro:', err.error.message);
+        }
+      },
     });
   }
 }

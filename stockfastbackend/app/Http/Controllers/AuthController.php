@@ -6,31 +6,34 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Http\Requests\RegisterRequest;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:100',
-            'last_name' => 'required|string|max:100',
-            'username' => 'required|string|max:100',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
+        try {
+            $data = $request->validated();
 
-        $user = User::create($data);
+            $user = User::create($data);
 
-        $token = JWTAuth::claims([
-            'username' => $user->username,
-            'plan' => $user->plan->name
-        ])->fromUser($user);
+            $user->load('plan');
 
-        return response()->json([
-            'success' => true,
-            'token' => $token
-        ]);
+            $planName = $user->plan ? $user->plan->name : null;
+
+            $token = JWTAuth::claims([
+                'username' => $user->username,
+                'plan' => $planName,
+            ])->fromUser($user);
+
+            return response()->json(['success' => true, 'token' => $token], 200);
+        } catch (\Throwable $th) {
+            Log::error('Error en register@AuthController', ['exception' => $th->getMessage()]);
+            return response()->json(['error' => 'Error al registrar el usuario'], 500);
+        }
     }
+
 
     public function login(Request $request)
     {

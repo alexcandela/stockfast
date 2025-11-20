@@ -33,6 +33,7 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('/get-userdata', [App\Http\Controllers\UserController::class, 'getUserData']);
     Route::put('/update-userdata', [App\Http\Controllers\UserController::class, 'updateUserData']);
+    Route::put('/update-password', [App\Http\Controllers\UserController::class, 'updatePassword']);
 
     Route::middleware('plan:Pro')->group(function () {});
 });

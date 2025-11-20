@@ -119,6 +119,18 @@
                                 </svg>
                                 <small class="errorMessage">El nombre de usuario es requerido</small>
                             </div>
+                            } @if (registerForm.get('username')?.touched &&
+                            registerForm.get('username')?.errors?.['unique']) {
+                            <div class="error-wrapper">
+                                <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                <small class="errorMessage">El nombre de usuario ya está en uso</small>
+                            </div>
                             }
                         </div>
                     </div>
@@ -151,6 +163,29 @@
                                     <line x1="12" y1="16" x2="12.01" y2="16" />
                                 </svg>
                                 <small class="errorMessage">El correo es requerido</small>
+                            </div>
+                            } @if (registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['email']) {
+                            <div class="error-wrapper">
+                                <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                <small class="errorMessage">El correo no es válido</small>
+                            </div>
+                            } @if (registerForm.get('email')?.touched && registerForm.get('email')?.errors?.['unique'])
+                            {
+                            <div class="error-wrapper">
+                                <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                <small class="errorMessage">El correo electrónico ya está registrado</small>
                             </div>
                             }
                         </div>
@@ -188,6 +223,20 @@
                                     <small class="errorMessage">Requerido</small>
                                 </div>
                                 }
+                                @if (registerForm.get('password')?.touched &&
+                                registerForm.get('password')?.errors?.['pattern']) {
+                                <div class="error-wrapper">
+                                    <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    <small class="errorMessage">La contraseña debe tener al menos 8 caracteres, una
+                                        letra mayúscula, un número y un carácter especial</small>
+                                </div>
+                                }
                             </div>
                         </div>
 
@@ -222,6 +271,22 @@
                                     <small class="errorMessage">Requerido</small>
                                 </div>
                                 }
+                                @if (registerForm.errors?.['passwordMismatch'] &&
+                                (registerForm.get('password')?.touched ||
+                                registerForm.get('password_confirmation')?.touched)) {
+                                <div class="error-wrapper">
+                                    <svg class="error-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    <small class="errorMessage">La contraseña de confirmación no coincide con la
+                                        contraseña</small>
+                                </div>
+                                }
+
                             </div>
                         </div>
                     </div>

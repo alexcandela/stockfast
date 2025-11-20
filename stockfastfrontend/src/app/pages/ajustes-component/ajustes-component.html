@@ -59,8 +59,8 @@
             <label for="username">Nombre de usuario</label>
             <input type="text" id="username" formControlName="username" placeholder="@username">
             @if (profileForm.get('username')?.touched && profileForm.get('username')?.errors?.['required']) {
-              <span class="error">El nombre de usuario es requerido</span>
-              }
+            <span class="error">El nombre de usuario es requerido</span>
+            }
             @if (profileForm.get('username')?.hasError('duplicate')) {
             <span class="error">El nombre de usuario ya está en uso</span>
             }
@@ -73,8 +73,8 @@
             <span class="error">Ingresa un email válido</span>
             }
             @if (profileForm.get('email')?.touched && profileForm.get('email')?.errors?.['required']) {
-              <span class="error">El email es requerido</span>
-              }
+            <span class="error">El email es requerido</span>
+            }
             @if (profileForm.get('email')?.hasError('duplicate')) {
             <span class="error">El correo electrónico ya está registrado</span>
             }
@@ -102,12 +102,28 @@
             <label for="current_password">Contraseña actual</label>
             <input type="password" id="current_password" formControlName="current_password"
               placeholder="Tu contraseña actual">
+            @if (passwordForm.get('current_password')?.touched &&
+            passwordForm.get('current_password')?.errors?.['incorrect']) {
+            <span class="error">La contraseña actual es incorrecta</span>
+            } @if (passwordForm.get('current_password')?.touched &&
+            passwordForm.get('current_password')?.errors?.['required']) {
+            <span class="error">La contraseña actual es requerida</span>
+            }
           </div>
 
           <div class="form-group">
             <label for="new_password">Nueva contraseña</label>
             <input type="password" id="new_password" formControlName="new_password" placeholder="Mínimo 8 caracteres">
-            <span class="hint">Usa al menos 8 caracteres con letras y números</span>
+            <span class="hint">Usa al menos 8 caracteres con letras, números y caracteres especiales</span>
+            @if (passwordForm.get('new_password')?.touched && passwordForm.get('new_password')?.errors?.['required']) {
+            <span class="error">La nueva contraseña es requerida</span>
+            }
+            @if (passwordForm.get('new_password')?.touched && passwordForm.get('new_password')?.errors?.['minlength']) {
+            <span class="error">La nueva contraseña debe tener al menos 8 caracteres</span>
+            }
+            @if (passwordForm.get('new_password')?.touched && passwordForm.get('new_password')?.errors?.['pattern']) {
+            <span class="error">La nueva contraseña debe tener al menos una letra mayúscula, un número y un carácter especial</span>
+            }
           </div>
 
           <div class="form-group">
@@ -117,14 +133,23 @@
             @if (passwordForm.errors?.['passwordMismatch'] && passwordForm.get('confirm_password')?.touched) {
             <span class="error">Las contraseñas no coinciden</span>
             }
+            @if (passwordForm.get('confirm_password')?.touched && passwordForm.get('confirm_password')?.errors?.['required']) {
+              <span class="error">La contraseña de confirmación es requerida</span>
+            }
+            @if (passwordForm.get('confirm_password')?.touched && passwordForm.get('confirm_password')?.errors?.['minlength']) {
+            <span class="error">La contraseña de confirmación debe tener al menos 8 caracteres</span>
+            }
+            @if (passwordForm.get('confirm_password')?.touched && passwordForm.get('confirm_password')?.errors?.['pattern']) {
+            <span class="error">La contraseña de confirmación debe tener al menos una letra mayúscula, un número y un carácter especial</span>
+            }
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary" [disabled]="!passwordForm.valid || loading">
-              {{ loading ? 'Cambiando...' : 'Cambiar contraseña' }}
+            <button type="submit" class="btn btn-primary">
+              Cambiar contraseña
             </button>
           </div>
-        </form>
+        </form> 
 
         <div class="security-info">
           <h3>Seguridad adicional</h3>

@@ -7,6 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { NotificationService } from '../../core/services/notification-service';
 
 import { Authservice } from '../../core/services/authservice';
 
@@ -19,7 +20,7 @@ import { Authservice } from '../../core/services/authservice';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: Authservice, private router: Router) {
+  constructor(private fb: FormBuilder, private authService: Authservice, private router: Router, private notificationService: NotificationService) {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
@@ -44,7 +45,13 @@ export class LoginComponent implements OnInit {
           }
         }
       },
-      error: (err) => console.error('Error al hacer login:', err),
+      error: (err) => { 
+        if (err.error.error === 'Credenciales inválidas') {
+          this.loginForm.setErrors({ 'invalid': true });
+        } else {
+          this.notificationService.error('Error al hacer iniciar sesión');
+        }
+      }
     });
   }
 

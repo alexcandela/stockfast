@@ -35,8 +35,8 @@ export class AjustesComponent implements OnInit {
     this.passwordForm = this.fb.group(
       {
         current_password: ['', [Validators.required]],
-        new_password: ['', [Validators.required, Validators.minLength(8)]],
-        confirm_password: ['', [Validators.required]],
+        new_password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)]],
+        confirm_password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)]],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -134,21 +134,26 @@ export class AjustesComponent implements OnInit {
    */
   changePassword(): void {
     if (this.passwordForm.valid) {
-      this.loading = true;
       const passwordData = {
         current_password: this.passwordForm.value.current_password,
         new_password: this.passwordForm.value.new_password,
       };
 
-      console.log('changePassword() - Datos preparados:', passwordData);
+      this.settingsService.updateUserPassword(passwordData).subscribe({
+        next: (response) => {
+          this.notificationService.success('Contraseña actualizada correctamente');
+          this.passwordForm.reset();
+        },
+        error: (error) => {
+          if (error.error.message === 'La contraseña es incorrecta.') {
+            this.passwordForm.get('current_password')?.setErrors({ incorrect: true });
+          } else {
+            this.notificationService.error('Error al actualizar la contraseña');
+          }
+        },
+      });
 
-      setTimeout(() => {
-        this.loading = false;
-        this.passwordForm.reset();
-        alert('Contraseña cambiada correctamente (simulado)');
-      }, 1000);
     } else {
-      console.warn('Formulario de contraseña no válido');
       this.markFormGroupTouched(this.passwordForm);
     }
   }

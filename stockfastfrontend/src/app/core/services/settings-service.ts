@@ -29,11 +29,12 @@ export class SettingsService {
     return this.http.put<any>(`${this.apiUrl}/update-userdata`, profileData, { headers });
   }
 
-  changeUserPassword(passwordData: any) {
-    // Lógica para cambiar la contraseña del usuario en el backend
-  }
+  updateUserPassword(passwordData: any) {
+    const token = this.authService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
 
-  updateNotificationSettings(notificationData: any) {
-    // Lógica para actualizar las configuraciones de notificaciones en el backend
-  }
+    return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers });
+  }  
 }
