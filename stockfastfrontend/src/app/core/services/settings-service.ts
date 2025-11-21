@@ -1,15 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Authservice } from './authservice';
+import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SettingsService {
-
   constructor(private http: HttpClient, private authService: Authservice) {}
 
-   private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   getUserData() {
     const token = this.authService.getToken();
@@ -36,5 +36,5 @@ export class SettingsService {
     });
 
     return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers });
-  }  
+  }
 }

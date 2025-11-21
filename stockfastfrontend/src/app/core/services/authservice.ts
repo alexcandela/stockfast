@@ -6,12 +6,13 @@ import { Router } from '@angular/router';
 import { JwtPayloadInterface } from '../interfaces/auth';
 
 import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class Authservice {
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {}
 

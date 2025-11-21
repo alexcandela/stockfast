@@ -3,13 +3,14 @@ import { Purchase } from '../interfaces/purchase';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Authservice } from './authservice'; // tu AuthService
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PurchaseService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService: Authservice) { }
 

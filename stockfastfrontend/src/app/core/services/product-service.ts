@@ -3,6 +3,7 @@ import { Authservice } from './authservice';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Product, ProductResponse } from '../interfaces/product';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs';
 export class ProductService {
   constructor(private http: HttpClient, private authService: Authservice) {}
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   getProducts(): Observable<ProductResponse> {
     const token = this.authService.getToken();

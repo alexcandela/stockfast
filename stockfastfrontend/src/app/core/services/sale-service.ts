@@ -4,13 +4,14 @@ import { Authservice } from './authservice';
 import { Sale } from '../interfaces/sale';
 import { Observable } from 'rxjs';
 import { Venta, VentaResponse } from '../interfaces/venta';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private authService: Authservice) { }
 
