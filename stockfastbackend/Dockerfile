@@ -1,7 +1,7 @@
 # Usa la imagen oficial de PHP 8.3 con Apache
 FROM php:8.3-apache
 
-# Instala dependencias del sistema y extensiones necesarias para Laravel y PostgreSQL
+# Instala dependencias y extensiones necesarias para Laravel y PostgreSQL
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -12,31 +12,32 @@ RUN apt-get update && apt-get install -y \
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia todo el contenido del contexto de build al directorio Apache
+# Copia todo el código al directorio Apache
 COPY ./ /var/www/html
 
-# Establece el directorio de trabajo dentro del contenedor
+# Establece el directorio de trabajo
 WORKDIR /var/www/html
 
-# Crea archivo .env copiando el ejemplo para que Artisan funcione si no hay otro
+# Copia archivo .env de ejemplo si no existe (opcional)
 RUN cp .env.example .env
 
-# Instala las dependencias con Composer (optimizando autoload y sin scripts de instalación)
+# Instala dependencias PHP con Composer
 RUN composer install --optimize-autoloader --no-scripts --no-interaction
 
-# Configura permisos para storage y cache para que Apache pueda escribirlos
+# Configura permisos para storage y cache para que Apache pueda escribir logs y caché
 RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chmod -R 775 storage bootstrap/cache
 
-# Configura Apache para servir la carpeta public/ de Laravel y habilita módulo rewrite
+# Configura Apache para servir desde la carpeta public y habilita mod_rewrite
 RUN echo "DocumentRoot /var/www/html/public" > /etc/apache2/sites-available/000-default.conf && \
     a2enmod rewrite
 
-# Copia y configura entrypoint
+# Copia el script entrypoint y dale permisos para ejecución
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Expone el puerto 80 para que el servidor web sea accesible
+# Expone puerto 80
 EXPOSE 80
 
-# Usa el entrypoint para arrancar la app y Apache en runtime
+# Usar entrypoint para comandos Artisan en runtime y luego ejecutar Apache
 CMD ["/entrypoint.sh"]
