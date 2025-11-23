@@ -1,24 +1,26 @@
 FROM php:8.3-apache
 
-# Instalar extensiones necesarias para PostgreSQL y Laravel
-RUN apt-get update && apt-get install -y libpq-dev unzip git \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip
+# Instalar dependencias del sistema y extensiones PHP necesarias
+RUN apt-get update && apt-get install -y libpq-dev unzip git zip libzip-dev \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip \
+    && a2enmod rewrite
 
-# Habilitar módulo rewrite para Laravel
-RUN a2enmod rewrite
-
-# Copiar código fuente al directorio público de Apache
-COPY . /var/www/html
-
-# Ajustar permisos, si es necesario
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Instalar dependencias con Composer
+# Copiar archivo composer desde la imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Establecer directorio de trabajo
 WORKDIR /var/www/html
+
+# Copiar todo el código al contenedor
+COPY . .
+
+# Ajustar permisos para Laravel
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Instalar dependencias PHP con Composer optimizadas para producción
 RUN composer install --optimize-autoloader --no-interaction
 
-# Exponer puerto 80
+# Exponer puerto 80 para HTTP
 EXPOSE 80
 
-# Apache ya está configurado para correr como proceso principal
+# Apache corre automáticamente al iniciar el contenedor
