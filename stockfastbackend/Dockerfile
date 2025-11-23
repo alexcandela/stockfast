@@ -16,8 +16,6 @@ COPY ./ /var/www/html
 
 WORKDIR /var/www/html
 
-RUN cp .env.example .env
-
 RUN composer install --optimize-autoloader --no-scripts --no-interaction
 
 RUN chown -R www-data:www-data storage bootstrap/cache
@@ -27,6 +25,7 @@ RUN echo "DocumentRoot /var/www/html/public" > /etc/apache2/sites-available/000-
 RUN a2enmod rewrite
 
 EXPOSE 80
+
 
 CMD sh -c "\
   php artisan migrate --force || true && \
