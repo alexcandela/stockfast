@@ -5,10 +5,10 @@ RUN apt-get update && apt-get install -y \
     unzip \
     zip \
     libzip-dev \
+    pkg-config \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath ctype fileinfo openssl json mbstring tokenizer xml \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
-
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -29,11 +29,11 @@ RUN a2enmod rewrite
 EXPOSE 80
 
 CMD sh -c "\
-    php artisan migrate --force && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan key:generate && \
-    php artisan jwt:secret --force && \
-    apache2-foreground"
+  php artisan migrate --force && \
+  php artisan config:clear && \
+  php artisan cache:clear && \
+  php artisan route:clear && \
+  php artisan view:clear && \
+  php artisan key:generate && \
+  php artisan jwt:secret --force && \
+  apache2-foreground"
