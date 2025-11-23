@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     pkg-config \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath ctype fileinfo openssl json mbstring tokenizer xml \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip bcmath fileinfo \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
