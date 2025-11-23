@@ -18,7 +18,7 @@ COPY ./ /var/www/html
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /var/www/html
 
-# Crea archivo .env copiando el ejemplo para que Artisan funcione
+# Crea archivo .env copiando el ejemplo para que Artisan funcione si no hay otro
 RUN cp .env.example .env
 
 # Instala las dependencias con Composer (optimizando autoload y sin scripts de instalación)
@@ -31,20 +31,12 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 RUN echo "DocumentRoot /var/www/html/public" > /etc/apache2/sites-available/000-default.conf && \
     a2enmod rewrite
 
-# Genera la key de la aplicación y cachea configuración, rutas y vistas
-RUN php artisan key:generate
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-
-# Genera clave JWT si usas jwt-auth
-RUN php artisan jwt:secret --force
-
-# Ejecuta migraciones en la base de datos
-RUN php artisan migrate --force
+# Copia y configura entrypoint
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # Expone el puerto 80 para que el servidor web sea accesible
 EXPOSE 80
 
-# Comando para arrancar Apache en primer plano
-CMD ["apache2-foreground"]
+# Usa el entrypoint para arrancar la app y Apache en runtime
+CMD ["/entrypoint.sh"]
