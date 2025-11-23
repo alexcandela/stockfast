@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://stockfast.up.railway.app/api',
+  apiUrl: 'https://stockfast-production.up.railway.app/api',
 };
