@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Authservice } from './authservice';
 import { Observable } from 'rxjs';
 import { StockResponse } from '../interfaces/stock';
-import { environment } from '../environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
