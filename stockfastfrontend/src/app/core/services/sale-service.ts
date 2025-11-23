@@ -4,7 +4,7 @@ import { Authservice } from './authservice';
 import { Sale } from '../interfaces/sale';
 import { Observable } from 'rxjs';
 import { Venta, VentaResponse } from '../interfaces/venta';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

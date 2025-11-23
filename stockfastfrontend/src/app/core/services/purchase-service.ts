@@ -3,7 +3,7 @@ import { Purchase } from '../interfaces/purchase';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Authservice } from './authservice'; // tu AuthService
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'

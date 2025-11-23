@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { JwtPayloadInterface } from '../interfaces/auth';
 
 import { jwtDecode, JwtPayload } from 'jwt-decode';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
