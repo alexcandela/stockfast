@@ -12,8 +12,8 @@ RUN apt-get update && apt-get install -y \
 # Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copia el código fuente del backend al directorio de Apache
-COPY ./stockfastbackend /var/www/html
+# Copia todo el contenido del contexto de build (la carpeta stockfastbackend) al directorio Apache
+COPY ./ /var/www/html
 
 # Establece el directorio de trabajo dentro del contenedor
 WORKDIR /var/www/html
