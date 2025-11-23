@@ -1,31 +1,30 @@
+# Usa la imagen oficial de PHP 8.3 con Apache
 FROM php:8.3-apache
 
+# Instala las extensiones necesarias para Laravel y PostgreSQL
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql pgsql \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo pdo_pgsql pgsql
 
+# Instala Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-COPY ./ /var/www/html
+# Copia el código fuente al directorio de Apache
+COPY . /var/www/html
 
-WORKDIR /var/www/html
+# Establece el directorio de trabajo
+WORKDIR /var/www/html/stockfastbackend
 
+# Instala dependencias de Composer
 RUN composer install --optimize-autoloader --no-scripts --no-interaction
 
+# Configura los permisos para storage y bootstrap/cache
 RUN chown -R www-data:www-data storage bootstrap/cache
 
-RUN echo "DocumentRoot /var/www/html/public" > /etc/apache2/sites-available/000-default.conf && \
-    a2enmod rewrite
-
-RUN php artisan key:generate
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-RUN php artisan jwt:secret --force
-
+# Expone el puerto 80
 EXPOSE 80
 
+# Comando para lanzar Apache en primer plano
 CMD ["apache2-foreground"]
