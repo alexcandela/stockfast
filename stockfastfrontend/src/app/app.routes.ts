@@ -23,15 +23,14 @@ export const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: '', redirectTo: 'login', pathMatch: 'full' }
-    ]
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
   },
 
   {
     path: 'stockfastpro',
     component: Stockfastpropage,
-    children: [
-    ]
+    children: [],
   },
 
   // Layout del dashboard
@@ -40,6 +39,7 @@ export const routes: Routes = [
     component: DashboardLayout,
     canActivate: [authGuard],
     children: [
+      { path: '', redirectTo: 'general', pathMatch: 'full' }, // <-- ruta raíz
       { path: 'general', component: GeneralComponent },
       { path: 'stock', component: StockComponent },
       { path: 'addlote', component: AddloteComponent },
@@ -47,9 +47,9 @@ export const routes: Routes = [
       { path: 'seo', component: SeoComponent },
       { path: 'estadisticas', component: EstadisticasComponent },
       { path: 'ajustes', component: AjustesComponent },
-    ]
+    ],
   },
 
   // Fallback
-  { path: '**', component: NotFoundPage }
+  { path: '**', component: NotFoundPage },
 ];
