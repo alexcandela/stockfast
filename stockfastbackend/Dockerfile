@@ -40,6 +40,9 @@ RUN php artisan view:cache
 # Genera clave JWT si usas jwt-auth
 RUN php artisan jwt:secret --force
 
+# Ejecuta migraciones en la base de datos
+RUN php artisan migrate --force
+
 # Expone el puerto 80 para que el servidor web sea accesible
 EXPOSE 80
 
