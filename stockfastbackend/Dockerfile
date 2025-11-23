@@ -29,7 +29,7 @@ RUN a2enmod rewrite
 EXPOSE 80
 
 CMD sh -c "\
-  php artisan migrate --force && \
+  php artisan migrate --force || true && \
   php artisan config:clear && \
   php artisan cache:clear && \
   php artisan route:clear && \
