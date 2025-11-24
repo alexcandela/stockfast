@@ -1,5 +1,6 @@
+<!-- dashboard-layout.html -->
 <div class="app-container">
-      <aside class="sidebar">
+      <aside class="sidebar" [class.sidebar-hidden]="!show()">
             <div class="sidebar-logo">
                   <h1>stockfast.</h1>
             </div>
@@ -39,9 +40,7 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/seo.svg" alt="seo-icon" />
                                           <span>Seo</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                               <li>
@@ -50,9 +49,7 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/analytics.svg" alt="analytics-icon" />
                                           <span>Estadísticas</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                               <li>
@@ -61,9 +58,7 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/bot.svg" alt="automation-icon" />
                                           <span>Automatización</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                               <li>
@@ -72,9 +67,7 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/integrations.svg" alt="integrations-icon" />
                                           <span>Integraciones</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                               <li>
@@ -83,9 +76,7 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/api.svg" alt="api-icon" />
                                           <span>Acceso API</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                               <li>
@@ -94,13 +85,10 @@
                                           [attr.aria-disabled]="!isPro()" (click)="!isPro() && $event.preventDefault()">
                                           <img src="assets/icons/support.svg" alt="support-icon" />
                                           <span>Soporte</span>
-                                          @if (!isPro()) {
-                                          <span class="pro-badge">PRO</span>
-                                          }
+                                          <span class="pro-badge" *ngIf="!isPro()">PRO</span>
                                     </a>
                               </li>
                         </div>
-
                         <hr />
                         <li>
                               <a class="sidebarbtn" routerLink="/ajustes" routerLinkActive="active">
@@ -110,11 +98,11 @@
                         </li>
                   </ul>
             </nav>
-
             <app-user-component />
       </aside>
 
       <main class="main">
+            <button class="menu-toggle" (click)="toggle()">☰</button>
             <router-outlet></router-outlet>
       </main>
 </div>

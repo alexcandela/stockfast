@@ -2,6 +2,7 @@
   height: 100%;
   padding: 24px;
   display: grid;
+  min-height: 300px;
   grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   gap: 16px;
@@ -10,6 +11,7 @@
   @media (max-width: 640px) {
     padding: 16px;
     gap: 12px;
+    min-height: 320px;
   }
 
   .titleContainer {
@@ -78,7 +80,7 @@
 
   // Contenedor del gráfico
   apx-chart {
-    min-height: 0;
+    min-height: 300px;
     overflow: hidden;
   }
 }

@@ -1,3 +1,4 @@
+// dashboard-layout.scss
 @use '../../../styles/base/typography' as *;
 @use '../../../styles/abstracts/variables' as *;
 
@@ -64,29 +65,10 @@
     cursor: not-allowed;
   }
 
-
   .main {
     background: #0f0f0f;
     padding: 25px;
     overflow-y: auto;
-
-    &::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.15);
-      }
-    }
-
     @media (max-width: 768px) {
       padding: 15px;
     }
@@ -97,7 +79,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #8b5cf6; /* color violeta característico */
+  background-color: #8b5cf6;
   color: white;
   font-weight: 800;
   font-size: 10px;
@@ -111,11 +93,57 @@
   text-transform: uppercase;
 }
 
-
-// Animación para app-user-component
 app-user-component {
   display: block;
   padding: 16px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   transition: opacity 0.3s ease;
+}
+
+// MOBILE
+@media (max-width: 1023px) {
+  .app-container {
+    grid-template-columns: 1fr;
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 250px;
+      z-index: 1000;
+      transform: translateX(0);
+      transition: transform 0.3s ease-in-out;
+    }
+    .sidebar.sidebar-hidden {
+      transform: translateX(-100%);
+    }
+    .main {
+      padding-top: 60px;
+    }
+    .menu-toggle {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      z-index: 1100;
+      background: rgba(26, 26, 26, 0.9);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+  }
+}
+
+.menu-toggle {
+  display: none;
+  @media (max-width: 1023px) {
+    display: inline-flex;
+  }
 }

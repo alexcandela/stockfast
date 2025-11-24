@@ -1,3 +1,4 @@
+// dashboard-layout.ts
 import { Component, HostListener, signal, AfterViewInit, OnInit } from '@angular/core';
 import { RouterLink, RouterOutlet, RouterLinkActive } from '@angular/router';
 import { UserComponent } from '../../components/user-component/user-component';
@@ -18,7 +19,9 @@ export class DashboardLayout implements AfterViewInit, OnInit {
   constructor(private authService: Authservice) {}
 
   toggle() {
-    this.show.set(!this.show());
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      this.show.set(!this.show());
+    }
   }
 
   ngAfterViewInit() {
@@ -36,7 +39,12 @@ export class DashboardLayout implements AfterViewInit, OnInit {
 
   private checkScreenSize() {
     if (typeof window !== 'undefined') {
-      this.show.set(window.innerWidth >= 1024);
+      const isDesktop = window.innerWidth >= 1024;
+      if (isDesktop) {
+        this.show.set(true);
+      } else {
+        this.show.set(false);
+      }
     }
   }
 
