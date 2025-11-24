@@ -58,4 +58,4 @@ WORKDIR /var/www/html
 EXPOSE 80
 
 # Comando para aplicar migraciones y arrancar Apache en primer plano
-CMD ["apache2-foreground"]
+CMD /bin/sh -c "php artisan migrate --force && apache2-foreground"
