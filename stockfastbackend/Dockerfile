@@ -64,6 +64,3 @@ WORKDIR /var/www/html
 
 # Exponer puerto 80 para Railway
 EXPOSE 80
-
-# Comando para aplicar migraciones y arrancar Apache en primer plano
-CMD /bin/sh -c "php artisan migrate --force && apache2-foreground"
