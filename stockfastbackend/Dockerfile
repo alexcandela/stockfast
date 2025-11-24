@@ -2,40 +2,55 @@
 FROM php:8.4-apache AS builder
 
 # Instala dependencias de sistema y extensiones PHP necesarias para Laravel y PostgreSQL
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    libzip-dev \
-    zip \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git unzip libpq-dev libzip-dev zip \
     && docker-php-ext-install pdo_pgsql
 
-# 3. Composer
+# Copia Composer desde la imagen oficial
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# 4. Directorio de trabajo
+# Directorio de trabajo
 WORKDIR /var/www/html
 
-# 5. Copiar proyecto
-COPY . .
+# Copia composer.json y composer.lock para usar cache Docker
+COPY composer.json composer.lock ./
 
-# 6. Instalar dependencias de Laravel
+# Instalar dependencias composer optimizadas para producción
 RUN composer install --no-dev --optimize-autoloader
 
-# 7. Crear carpetas necesarias y dar permisos
+# Copia el resto del código
+COPY . .
+
+# Crear carpetas Laravel necesarias y dar permisos
 RUN mkdir -p storage/framework/views storage/framework/cache storage/logs bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# 8. Enlazar storage
+# Enlazar storage para acceso a archivos públicos
 RUN php artisan storage:link
 
-# 11. Exponer puerto
-EXPOSE 8000
+# Etapa 2: Imagen final con Apache
+FROM php:8.4-apache
 
-# 12. Comando para ejecutar Laravel y limpiar caches al inicio.
-CMD php artisan migrate --force && \
-    php artisan config:clear && \
-    php artisan cache:clear && \
-    php artisan route:clear && \
-    php artisan view:clear && \
-    php artisan serve --host=0.0.0.0 --port=8000
+# Copiar dependencias y aplicación desde builder
+COPY --from=builder /var/www/html /var/www/html
+COPY --from=builder /usr/local/bin/composer /usr/local/bin/composer
+
+# Instalar librerías runtime necesarias
+RUN apt-get update && apt-get install -y --no-install-recommends libpq-dev libzip-dev libicu-dev libonig-dev \
+    && apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/*
+
+# Configurar Apache para usar /public como DocumentRoot
+RUN a2enmod rewrite \
+    && sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf
+
+# Evitar warning Apache con ServerName
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+WORKDIR /var/www/html
+
+# Exponer puerto 80 para Railway
+EXPOSE 80
+
+# CMD para arrancar Apache en primer plano
+CMD ["apache2-foreground"]
