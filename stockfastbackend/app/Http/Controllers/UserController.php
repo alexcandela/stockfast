@@ -29,6 +29,11 @@ class UserController extends Controller
         try {
             $loggedUser = Auth::user();
             $user = User::findOrFail($loggedUser->id);
+
+            if ($user->username === 'johndoe') {
+                return response()->json(['error' => 'No está permitido modificar los datos del usuario demo'], 403);
+            }
+
             $validatedData = $request->validated();
 
             $user->update($validatedData);
@@ -46,8 +51,13 @@ class UserController extends Controller
         try {
             $loggedUser = Auth::user();
             $user = User::findOrFail($loggedUser->id);
+
+            if ($user->username === 'johndoe') {
+                return response()->json(['error' => 'No está permitido modificar los datos del usuario demo'], 403);
+            }
+
             $validatedData = $request->validated();
-            
+
             $user->password = Hash::make($validatedData['new_password']);
             $user->save();
 

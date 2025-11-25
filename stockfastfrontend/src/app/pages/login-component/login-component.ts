@@ -20,7 +20,12 @@ import { Authservice } from '../../core/services/authservice';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private authService: Authservice, private router: Router, private notificationService: NotificationService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: Authservice,
+    private router: Router,
+    private notificationService: NotificationService
+  ) {
     this.loginForm = this.fb.group({
       email: ['', Validators.required],
       password: ['', Validators.required],
@@ -32,7 +37,7 @@ export class LoginComponent implements OnInit {
       this.loginForm.markAllAsTouched();
       return;
     }
-    
+
     this.authService.login(this.loginForm.value).subscribe({
       next: (res) => {
         if (res.success) {
@@ -45,13 +50,41 @@ export class LoginComponent implements OnInit {
           }
         }
       },
-      error: (err) => { 
+      error: (err) => {
         if (err.error.error === 'Credenciales inválidas') {
-          this.loginForm.setErrors({ 'invalid': true });
+          this.loginForm.setErrors({ invalid: true });
         } else {
           this.notificationService.error('Error al hacer iniciar sesión');
         }
-      }
+      },
+    });
+  }
+
+  demo() {
+    this.loginForm.patchValue({
+      email: 'johndoe@gmail.com',
+      password: 'St@ckfast19'
+    });
+
+    this.authService.login(this.loginForm.value).subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.authService.setToken(res.token);
+          if (this.authService.isTokenValid(res.token)) {
+            this.router.navigate(['/general']);
+            this.loginForm.reset();
+          } else {
+            console.error('Token inválido');
+          }
+        }
+      },
+      error: (err) => {
+        if (err.error.error === 'Credenciales inválidas') {
+          this.loginForm.setErrors({ invalid: true });
+        } else {
+          this.notificationService.error('Error al hacer iniciar sesión');
+        }
+      },
     });
   }
 

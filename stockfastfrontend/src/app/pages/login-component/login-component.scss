@@ -314,6 +314,9 @@
 
 .formbtn {
     margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .authbtn {
@@ -334,6 +337,31 @@
     overflow: hidden;
 }
 
+.demobtn {
+    width: 100%;
+    background: linear-gradient(135deg, #10B981 0%, #34D399 100%); /* Verde degradado */
+    border: none;
+    border-radius: 12px;
+    padding: 16px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 4px 16px rgba(16, 185, 129, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    position: relative;
+    overflow: hidden;
+}
+
+.demobtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 24px rgba(16, 185, 129, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
 .btn-text {
     position: relative;
     z-index: 1;
@@ -342,12 +370,25 @@
 .btn-shine {
     position: absolute;
     top: -50%;
-    left: -100%;
-    width: 100%;
+    left: -120%;
+    width: 60%;
     height: 200%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
     transform: skewX(-20deg);
     transition: left 0.6s ease;
+}
+
+.demobtn:hover .btn-shine {
+    animation: shineMove 1.2s forwards;
+}
+
+@keyframes shineMove {
+    0% {
+        left: -120%;
+    }
+    100% {
+        left: 120%;
+    }
 }
 
 .authbtn:hover .btn-shine {
@@ -362,6 +403,9 @@
 }
 
 .authbtn:active {
+    transform: translateY(0);
+}
+.demobtn:active {
     transform: translateY(0);
 }
 

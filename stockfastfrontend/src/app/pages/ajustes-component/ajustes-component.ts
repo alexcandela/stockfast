@@ -35,8 +35,22 @@ export class AjustesComponent implements OnInit {
     this.passwordForm = this.fb.group(
       {
         current_password: ['', [Validators.required]],
-        new_password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)]],
-        confirm_password: ['', [Validators.required, Validators.minLength(8), Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/)]],
+        new_password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+          ],
+        ],
+        confirm_password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(8),
+            Validators.pattern(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/),
+          ],
+        ],
       },
       { validators: this.passwordMatchValidator }
     );
@@ -118,6 +132,8 @@ export class AjustesComponent implements OnInit {
             if (errors.email) {
               this.profileForm.get('email')?.setErrors({ duplicate: true });
             }
+          } else if (error.status === 403) {
+            this.notificationService.error(error.error.error);
           } else {
             this.notificationService.error('Error al actualizar el perfil');
           }
@@ -147,12 +163,13 @@ export class AjustesComponent implements OnInit {
         error: (error) => {
           if (error.error.message === 'La contraseña es incorrecta.') {
             this.passwordForm.get('current_password')?.setErrors({ incorrect: true });
+          } else if (error.status === 403) {
+            this.notificationService.error(error.error.error);
           } else {
             this.notificationService.error('Error al actualizar la contraseña');
           }
         },
       });
-
     } else {
       this.markFormGroupTouched(this.passwordForm);
     }
