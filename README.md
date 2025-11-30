@@ -143,6 +143,6 @@ Authorization: Bearer {token}
 
 **Alex Candela** - Desarrollador Full Stack
 - GitHub: [@alexcandela](https://github.com/alexcandela)
-- LinkedIn: [Tu Perfil](https://linkedin.com/in/alexcandela)
+- LinkedIn: [Alex Candela](https://linkedin.com/in/alexcandela)
 - Email: alex.candelaa@gmail.com
 
