@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
         if (err.error.error === 'Credenciales inválidas') {
           this.loginForm.setErrors({ invalid: true });
         } else {
-          this.notificationService.error('Error al hacer iniciar sesión');
+          this.notificationService.error('Error al iniciar sesión');
         }
       },
     });
@@ -82,7 +82,7 @@ export class LoginComponent implements OnInit {
         if (err.error.error === 'Credenciales inválidas') {
           this.loginForm.setErrors({ invalid: true });
         } else {
-          this.notificationService.error('Error al hacer iniciar sesión');
+          this.notificationService.error('Error al iniciar sesión');
         }
       },
     });
