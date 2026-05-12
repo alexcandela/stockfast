@@ -287,11 +287,11 @@
 
         &-types {
           display: grid;
-          grid-template-columns: auto 2fr repeat(5, 1fr);
+          grid-template-columns: 1.5fr repeat(5, 1fr);
           padding: 15px 20px;
           background: rgba(255, 255, 255, 0.03);
           border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          gap: 20px;
+          
 
           @media (max-width: 768px) {
             grid-template-columns: repeat(9, auto);
@@ -310,7 +310,7 @@
             cursor: pointer;
 
             span {
-              font-size: clamp(10px, 1rem, 1vw);
+              font-size: clamp(10px, 1rem, 0.8vw);
               color: rgba(255, 255, 255, 0.5);
               font-weight: 600;
               text-transform: uppercase;

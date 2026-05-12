@@ -145,7 +145,7 @@
 
     .list-header {
       display: grid;
-      grid-template-columns: auto 2fr repeat(7, 1fr);
+      grid-template-columns: 1.5fr repeat(7, 1fr);
       padding: 16px 20px;
       background: rgba(255, 255, 255, 0.03);
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
