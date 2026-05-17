@@ -57,7 +57,6 @@ class Purchase extends Model
 
                 $purchase->products()->createMany($products);
             }
-    dd($purchase->products);
             return $purchase->load('products');
         });
     }
