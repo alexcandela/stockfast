@@ -169,11 +169,12 @@ class DatabaseSeeder extends Seeder
 
         $faker = Faker::create();
 
-        // Crear compras y productos
         for ($i = 1; $i <= 10; $i++) {
+            $shippingCost = $faker->randomFloat(2, 5, 20);
+
             $purchaseId = DB::table('purchases')->insertGetId([
                 'user_id' => 1,
-                'shipping_cost' => $faker->randomFloat(2, 5, 20),
+                'shipping_cost' => $shippingCost,
                 'supplier_name' => $faker->company,
                 'shipping_agency' => $faker->company,
                 'purchase_date' => $faker->dateTimeThisYear,
@@ -181,16 +182,18 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => now(),
             ]);
 
-            // Crear productos asociados a la compra
-            for ($j = 1; $j <= rand(1, 5); $j++) {
+            // Primero generar los productos con sus cantidades
+            $numProducts = rand(1, 5);
+            $productsData = [];
+
+            for ($j = 0; $j < $numProducts; $j++) {
                 $category_id = rand(1, 7);
                 $productName = $realNames[$category_id][array_rand($realNames[$category_id])];
-
                 $purchasePrice = $faker->randomFloat(2, 5, 30);
                 $maxSalePrice = min($purchasePrice + 150, 150);
                 $salePrice = $faker->randomFloat(2, $purchasePrice + 0.01, $maxSalePrice);
 
-                DB::table('products')->insert([
+                $productsData[] = [
                     'purchase_id' => $purchaseId,
                     'category_id' => $category_id,
                     'name' => $productName,
@@ -200,7 +203,17 @@ class DatabaseSeeder extends Seeder
                     'quantity' => rand(1, 10),
                     'created_at' => now(),
                     'updated_at' => now(),
-                ]);
+                ];
+            }
+
+            // Calcular el total de unidades y el proporcional
+            $totalQuantity = array_sum(array_column($productsData, 'quantity'));
+            $shippingPerUnit = $totalQuantity > 0 ? round($shippingCost / $totalQuantity, 2) : 0;
+
+            // Añadir el shipping_cost_per_unit a cada producto e insertar
+            foreach ($productsData as $product) {
+                $product['shipping_cost_per_unit'] = $shippingPerUnit;
+                DB::table('products')->insert($product);
             }
         }
 
@@ -214,7 +227,7 @@ class DatabaseSeeder extends Seeder
         for ($month = 1; $month <= 12; $month++) {
             $monthStart = Carbon::create($startDate->year, $month, 1)->startOfMonth();
             $monthEnd = Carbon::create($startDate->year, $month, 1)->endOfMonth();
-            
+
             // Número aleatorio de ventas para este mes (entre 5 y 40)
             $numSalesThisMonth = rand(5, 40);
 

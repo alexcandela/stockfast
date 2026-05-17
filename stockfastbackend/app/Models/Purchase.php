@@ -31,19 +31,33 @@ class Purchase extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Si alguno de los inserts falla, se hace un rollback y no se inserta nada que se haya enviado anteriormente
     public static function createWithProducts(array $data, $user): Purchase
     {
         return DB::transaction(function () use ($data, $user) {
 
             $data['user_id'] = $user->id;
 
+            // Guardar antes de que $data se modifique
+            $shippingCost = (float) ($data['shipping_cost'] ?? 0);
+            $productsData = $data['products'] ?? [];
+
             $purchase = self::create($data);
 
-            if (!empty($data['products'])) {
-                $purchase->products()->createMany($data['products']);
-            }
+            if (!empty($productsData)) {
+                $totalQuantity = array_sum(array_column($productsData, 'quantity'));
 
+                $shippingPerUnit = ($shippingCost > 0 && $totalQuantity > 0)
+                    ? round($shippingCost / $totalQuantity, 2)
+                    : 0;
+
+                $products = array_map(function ($product) use ($shippingPerUnit) {
+                    $product['shipping_cost_per_unit'] = $shippingPerUnit;
+                    return $product;
+                }, $productsData);
+
+                $purchase->products()->createMany($products);
+            }
+    dd($purchase->products);
             return $purchase->load('products');
         });
     }

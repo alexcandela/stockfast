@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('purchase_price', 8, 2);
             $table->decimal('estimated_sale_price', 8, 2);
             $table->integer('quantity')->default(0);
+            $table->decimal('shipping_cost_per_unit', 8, 2)->default(0);
             $table->timestamps();
         });
     }

@@ -13,7 +13,7 @@
             <span>{{ product.purchase_price }}€</span>
         </div>
         <div class="dataname">
-            <span class="shipping-cost">+{{ product.shipping_cost || 0 }}€</span>
+            <span class="shipping-cost">+{{ product.shipping_cost_per_unit || 0 }}€</span>
         </div>
         <div class="dataname">
             <span class="sale_price">{{ product.estimated_sale_price }}€</span>

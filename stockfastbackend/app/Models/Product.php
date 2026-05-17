@@ -14,6 +14,7 @@ class Product extends Model
         'estimated_sale_price',
         'category_id',
         'description',
+        'shipping_cost_per_unit',
         'purchase_id'
     ];
 
