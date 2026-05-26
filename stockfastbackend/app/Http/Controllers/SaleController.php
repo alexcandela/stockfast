@@ -188,7 +188,7 @@ class SaleController extends Controller
         try {
             $sales = Sale::with('product', 'product.purchase', 'product.category')
                 ->where('user_id', $user->id)
-                ->orderBy('sale_date', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->get();
 
             $transformedSales = $sales->map(function ($sale) {
