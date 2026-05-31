@@ -40,10 +40,14 @@ export class AddloteComponent {
     { id: 7, nombre: 'Relojes' },
   ];
   private notificationService = inject(NotificationService);
-  constructor(private fb: FormBuilder, private purchaseService: PurchaseService) {
+  constructor(
+    private fb: FormBuilder,
+    private purchaseService: PurchaseService,
+  ) {
     this.productForm = this.fb.group({
       name: ['', Validators.required],
       quantity: [null, [Validators.required, Validators.min(1)]],
+      size: [null],
       purchase_price: [null, [Validators.required, Validators.min(0)]],
       estimated_sale_price: [null, [Validators.required, Validators.min(0)]],
       category_id: [null, [Validators.required]],
@@ -59,6 +63,12 @@ export class AddloteComponent {
     });
   }
 
+  tallasCalzado = ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45'];
+  tallasRopa = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+  seleccionarTalla(talla: number | string | null) {
+    this.productForm.get('size')?.setValue(talla);
+  }
   // Seleccionar la categoria del producto
   seleccionarCategoria(id: number) {
     this.productForm.get('category_id')?.setValue(id);

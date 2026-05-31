@@ -12,6 +12,7 @@ export interface Product {
   description?: string;
   purchase?: Purchase;
   category?: Category;
+  size?: string;
 }
 
 export interface ProductResponse {

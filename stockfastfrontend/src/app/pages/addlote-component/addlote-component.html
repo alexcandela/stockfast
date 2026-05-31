@@ -12,60 +12,101 @@
     <div class="addlotecontainer-cont">
         <div class="addlotecontainer-cont-producto">
             <form class="card formproduct" [formGroup]="productForm">
+
                 <div class="minititle formproduct-title">
                     <img src="assets/icons/info.svg" alt="product-icon">
                     <h4>Producto</h4>
                 </div>
+
                 <div class="forminputs">
+
+                    <!-- Nombre -->
                     <div class="forminputs-section1">
                         <div class="input">
                             <label for="name">Nombre</label>
-                            <input type="text" id="name" formControlName="name">
+                            <input type="text" id="name" formControlName="name" placeholder="Ej. Zapatillas Nike">
                             <div class="errorMessageContainer">
-                                @if (productForm.get('name')?.touched &&
-                                productForm.get('name')?.errors?.['required']) {
-                                <small class="errorMessage">
-                                    El nombre no puede estar vacío
-                                </small>
+                                @if (productForm.get('name')?.touched && productForm.get('name')?.errors?.['required'])
+                                {
+                                <small class="errorMessage">El nombre no puede estar vacío</small>
                                 }
                             </div>
                         </div>
                     </div>
+
+                    <!-- Talla -->
+                    <div class="forminputs-section-size">
+                        <div class="size-header">
+                            <label>Talla</label>
+                            @if (productForm.get('size')?.value) {
+                            <span class="size-selected-badge">{{ productForm.get('size')?.value }}</span>
+                            }
+                        </div>
+                        <div class="size-selector">
+                            <div class="size-group">
+                                <span class="size-group-label">Calzado</span>
+                                <div class="size-options">
+                                    @for (talla of tallasCalzado; track talla) {
+                                    <span (click)="seleccionarTalla(talla)"
+                                        [class.selected]="productForm.get('size')?.value === talla">
+                                        {{ talla }}
+                                    </span>
+                                    }
+                                </div>
+                            </div>
+                            <div class="size-group">
+                                <span class="size-group-label">Ropa</span>
+                                <div class="size-options">
+                                    @for (talla of tallasRopa; track talla) {
+                                    <span (click)="seleccionarTalla(talla)"
+                                        [class.selected]="productForm.get('size')?.value === talla">
+                                        {{ talla }}
+                                    </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="size-clear-btn" type="button" (click)="seleccionarTalla(null)">
+                            <img src="assets/icons/delete.svg" alt="delete" class="deletesize">
+                            Quitar talla
+                        </button>
+
+                    </div>
+
+                    <!-- Precios y cantidad -->
                     <div class="forminputs-section2">
                         <div class="input">
                             <label for="purchase_price">Precio Unidad</label>
-                            <input type="number" id="purchase_price" placeholder="0.00"
-                                formControlName="purchase_price">
+                            <div class="input-prefix-wrapper">
+                                <span class="input-prefix">€</span>
+                                <input type="number" id="purchase_price" placeholder="0.00"
+                                    formControlName="purchase_price">
+                            </div>
                             <div class="errorMessageContainer">
                                 @if (productForm.get('purchase_price')?.touched &&
                                 productForm.get('purchase_price')?.errors?.['required']) {
-                                <small class="errorMessage">
-                                    No puede estar vacío
-                                </small>
+                                <small class="errorMessage">No puede estar vacío</small>
                                 } @else if (productForm.get('purchase_price')?.touched &&
                                 productForm.get('purchase_price')?.errors?.['min']) {
-                                <small class="errorMessage">
-                                    Error
-                                </small>
+                                <small class="errorMessage">Error</small>
                                 }
                             </div>
                         </div>
                         <div class="input">
                             <label for="estimated_sale_price">Venta Estimada</label>
-                            <input type="number" id="estimated_sale_price" placeholder="0.00"
-                                formControlName="estimated_sale_price">
+                            <div class="input-prefix-wrapper">
+                                <span class="input-prefix">€</span>
+                                <input type="number" id="estimated_sale_price" placeholder="0.00"
+                                    formControlName="estimated_sale_price">
+                            </div>
                             <div class="errorMessageContainer">
                                 @if (productForm.get('estimated_sale_price')?.touched &&
                                 productForm.get('estimated_sale_price')?.errors?.['required']) {
-                                <small class="errorMessage">
-                                    No puede estar vacío
-                                </small>
-                                }
-                                @else if (productForm.get('estimated_sale_price')?.touched &&
+                                <small class="errorMessage">No puede estar vacío</small>
+                                } @else if (productForm.get('estimated_sale_price')?.touched &&
                                 productForm.get('estimated_sale_price')?.errors?.['min']) {
-                                <small class="errorMessage">
-                                    Error
-                                </small>
+                                <small class="errorMessage">Error</small>
                                 }
                             </div>
                         </div>
@@ -75,21 +116,19 @@
                             <div class="errorMessageContainer">
                                 @if (productForm.get('quantity')?.touched &&
                                 productForm.get('quantity')?.errors?.['required']) {
-                                <small class="errorMessage">
-                                    No puede estar vacío
-                                </small>
+                                <small class="errorMessage">No puede estar vacío</small>
                                 } @else if (productForm.get('quantity')?.touched &&
                                 productForm.get('quantity')?.errors?.['min']) {
-                                <small class="errorMessage">
-                                    Error
-                                </small>
+                                <small class="errorMessage">Error</small>
                                 }
                             </div>
                         </div>
                     </div>
+
+                    <!-- Categoría -->
                     <div class="forminputs-section3">
                         <div class="categorias">
-                            <label for="categoria">Selecciona una categoría</label>
+                            <label for="categoria">Categoría</label>
                             <div class="categorias-categoryselector">
                                 @for (categoria of categorias; track $index) {
                                 <span (click)="seleccionarCategoria(categoria.id)"
@@ -101,32 +140,24 @@
                             <div class="errorMessageContainer">
                                 @if (productForm.get('category_id')?.touched &&
                                 productForm.get('category_id')?.errors?.['required']) {
-                                <small class="errorMessage">
-                                    No se a seleccionado ninguna categoría
-                                </small>
+                                <small class="errorMessage">No se ha seleccionado ninguna categoría</small>
                                 }
                             </div>
                         </div>
                     </div>
-                    <div class="forminputs-section4">
-                        <div class="input">
-                            <label for="description">Descripción</label>
-                            <textarea type="text" id="desc" formControlName="description"></textarea>
-                            <div class="errorMessageContainer">
-                                @if (productForm.get('description')?.touched &&
-                                productForm.get('description')?.errors?.['maxlength']) {
-                                <small class="errorMessage">
-                                    Descripción demasiado larga
-                                </small>
-                                }
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
-                <button class="addproductbtn" type="button" (click)="addProduct()"><img
-                        src="assets/icons/whitearrow.svg" alt="arrow-icon"></button>
+
+                <!-- Botón añadir producto -->
+                <div class="formproduct-footer">
+                    <button class="addproductbtn" type="button" (click)="addProduct()">
+                        <img src="assets/icons/whitearrow.svg" alt="arrow-icon">
+                        <span>Añadir producto</span>
+                    </button>
+                </div>
+
             </form>
-            <div class="card"></div>
+            <!-- <div class="card"></div> -->
         </div>
         <div class="addlotecontainer-cont-lote lote">
             <div class="lote-listcontainer card">
@@ -144,6 +175,10 @@
                         <img src="assets/icons/sort.svg" alt="sort-icon">
                     </div>
                     <div class="typetitle">
+                        <span>Talla</span>
+                        <img src="assets/icons/sort.svg" alt="sort-icon">
+                    </div>
+                    <div class="typetitle">
                         <span>Coste</span>
                         <img src="assets/icons/sort.svg" alt="sort-icon">
                     </div>
@@ -151,6 +186,7 @@
                         <span>V.Estimada</span>
                         <img src="assets/icons/sort.svg" alt="sort-icon">
                     </div>
+                    <div class="typetitle"></div>
                 </div>
                 <div class="lote-listcontainer-list">
                     <div class="listscroll">

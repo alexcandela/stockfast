@@ -34,6 +34,7 @@ class PurchaseRequest extends FormRequest
             'products.*.estimated_sale_price' => 'required|numeric|min:0',
             'products.*.category_id' => 'required|exists:categories,id',
             'products.*.description' => 'nullable|string',
+            'products.*.size' => 'nullable|string|max:10',
         ];
     }
 }

@@ -15,7 +15,8 @@ class Product extends Model
         'category_id',
         'description',
         'shipping_cost_per_unit',
-        'purchase_id'
+        'purchase_id',
+        'size'
     ];
 
     protected $casts = [

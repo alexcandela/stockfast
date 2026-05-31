@@ -1,9 +1,8 @@
 .productlist {
   &-product {
     display: grid;
-    grid-template-columns: 1.5fr repeat(5, 1fr);
+    grid-template-columns: 1.5fr repeat(6, 1fr);
     padding: 10px 20px;
-    
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s ease;
     position: relative;
@@ -49,7 +48,7 @@
     }
 
     .productname {
-      width: clamp(100px, 200px, 200px);
+      min-width: 0;
       font-weight: 600;
       color: #ffffff;
     }
@@ -58,9 +57,10 @@
       display: flex;
       justify-content: start;
       align-items: center;
+      min-width: 0;
 
       span {
-        
+        min-width: 0;
         color: rgba(255, 255, 255, 0.8);
       }
     }
