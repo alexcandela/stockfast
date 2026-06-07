@@ -31,7 +31,7 @@
                             }
                         </li>
                         }
-                        <li (click)="selectTotal()" class="total-option" [class.selected]="!selectedMonth()">
+                        <li (click)="selectTotalMonth()" class="total-option" [class.selected]="!selectedMonth()">
                             Total
                             @if (!selectedMonth()) {
                             <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">
@@ -62,7 +62,7 @@
                             }
                         </li>
                         }
-                        <li (click)="selectTotal()" class="total-option" [class.selected]="!selectedYear()">
+                        <li (click)="selectTotalYear()" class="total-option" [class.selected]="!selectedYear()">
                             Total
                             @if (!selectedYear()) {
                             <svg class="check-icon" viewBox="0 0 24 24" width="16" height="16">

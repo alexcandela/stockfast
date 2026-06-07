@@ -169,7 +169,7 @@ class DataController extends Controller
 
     // ==================== OBTENCIÓN DE DATOS ====================
 
-    private function obtenerVentasPorMes($userId, $month)
+    private function obtenerVentasPorMes($userId, $month, $yearOnly = null)
     {
         $query = Sale::with(['product.purchase' => function ($query) {
             $query->with('products');
@@ -179,6 +179,8 @@ class DataController extends Controller
             $start = Carbon::parse($month . '-01')->startOfMonth();
             $end = Carbon::parse($month . '-01')->endOfMonth();
             $query->whereBetween('sale_date', [$start, $end]);
+        } elseif ($yearOnly) {
+            $query->whereYear('sale_date', $yearOnly);
         }
 
         return $query->get();
@@ -207,11 +209,21 @@ class DataController extends Controller
     public function getGeneralData(Request $request)
     {
         $user = Auth::user();
-        $month = $request->query('month');
+        $filter = $request->query('month');
         $plan = $user->plan->name ?? 'Free';
 
+        $month = null;
+        $yearOnly = null;
+
+        if ($filter && $filter !== 'total') {
+            if (str_contains($filter, '-')) {
+                $month = $filter;
+            } else {
+                $yearOnly = $filter;
+            }
+        }
+
         try {
-            // Validar acceso para usuarios Free
             if (!$this->validarAccesoPlanFree($month, $plan)) {
                 return response()->json([
                     'success' => false,
@@ -219,11 +231,9 @@ class DataController extends Controller
                 ], 403);
             }
 
-            // Obtener datos
-            $sales = $this->obtenerVentasPorMes($user->id, $month);
+            $sales = $this->obtenerVentasPorMes($user->id, $month, $yearOnly);
             $salesPrevMonth = $this->obtenerVentasMesAnterior($user->id, $month);
 
-            // Calcular métricas
             $ingresos = $this->calcularIngresos($sales, $salesPrevMonth);
             $quantitySales = $this->calcularNumVentas($sales, $salesPrevMonth);
 

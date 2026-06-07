@@ -15,7 +15,7 @@ export class SalesChartComponent implements OnChanges {
 
   filterLabel = signal('');
 
-   meses = [
+  meses = [
     { id: 1, nombre: 'Enero' },
     { id: 2, nombre: 'Febrero' },
     { id: 3, nombre: 'Marzo' },
@@ -47,13 +47,19 @@ export class SalesChartComponent implements OnChanges {
   }
 
   getFilterLabelNames(data: string) {
-    if (data === 'total') {
-      this.filterLabel.set(data.charAt(0).toUpperCase() + data.slice(1));
-    } else {
-      const array = data.split('-');
-      const mes = this.meses.find((m) => m.id === Number(array[1]));
-      this.filterLabel.set(`${mes?.nombre}, ${array[0]}`);
+    if (!data || data === 'total') {
+      this.filterLabel.set('Total');
+      return;
     }
+    const array = data.split('-');
+    if (array.length === 1) {
+      // Solo año: "2024"
+      this.filterLabel.set(array[0]);
+      return;
+    }
+    // Mes concreto: "2024-06"
+    const mes = this.meses.find((m) => m.id === Number(array[1]));
+    this.filterLabel.set(`${mes?.nombre}, ${array[0]}`);
   }
 
   private updateChart(data: any[], filter: string) {
@@ -64,7 +70,6 @@ export class SalesChartComponent implements OnChanges {
     }
 
     this.getFilterLabelNames(filter);
-
     let labels: string[] = [];
     let quantities: number[] = [];
 
@@ -72,38 +77,40 @@ export class SalesChartComponent implements OnChanges {
       // Agrupar por mes
       const grouped: Record<string, number> = {};
       data.forEach((sale) => {
-        const month = new Date(sale.sale_date).toISOString().slice(0, 7); // "YYYY-MM"
+        const month = new Date(sale.sale_date).toISOString().slice(0, 7);
         grouped[month] = (grouped[month] || 0) + sale.quantity;
       });
-
-      // Ordenar meses
+      labels = Object.keys(grouped).sort();
+      quantities = labels.map((month) => grouped[month]);
+    } else if (!filter.includes('-')) {
+      // Solo año: "2024" → agrupar por mes de ese año
+      const grouped: Record<string, number> = {};
+      data.forEach((sale) => {
+        const month = new Date(sale.sale_date).toISOString().slice(0, 7);
+        grouped[month] = (grouped[month] || 0) + sale.quantity;
+      });
       labels = Object.keys(grouped).sort();
       quantities = labels.map((month) => grouped[month]);
     } else {
-      // Filtrar mes específico YYYY-MM → diario
+      // Mes concreto "2024-06" → agrupar por día
       const [year, monthStr] = filter.split('-').map(Number);
       const firstDay = new Date(year, monthStr - 1, 1);
       const lastDay = new Date(year, monthStr, 0);
-
       const allDays: string[] = [];
       for (let d = new Date(firstDay); d <= lastDay; d.setDate(d.getDate() + 1)) {
         allDays.push(d.toISOString().split('T')[0]);
       }
-
       const grouped = data.reduce((acc: Record<string, number>, sale) => {
         const day = new Date(sale.sale_date).toISOString().split('T')[0];
         acc[day] = (acc[day] || 0) + sale.quantity;
         return acc;
       }, {});
-
       labels = allDays;
       quantities = allDays.map((day) => grouped[day] || 0);
     }
 
-    // Actualizar gráfico
     this.chartOptions.series = [{ name: 'Productos vendidos', data: quantities }];
     this.chartOptions.labels = labels;
-
     if (this.chart?.updateSeries) {
       this.chart.updateSeries(this.chartOptions.series, true);
     }

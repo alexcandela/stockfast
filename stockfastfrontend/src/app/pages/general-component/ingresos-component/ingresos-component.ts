@@ -1,4 +1,15 @@
-import { Component, Output, EventEmitter, Input, OnInit, signal, computed, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  OnInit,
+  signal,
+  computed,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Authservice } from '../../../core/services/authservice';
@@ -25,49 +36,49 @@ export class IngresosComponent implements OnInit, OnChanges {
   @Input() initialFilter: string = '';
 
   readonly Math = Math;
-  
+
   userplan = signal<string | null>(null);
   selectedMonth = signal<string>('');
   selectedYear = signal<string>('');
   showMonthDropdown = signal(false);
   showYearDropdown = signal(false);
   selectedTotal = false;
-  
+
   private isInitializing = true;
-  
+
   selectedMonthLabel = computed(() => {
     if (!this.selectedMonth()) {
       this.selectedTotal = true;
       return 'Total';
     }
-    const month = this.months.find(m => m.value === this.selectedMonth());
+    const month = this.months.find((m) => m.value === this.selectedMonth());
     this.selectedTotal = false;
     return month?.label ?? 'Selecciona mes';
   });
-  
+
   selectedYearLabel = computed(() => {
     if (!this.selectedYear()) {
       return 'Total';
     }
     return this.selectedYear();
   });
-  
+
   months: MonthOption[] = [];
   years: number[] = [];
 
   constructor(
     private authService: Authservice,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
     this.initializeUserPlan();
     this.initializeMonths();
     this.initializeYears();
-    
+
     Promise.resolve().then(() => {
       this.applyInitialFilter();
-      
+
       setTimeout(() => {
         this.isInitializing = false;
       }, 200);
@@ -87,10 +98,9 @@ export class IngresosComponent implements OnInit, OnChanges {
       this.cdr.detectChanges();
       return;
     }
-    
+
     if (this.initialFilter && this.initialFilter.includes('-')) {
       const [year, month] = this.initialFilter.split('-');
-      
       if (year && month) {
         setTimeout(() => {
           this.selectedYear.set(year);
@@ -100,7 +110,17 @@ export class IngresosComponent implements OnInit, OnChanges {
         return;
       }
     }
-    
+
+    // Nuevo caso: solo año "2024"
+    if (this.initialFilter && !this.initialFilter.includes('-')) {
+      setTimeout(() => {
+        this.selectedYear.set(this.initialFilter);
+        this.selectedMonth.set('');
+        this.cdr.detectChanges();
+      }, 0);
+      return;
+    }
+
     this.setInitialSelection();
   }
 
@@ -111,27 +131,21 @@ export class IngresosComponent implements OnInit, OnChanges {
   private initializeMonths(): void {
     const now = new Date();
     const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
-    const previousMonth = now.getMonth() === 0 
-      ? '12' 
-      : now.getMonth().toString().padStart(2, '0');
+    const previousMonth = now.getMonth() === 0 ? '12' : now.getMonth().toString().padStart(2, '0');
 
     this.months = Array.from({ length: 12 }, (_, i) => {
       const value = (i + 1).toString().padStart(2, '0');
       const label = this.capitalizeFirstLetter(
-        new Date(2000, i).toLocaleString('es', { month: 'long' })
+        new Date(2000, i).toLocaleString('es', { month: 'long' }),
       );
-      
+
       const locked = this.isMonthLocked(value, currentMonth, previousMonth);
 
       return { value, label, locked };
     });
   }
 
-  private isMonthLocked(
-    monthValue: string, 
-    currentMonth: string, 
-    previousMonth: string
-  ): boolean {
+  private isMonthLocked(monthValue: string, currentMonth: string, previousMonth: string): boolean {
     if (this.userplan() !== 'Free') return false;
     return monthValue !== currentMonth && monthValue !== previousMonth;
   }
@@ -148,7 +162,7 @@ export class IngresosComponent implements OnInit, OnChanges {
 
     this.selectedMonth.set(currentMonth);
     this.selectedYear.set(currentYear);
-    
+
     if (!this.initialFilter) {
       this.emitFilter();
     }
@@ -159,65 +173,67 @@ export class IngresosComponent implements OnInit, OnChanges {
   }
 
   private emitFilter(): void {
-    if (this.isInitializing) {
-      return;
-    }
-    
+    if (this.isInitializing) return;
+
     const hasMonth = this.selectedMonth();
     const hasYear = this.selectedYear();
-    
+
     let filter: string;
-    
-    if (!hasMonth || !hasYear) {
+
+    if (!hasYear) {
       filter = 'total';
+    } else if (!hasMonth) {
+      filter = hasYear; // p.ej. "2024" → el backend filtra todo ese año
     } else {
       filter = `${hasYear}-${hasMonth}`;
     }
-    
+
     this.filterChange.emit(filter);
   }
 
   toggleMonthDropdown(): void {
-    this.showMonthDropdown.update(value => !value);
+    this.showMonthDropdown.update((value) => !value);
     this.showYearDropdown.set(false);
   }
 
   toggleYearDropdown(): void {
-    this.showYearDropdown.update(value => !value);
+    this.showYearDropdown.update((value) => !value);
     this.showMonthDropdown.set(false);
   }
 
   selectMonth(month: MonthOption): void {
     if (month.locked) return;
-    
+
     this.selectedMonth.set(month.value);
-    
+
     if (!this.selectedYear()) {
       const currentYear = new Date().getFullYear().toString();
       this.selectedYear.set(currentYear);
     }
-    
+
     this.showMonthDropdown.set(false);
     this.emitFilter();
   }
 
   selectYear(year: number): void {
     this.selectedYear.set(year.toString());
-    
-    if (!this.selectedMonth()) {
-      const currentMonth = (new Date().getMonth() + 1).toString().padStart(2, '0');
-      this.selectedMonth.set(currentMonth);
-    }
-    
+
+    // Ya NO forzamos el mes — respetamos lo que tenga el dropdown de mes
+    // Si hay mes seleccionado se emite "2024-06", si no se emite "2024"
+
     this.showYearDropdown.set(false);
     this.emitFilter();
   }
 
-  selectTotal(): void {
+  selectTotalMonth(): void {
+    this.selectedMonth.set('');
+    this.showMonthDropdown.set(false);
+    this.emitFilter();
+  }
+
+  selectTotalYear(): void {
     this.selectedMonth.set('');
     this.selectedYear.set('');
-    
-    this.showMonthDropdown.set(false);
     this.showYearDropdown.set(false);
     this.emitFilter();
   }
