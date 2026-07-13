@@ -1,1 +1,248 @@
-<p>estadisticas-component works!</p>
+<div class="lotes-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="page-header-title">
+            <div class="iconcontainer">
+                <img src="assets/icons/purchases.svg" alt="lotes-icon" />
+            </div>
+            <div>
+                <h1>Lotes & Productos</h1>
+                <p class="subtitle">Analiza el rendimiento de tus inversiones</p>
+            </div>
+        </div>
+        <button class="btn-primary">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+                <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+            </svg>
+            Nuevo lote
+        </button>
+    </div>
+
+    <!-- Resumen global -->
+    <div class="global-stats">
+        <div class="stat-card">
+            <span class="stat-label">Inversión total</span>
+            <span class="stat-value">{{ totalInversion }} €</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Beneficio neto</span>
+            <span class="stat-value green">{{ totalBeneficio }} €</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">ROI medio</span>
+            <span class="stat-value" [ngClass]="totalRoi() >= 0 ? 'green' : 'red'">{{ totalRoi() }}%</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Lotes activos</span>
+            <span class="stat-value">{{ lotesActivos }}</span>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab" [class.active]="activeTab === 'lotes'" (click)="activeTab = 'lotes'">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+                <path fill="currentColor"
+                    d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 16.5 1 14.64 1c-1.1 0-2.04.5-2.64 1.32L12 2.7l-.36-.38C11.04 1.5 10.1 1 9 1 7.14 1 5.64 2.51 5.64 4.36c0 .48.11.92.18 1.36H4c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z" />
+            </svg>
+            Lotes
+            <span class="tab-count">{{ lotes.length }}</span>
+        </button>
+        <button class="tab" [class.active]="activeTab === 'productos'" (click)="activeTab = 'productos'">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+                <path fill="currentColor"
+                    d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z" />
+            </svg>
+            Productos
+            <span class="tab-count">{{ productos.length }}</span>
+        </button>
+    </div>
+
+    <!-- Tab: Lotes -->
+    @if (activeTab === 'lotes') {
+    <div class="tab-content">
+
+        <!-- Filtros y búsqueda -->
+        <div class="toolbar">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor"
+                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+                <input type="text" placeholder="Buscar lote..." [(ngModel)]="searchLote" />
+            </div>
+            <div class="filter-group">
+                <button class="filter-btn" [class.active]="filterEstado === 'todos'"
+                    (click)="filterEstado = 'todos'">Todos</button>
+                <button class="filter-btn" [class.active]="filterEstado === 'activo'"
+                    (click)="filterEstado = 'activo'">En progreso</button>
+                <button class="filter-btn" [class.active]="filterEstado === 'liquidado'"
+                    (click)="filterEstado = 'liquidado'">Liquidados</button>
+            </div>
+        </div>
+
+        <!-- Lista de lotes -->
+        <div class="lotes-grid">
+            @for (lote of lotesFiltrados; track lote.id) {
+            <div class="lote-card card" (click)="goToLote(lote.id)">
+
+                <div class="lote-card-header">
+                    <div class="lote-info">
+                        <h3 class="lote-name">{{ lote.name }}</h3>
+                        <span class="lote-date">{{ lote.created_at | date:'dd MMM yyyy' }}</span>
+                    </div>
+                    <span class="badge" [ngClass]="lote.stock === 0 ? 'badge-liquidado' : 'badge-activo'">
+                        {{ lote.stock === 0 ? 'Liquidado' : 'En progreso' }}
+                    </span>
+                </div>
+
+                <div class="lote-metrics">
+                    <div class="metric">
+                        <span class="metric-label">Inversión</span>
+                        <span class="metric-value">{{ lote.inversion }} €</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Ingresos</span>
+                        <span class="metric-value">{{ lote.ingresos }} €</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Beneficio</span>
+                        <span class="metric-value" [ngClass]="lote.beneficio >= 0 ? 'green' : 'red'">
+                            {{ lote.beneficio >= 0 ? '+' : '' }}{{ lote.beneficio }} €
+                        </span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">ROI</span>
+                        <span class="metric-value" [ngClass]="lote.roi >= 0 ? 'green' : 'red'">
+                            {{ lote.roi >= 0 ? '+' : '' }}{{ lote.roi }}%
+                        </span>
+                    </div>
+                </div>
+
+                <div class="lote-progress">
+                    <div class="progress-header">
+                        <span>Unidades vendidas</span>
+                        <span>{{ lote.vendidos }} / {{ lote.total }}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" [style.width.%]="(lote.vendidos / lote.total) * 100"></div>
+                    </div>
+                </div>
+
+                <div class="lote-products-preview">
+                    @for (producto of lote.productos.slice(0, 3); track producto.id) {
+                    <span class="product-chip">{{ producto.name }}</span>
+                    }
+                    @if (lote.productos.length > 3) {
+                    <span class="product-chip more">+{{ lote.productos.length - 3 }}</span>
+                    }
+                </div>
+
+                <div class="lote-card-footer">
+                    <span class="ver-detalle">Ver detalle
+                        <svg viewBox="0 0 24 24" width="14" height="14">
+                            <path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+                        </svg>
+                    </span>
+                </div>
+
+            </div>
+            }
+
+            @if (lotesFiltrados.length === 0) {
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                    <path fill="currentColor"
+                        d="M20 6h-2.18c.07-.44.18-.88.18-1.36C18 2.51 16.5 1 14.64 1c-1.1 0-2.04.5-2.64 1.32L12 2.7l-.36-.38C11.04 1.5 10.1 1 9 1 7.14 1 5.64 2.51 5.64 4.36c0 .48.11.92.18 1.36H4c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"
+                        opacity=".3" />
+                </svg>
+                <p>No hay lotes que mostrar</p>
+            </div>
+            }
+        </div>
+    </div>
+    }
+
+    <!-- Tab: Productos -->
+    @if (activeTab === 'productos') {
+    <div class="tab-content">
+
+        <div class="toolbar">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" width="16" height="16">
+                    <path fill="currentColor"
+                        d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                </svg>
+                <input type="text" placeholder="Buscar producto..." [(ngModel)]="searchProducto" />
+            </div>
+            <div class="sort-group">
+                <span class="sort-label">Ordenar por</span>
+                <select [(ngModel)]="sortProducto">
+                    <option value="beneficio">Beneficio</option>
+                    <option value="ventas">Ventas</option>
+                    <option value="roi">ROI</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="productos-list">
+            @for (producto of productosFiltrados; track producto.id) {
+            <div class="producto-card card" (click)="goToProducto(producto.id)">
+
+                <div class="producto-left">
+                    <div class="producto-icon">
+                        <img src="assets/icons/product.svg" alt="product" />
+                    </div>
+                    <div class="producto-info">
+                        <h3>{{ producto.name }}</h3>
+                        <span class="producto-lotes">{{ producto.num_lotes }} lote{{ producto.num_lotes !== 1 ? 's' : ''
+                            }}</span>
+                    </div>
+                </div>
+
+                <div class="producto-stats">
+                    <div class="stat">
+                        <span class="stat-label">Vendidos</span>
+                        <span class="stat-val">{{ producto.vendidos }} uds</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Stock</span>
+                        <span class="stat-val">{{ producto.stock }} uds</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Beneficio</span>
+                        <span class="stat-val" [ngClass]="producto.beneficio >= 0 ? 'green' : 'red'">
+                            {{ producto.beneficio >= 0 ? '+' : '' }}{{ producto.beneficio }} €
+                        </span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">ROI</span>
+                        <span class="stat-val" [ngClass]="producto.roi >= 0 ? 'green' : 'red'">
+                            {{ producto.roi >= 0 ? '+' : '' }}{{ producto.roi }}%
+                        </span>
+                    </div>
+                </div>
+
+                <svg class="chevron" viewBox="0 0 24 24" width="18" height="18">
+                    <path fill="currentColor" d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+                </svg>
+
+            </div>
+            }
+
+            @if (productosFiltrados.length === 0) {
+            <div class="empty-state">
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                    <path fill="currentColor"
+                        d="M12 2l-5.5 9h11L12 2zm0 3.84L13.93 9h-3.87L12 5.84zM17.5 13c-2.49 0-4.5 2.01-4.5 4.5S15.01 22 17.5 22s4.5-2.01 4.5-4.5S19.99 13 17.5 13zm0 7c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5S18.88 20 17.5 20zM3 21.5h8v-8H3v8zm2-6h4v4H5v-4z"
+                        opacity=".3" />
+                </svg>
+                <p>No hay productos que mostrar</p>
+            </div>
+            }
+        </div>
+    </div>
+    }
+
+</div>
